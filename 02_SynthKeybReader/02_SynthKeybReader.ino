@@ -1,4 +1,6 @@
-//EndlessSynth Keyboard Reader
+//EndlessSynth, Keyboard Reader Test
+//Device: Arduino Mega
+
 //Считывание клавиатуры детского синтезатора "Агния Барто"
 //Подключение: 12 пинов с клавиатуры к Arduino Mega, 22,24,26,...,44
 //пин 0,1,2,3 - выбор блока, который опрашиваем, 

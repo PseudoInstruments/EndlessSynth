@@ -1,4 +1,6 @@
-//EndlessSynth Keyboard Pins tester
+//EndlessSynth, Keyboard Pins test
+//Device: Arduino Mega
+
 //Проверка пинов клавиатуры детского синтезатора "Агния Барто"
 //Подключил 12 пинов с клавиатуры к Arduino Mega,
 //22,24,26,...,44
