@@ -1,2 +1,3 @@
 # EndlessSynth
-1-bit synthesizer
+1-bit synthesizer using Arduino and toy keyboard.
+
