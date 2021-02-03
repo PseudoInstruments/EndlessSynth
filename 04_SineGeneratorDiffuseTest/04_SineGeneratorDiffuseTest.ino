@@ -3,6 +3,7 @@
 //It's appear that sound too harch :)
 //also, it's inefficient to compute time for each phase sample.
 //So, in the next sketches I will use timer interrupts timer to obtain precise sample rate.
+//as a final result, see 09_SineWaveInterruptsMega
 
 //Device: Arduino Uno or Mega
 
