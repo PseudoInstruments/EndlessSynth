@@ -2,19 +2,19 @@
 
 //This program runs TIMER2 at 44100 Hz, increase counter at each interrupt,
 //and prints real rate between calls and time.
+//Based on https://www.instructables.com/Arduino-Timer-Interrupts/
+
 //Result: 
 //compare_match = ...-1; ~44400 Hz.
 //compare_match = ...; ~43480 Hz.
+//I noted that Serial not works if interrupt function works longer.
+//So, to resulve issue I use TIMER3 on Mega, with TimerThreeeLibrary, see the next examples
 
-
-//Based on https://www.instructables.com/Arduino-Timer-Interrupts/
 
 //Device: Arduino Mega (Note: Not Uno!)
-
 //Note: Monitor port baud must be set to 500000!
 
 const long int audio_sample_rate = 44100;
-
 //---------------------------------------------------------------
 void setup() {
   Serial.begin(500000);

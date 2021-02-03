@@ -1,10 +1,10 @@
 //EndlessSynth, 1-bit sine generator with diffusion
-//Results of this investigation: it's inefficient to compute time for each phase sample.
-//So, in the next sketches we will try to use interruption timer because hope it has precise tming.
+//I implemented 1 bit sound synthesis without timer.
+//It's appear that sound too harch :)
+//also, it's inefficient to compute time for each phase sample.
+//So, in the next sketches I will use timer interrupts timer to obtain precise sample rate.
 
 //Device: Arduino Uno or Mega
-//I use style of writing by using very basic Arduino functions,
-//in order code will be more readable by beginners.
 
 //Commutation:
 const byte pin_buz = 2;

@@ -4,8 +4,6 @@
 //Commutation:
 const byte pin_buz = 2;
 
-//(I use style of writing by using very basic Arduino functions,
-//in order code will be more readable by beginners)
 
 char sample[1704] = {
 0,-15,4,34,76,104,118,112,89,60,17,-27,-80,-128,-128,-128,-127,-70,-4,56,93,108,102,81,54,26,1,-23,-43,-64,-79,-82,-69,
