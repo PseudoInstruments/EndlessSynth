@@ -6,11 +6,10 @@
 //as a final result, see 09_SineWaveInterruptsMega
 
 //Device: Arduino Uno or Mega
-
 //Commutation:
 const byte pin_buz = 2;
-
 //Note: Monitor port baud must be set to 500000!
+
 
 //---------------------------------------------------------------
 void setup() {
