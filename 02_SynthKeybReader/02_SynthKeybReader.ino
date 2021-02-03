@@ -55,10 +55,12 @@ void keys_update() {
     //небольшая пауза, чтобы пины настроились, говорят, что достаточно 2 мкс, но делаем больше
     delayMicroseconds(10);
     //считываем значения клавиатуры
+
+    //TODO can use ports for reading faster, see 05_ArduinoMegaPortTest
     for (byte i=0; i<keyReadN; i++) {
-      byte key = i+keyReadN*k; 
-      byte v = (digitalRead(keyRead[i]) == LOW)?1:0;      
-      byte &state =key_state[key];
+      byte key = keys - 1 - (i+keyReadN*k); //because of reverted 
+      byte v = (digitalRead(keyRead[i]) == LOW)?1:0;     
+      byte &state = key_state[key];
       //клавиша была отпущена или нажата
       if (state != v) {
         Serial.print("key "); Serial.print(key); Serial.print(": ");
