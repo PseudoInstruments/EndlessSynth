@@ -15,6 +15,12 @@ pin 1 and 4,5,6,7,8,9,10,11 - keys 8..15
 pin 2 and 4,5,6,7,8,9,10,11 - keys 16..23 
 pin 3 and 4,5,6,7,8,9,10,11 - keys 24..31 
 (key numbers are reverted)
+
+NOTE: there is some issue with switching control pins 0,1,2,3:
+if for example key 0 and 8 is pressed:
+- then if pin 0 and pin 1 will be in opposite state - the result is flowing + to -, short circuit.
+  To resolve the problem, we must use diodes, or just disable current from control pins 0,1,2,3 when not used
+  But we will deal with it in the next sketch, here we just testing pins communation
 */
 //Result: keyboard is polyphonic, can be read by blocks of 8 keys
 

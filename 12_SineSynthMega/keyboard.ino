@@ -5,6 +5,11 @@
 //pins 0,1,2,3 - choosing keys block,
 //pins 4,5,6,7,8,9,10,11 - keys 0..7, 8..15, 16..23, 24..31
 //(keys numbers is reverted)
+/*NOTE: there is some issue with switching control pins 0,1,2,3:
+  if for example key 0 and 8 is pressed:
+  - then if pin 0 and pin 1 will be in opposite state - the result is flowing + to -, short circuit.
+  To resolve the problem, we disable current from control pins 0,1,2,3 when not used
+*/
 
 const byte keyGndN = 4;
 const byte keyReadN = 8;
@@ -13,7 +18,7 @@ byte keyReadPin[keyReadN] = {30, 32, 34, 36, 38, 40, 42, 44};
 
 const byte keys = 32;  //number of keys
 const byte note_keys_count = keys - 8; //notes used for notes
-const byte string_keys_indices[POLYPHONY] = {26,28,30,31}; //"string" keys
+const byte string_keys_indices[POLYPHONY] = {26, 28, 30, 31}; //"string" keys
 
 //Starting midi note
 byte midi_note_0 = 65; //F
@@ -31,8 +36,7 @@ void keyboard_setup() {
 
   //Set
   for (int i = 0; i < keyGndN; i++) {
-    pinMode(keyGndPin[i], OUTPUT);
-    digitalWrite(keyGndPin[i], HIGH);  //выключено по-умолчанию
+    pinMode(keyGndPin[i], INPUT_PULLUP);     //disable current from control pin, see NOTE above
   }
   for (int i = 0; i < keyReadN; i++) {
     pinMode(keyReadPin[i], INPUT_PULLUP);
@@ -53,19 +57,19 @@ byte string_keys[POLYPHONY];
 //process pressing key
 void key_pressed(byte key) {
   //this is note key
-  if (key < note_keys_count) { 
+  if (key < note_keys_count) {
     if (note_keys_n < POLYPHONY) { //add to array
       //Serial.print("note_key "); Serial.print(note_keys_n); Serial.print(" = "); Serial.println(key);
-      note_keys[note_keys_n++] = key; 
+      note_keys[note_keys_n++] = key;
       //because we scan keys ordered, note_keys will be ordered too
     }
     return;
   }
-  
+
   //this is string key
   //TODO can map all keys
-    for (byte i=0; i<POLYPHONY; i++) {
-      if (key == string_keys_indices[i]) {
+  for (byte i = 0; i < POLYPHONY; i++) {
+    if (key == string_keys_indices[i]) {
       //Serial.print("string_key "); Serial.println(i);
       string_keys[i] = 1;
     }
@@ -76,22 +80,32 @@ void key_pressed(byte key) {
 
 //---------------------------------------------------------------
 void keyboard_loop() {
-  note_keys_n = 0;  //clear pressing notes
-  for (byte i = 0; i < POLYPHONY; i++) { //clear string notes
+  //clear notes and string keys
+  note_keys_n = 0;  
+  for (byte i = 0; i < POLYPHONY; i++) { 
+    note_keys[i] = -1;
     string_keys[i] = 0;
   }
 
   bool was_changed = false;  //was keyboard state changed
 
   //Scan keys
-  for (char k = keyGndN-1; k>=0; k--) {   //because "for" decreases, we need to use char for check ">=0" properly
-    for (char j = 0; j < keyGndN; j++) { //choose keyboard block
-      digitalWrite(keyGndPin[j], (j == k) ? LOW : HIGH);
+  for (char k = keyGndN - 1; k >= 0; k--) { //because "for" decreases, we need to use char for check ">=0" properly
+    //set control pin
+    for (byte j = 0; j < keyGndN; j++) {
+      if (j == k) {
+        pinMode(keyGndPin[j], OUTPUT);  //put current
+        digitalWrite(keyGndPin[j], LOW);
+      }
+      else {
+        pinMode(keyGndPin[j], INPUT_PULLUP);  //disable current, see NOTE above
+      }
     }
-    delayMicroseconds(1000); //pause to pin affected circuit
+
+    delayMicroseconds(10); //pause to pin affected circuit
 
     //read keys pins //TODO can use ports for reading faster, see 05_ArduinoMegaPortTest
-    for (char i = keyReadN-1; i >= 0; i--) {  //because "for" decreases, we need to use char for check ">=0" properly
+    for (char i = keyReadN - 1; i >= 0; i--) { //because "for" decreases, we need to use char for check ">=0" properly
       byte key = keys - 1 - (i + keyReadN * k); //because of reverted
       byte v = (digitalRead(keyReadPin[i]) == LOW) ? 1 : 0;
       byte &state = key_state[key];
@@ -110,7 +124,7 @@ void keyboard_loop() {
       }
     }
   }
-    
+
   //play
   if (was_changed) {
     set_notes(string_keys[0] ? note_keys[0] : -1,

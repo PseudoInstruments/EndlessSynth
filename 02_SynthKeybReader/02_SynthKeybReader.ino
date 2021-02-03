@@ -9,7 +9,15 @@
 //pins 0,1,2,3 - choosing keys block, 
 //pins 4,5,6,7,8,9,10,11 - keys 0..7, 8..15, 16..23, 24..31 
 //(keys numbers is reverted)
+/*NOTE: there is some issue with switching control pins 0,1,2,3:
+if for example key 0 and 8 is pressed:
+- then if pin 0 and pin 1 will be in opposite state - the result is flowing + to -, short circuit.
+  To resolve the problem, we disable current from control pins 0,1,2,3 when not used
 
+The next problem: if we press several keys in one block 
+and then one key in another block - it will give response of the all keys in the second block!
+To resolve it, we need to solder keys separately... or put many diodes.
+*/
 
 const byte keyGndN = 4;
 const byte keyReadN = 8;
@@ -36,8 +44,7 @@ void setup() {
 
   //Установка пинов
   for (int i=0; i<keyGndN; i++) {
-      pinMode(keyGnd[i], OUTPUT);
-      digitalWrite(keyGnd[i], HIGH);  //выключено по-умолчанию
+      pinMode(keyGnd[i], INPUT);  //disable current from control pin, see NOTE above
   }
   for (int i=0; i<keyReadN; i++) {
       pinMode(keyRead[i], INPUT_PULLUP);
@@ -48,9 +55,15 @@ void setup() {
 void keys_update() {
   //Обновление состояния клавиатуры
   for (byte k=0; k<keyGndN; k++) {
-    //выбираем область клавиатуры для считывания  
+    //set control pin 
     for (byte j=0; j<keyGndN; j++) {
-      digitalWrite(keyGnd[j], (j==k)?LOW:HIGH);      
+      if (j == k) {
+        pinMode(keyGnd[j], OUTPUT);  //put current
+        digitalWrite(keyGnd[j], LOW);              
+      }
+      else {
+        pinMode(keyGnd[j], INPUT);  //disable current, see NOTE above
+      }
     }
     //небольшая пауза, чтобы пины настроились, говорят, что достаточно 2 мкс, но делаем больше
     delayMicroseconds(10);
