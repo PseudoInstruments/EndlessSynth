@@ -10,9 +10,8 @@
 //- baud must be set to 500000!
 //---------------------------------------------------------------
 //number of notes to play simultaneously, 1..4
-//const byte POLYPHONY = 2;
-//const byte POLYPHONY = 3;
-const byte POLYPHONY = 4;
+#define POLYPHONY (3)
+//#define POLYPHONY (4) //For some reason 4 halts the system :)
 
 //print routines - use their for shortening code
 void pr(const char *str) {

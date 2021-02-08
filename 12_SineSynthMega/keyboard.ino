@@ -22,10 +22,20 @@ int keyReadPin[keys] = {22, 23, 24, 25, 26, 27, 28, 29,
                        };
 
 const byte note_keys_count = keys - 8; //notes used for notes
-const byte string_keys_indices[POLYPHONY] = {31, 30, 28, 26}; //"string" keys, note reversed order
+const byte string_keys_indices[POLYPHONY] = {31, 30, 28}; //, 26}; //"string" keys, note reversed order
 
-//Starting midi note - chenged with octave switch
-byte base_note = 65; //F
+//keys for octave switch
+const byte key_octave1=25;  
+const byte key_octave2=27;  
+const byte key_octave3=29;  
+
+//octave base notes
+const byte note_octave1=65-3*12;
+const byte note_octave2=65-12;
+const byte note_octave3=65;   //F
+
+//Current base note - changed with octave switch
+byte base_note = note_octave2; 
 
 //---------------------------------------------------------------
 void keyboard_setup() {
@@ -54,6 +64,16 @@ byte note_keys_n = 0;
 byte string_keys[POLYPHONY];
 
 //---------------------------------------------------------------
+//octave switch
+void set_base_note(char note) {
+  if (base_note != note) {
+    base_note = note;
+    Serial.print("Base note: ");
+    Serial.println(int(note));
+  }
+}
+
+//---------------------------------------------------------------
 //process pressing key
 void key_pressed(byte key) {
   //this is note key
@@ -72,10 +92,15 @@ void key_pressed(byte key) {
     if (key == string_keys_indices[i]) {
       //Serial.print("string_key "); Serial.println(i);
       string_keys[i] = 1;
+      return;
     }
   }
 
-  //TODO octave switch
+  //octave switch
+  if (key == key_octave1) { set_base_note(note_octave1); return; }
+  if (key == key_octave2) { set_base_note(note_octave2); return; }
+  if (key == key_octave3) { set_base_note(note_octave3); return; }
+  
 }
 
 //---------------------------------------------------------------

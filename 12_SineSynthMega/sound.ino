@@ -41,27 +41,30 @@ void set_freqs(int freq1_, int freq2_, int freq3_, int freq4_) {
   freq1 = freq1_;
   freq2 = freq2_;
   freq3 = freq3_;
-  freq4 = freq4_;  
+  freq4 = freq4_;
 }
 
 //---------------------------------------------------------------
 //Set playing notes
 //-1 means note off, that os freqi=0
 void set_notes(char midi_note1, char midi_note2, char midi_note3, char midi_note4, char base_note) {
-  Serial.print("notes "); Serial.print(int(midi_note1)); 
-  Serial.print(" "); Serial.print(int(midi_note2)); 
-  Serial.print(" "); Serial.print(int(midi_note3)); 
-  Serial.print(" "); Serial.print(int(midi_note4)); 
-  
-  freq1 = (midi_note1!=-1) ? m_to_f_int(midi_note1 + base_note) : 0;
-  freq2 = (midi_note2!=-1) ? m_to_f_int(midi_note2 + base_note) : 0;
-  freq3 = (midi_note3!=-1) ? m_to_f_int(midi_note3 + base_note) : 0;
-  freq4 = (midi_note4!=-1) ? m_to_f_int(midi_note4 + base_note) : 0;
+  Serial.print("notes "); Serial.print(int(midi_note1));
+  Serial.print(" "); Serial.print(int(midi_note2));
+  Serial.print(" "); Serial.print(int(midi_note3));
+  //Serial.print(" "); Serial.print(int(midi_note4));
 
-  Serial.print("   freq "); Serial.print(freq1); 
-  Serial.print(" "); Serial.print(freq2); 
-  Serial.print(" "); Serial.print(freq3); 
-  Serial.print(" "); Serial.println(int(freq4)); 
+  freq1 = (midi_note1 != -1) ? m_to_f_int(midi_note1 + base_note) : 0;
+  freq2 = (midi_note2 != -1) ? m_to_f_int(midi_note2 + base_note) : 0;
+  freq3 = (midi_note3 != -1) ? m_to_f_int(midi_note3 + base_note) : 0;
+#if POLUPHONY>=4
+  freq4 = (midi_note4 != -1) ? m_to_f_int(midi_note4 + base_note) : 0;
+#endif
+
+  Serial.print("   freq "); Serial.print(freq1);
+  Serial.print(" "); Serial.print(freq2);
+  Serial.print(" "); Serial.print(freq3);
+  //Serial.print(" "); Serial.print(int(freq4));
+  Serial.println();
 }
 
 //---------------------------------------------------------------
@@ -116,7 +119,9 @@ long int t = 0;
 long int phase = 0;
 int sound_value = 0;
 const int diff_step = //127 * POLYPHONY; //step of diffusion subtraction - 1..127, kind of threshold for sound
-                    127;    //just 127 - to make polyphony sounding more "phatty"
+  127;    //just 127 - to make polyphony sounding more "phatty"
+
+const int thresh_sound = diff_step / 2;
 
 
 //We should make this function as fast as possible, and trying to omit "/" and "%" operations
@@ -124,41 +129,49 @@ void timer_interrupt() {
   t++;
 
   //decrease accumulated diffusion, because in opposite case zero values will give constant high-tone
-  sound_value = sound_value*4/5;    //TODO parameter
+  sound_value = sound_value * 4 / 5; //TODO parameter
 
   //phase - is changed audio_sample_rate times per second
   //wave_n - length of wavetable
   //freq - desired frequency
   //ph - must go freq times 0..wave_n-1
   if (freq1) sound_value += wave_table[(((long long)phase * freq1 * wave_n) >> shift_audio) % wave_n];
-#if POLYPHONY>=2
   if (freq2) sound_value += wave_table[(((long long)phase * freq2 * wave_n) >> shift_audio) % wave_n];
-#endif
-#if POLYPHONY>=3
   if (freq3) sound_value += wave_table[(((long long)phase * freq3 * wave_n) >> shift_audio) % wave_n];
-#endif
-#if POLYPHONY>=4
-  if (freq4) sound_value += wave_table[(((long long)phase * freq4 * wave_n) >> shift_audio) % wave_n];
-#endif
+//#if POLYPHONY>=4
+//  if (freq4) sound_value += wave_table[(((long long)phase * freq4 * wave_n) >> shift_audio) % wave_n];
+//#endif
 
   phase++;
 
   //output audio sample to buzzer
   //NOTE: silence generates 1/0/1/0 sequence in this approach:
-  if (sound_value >= 0) {
+  /*if (sound_value >= 0) {
+    PORTE = B00010000; //buzzer ON
+    sound_value -= diff_step;       //diffusion propagation
+    }
+    else {
+    PORTE = B00000000; //buzzer OFF;
+    sound_value += diff_step;       //diffusion propagation
+    }*/
+
+  //On removing 1/0/1/0 silence sequence problem:
+  //Idea to use threshold for hysteresis:
+  //>thresh -> HIGH,
+  //-thresh..thresh - do nothing
+  //<-thresh -> LOW.
+
+  if (sound_value >= thresh_sound) {
     PORTE = B00010000; //buzzer ON
     sound_value -= diff_step;       //diffusion propagation
   }
   else {
-    PORTE = B00000000; //buzzer OFF;
-    sound_value += diff_step;       //diffusion propagation
+    if (sound_value <= -thresh_sound) {
+      PORTE = B00000000; //buzzer OFF;
+      sound_value += diff_step;       //diffusion propagation
+    }
   }
-  //On removing 1/0/1/0 silence sequence problem:
-  //Idea to use threshold for hysteresis: 
-  //>thresh -> HIGH, 
-  //-thresh..thresh - do nothing
-  //<-thresh -> LOW. 
-  
+
 }
 
 
@@ -175,27 +188,27 @@ void sound_loop() {
     //Serial.print("\t");
     //Serial.print("counter: ");
     //Serial.print(t);
-    
+
     //Serial.print("\trate: ");
     //Serial.println(double(t) / (time / 1000.0));
 
 
     /*
-    static int note1 = 69 - 24; //midi bass note A
-    static int note2 = note1 + 12 + 3; //second note
-    static int note3 = note1 + 12 + 7; //second note
-    static int note4 = note1 + 12 + 12; //second note
-    freq1 = m_to_f(note1);
-    freq2 = m_to_f(note2);
-    freq3 = m_to_f(note1);
-    freq4 = m_to_f(note2);
-    //Serial.print("notes "); Serial.print(note1);
-    //Serial.print(" "); Serial.println(note2);
+      static int note1 = 69 - 24; //midi bass note A
+      static int note2 = note1 + 12 + 3; //second note
+      static int note3 = note1 + 12 + 7; //second note
+      static int note4 = note1 + 12 + 12; //second note
+      freq1 = m_to_f(note1);
+      freq2 = m_to_f(note2);
+      freq3 = m_to_f(note1);
+      freq4 = m_to_f(note2);
+      //Serial.print("notes "); Serial.print(note1);
+      //Serial.print(" "); Serial.println(note2);
 
-    note1++;
-    note2++;
-    note3++;
-    note4++;
+      note1++;
+      note2++;
+      note3++;
+      note4++;
     */
   }
 }
