@@ -53,10 +53,15 @@ void set_notes(char midi_note1, char midi_note2, char midi_note3, char midi_note
   Serial.print(" "); Serial.print(int(midi_note3)); 
   Serial.print(" "); Serial.println(int(midi_note4)); 
   
-  freq1 = m_to_f(midi_note1);
-  freq2 = m_to_f(midi_note2);
-  freq3 = m_to_f(midi_note3);
-  freq4 = m_to_f(midi_note4); 
+  freq1 = m_to_f_int(midi_note1);
+  freq2 = m_to_f_int(midi_note2);
+  freq3 = m_to_f_int(midi_note3);
+  freq4 = m_to_f_int(midi_note4); 
+
+  Serial.print("freq "); Serial.print(freq1); 
+  Serial.print(" "); Serial.print(freq2); 
+  Serial.print(" "); Serial.print(freq3); 
+  Serial.print(" "); Serial.println(int(freq4)); 
 }
 
 //---------------------------------------------------------------
@@ -110,11 +115,16 @@ long int t = 0;
 
 long int phase = 0;
 int sound_value = 0;
-const int diff_step = 127 * POLYPHONY; //step of diffusion subtraction - 1..127, kind of threshold for sound
+const int diff_step = //127 * POLYPHONY; //step of diffusion subtraction - 1..127, kind of threshold for sound
+                    127;    //just 127 - to make polyphony sounding more "phatty"
+
 
 //We should make this function as fast as possible, and trying to omit "/" and "%" operations
 void timer_interrupt() {
   t++;
+
+  //decrease accumulated diffusion, because in opposite case zero values will give constant high-tone
+  sound_value = sound_value*4/5;    //TODO parameter
 
   //phase - is changed audio_sample_rate times per second
   //wave_n - length of wavetable
@@ -134,6 +144,7 @@ void timer_interrupt() {
   phase++;
 
   //output audio sample to buzzer
+  //NOTE: silence generates 1/0/1/0 sequence in this approach:
   if (sound_value >= 0) {
     PORTE = B00010000; //buzzer ON
     sound_value -= diff_step;       //diffusion propagation
@@ -142,7 +153,12 @@ void timer_interrupt() {
     PORTE = B00000000; //buzzer OFF;
     sound_value += diff_step;       //diffusion propagation
   }
-  //if (phase >= period_samples) phase = 0;
+  //On removing 1/0/1/0 silence sequence problem:
+  //Idea to use threshold for hysteresis: 
+  //>thresh -> HIGH, 
+  //-thresh..thresh - do nothing
+  //<-thresh -> LOW. 
+  
 }
 
 

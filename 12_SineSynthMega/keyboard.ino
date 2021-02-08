@@ -1,22 +1,26 @@
 //Toy Piano Keyboard Reader
 
 //Connection:
-//- 12 pins from Toy Piano to Arduino Mega: 22,24,26,...,44
-//pins 0,1,2,3 - choosing keys block,
-//pins 4,5,6,7,8,9,10,11 - keys 0..7, 8..15, 16..23, 24..31
-//(keys numbers is reverted)
-/*NOTE: there is some issue with switching control pins 0,1,2,3:
-  if for example key 0 and 8 is pressed:
-  - then if pin 0 and pin 1 will be in opposite state - the result is flowing + to -, short circuit.
-  To resolve the problem, we disable current from control pins 0,1,2,3 when not used
-*/
+//Toy Piano sensor was prepared: I made small holes and solder wires to each key.
+//So we have 32 out pins and pin for GND
 
-const byte keyGndN = 4;
-const byte keyReadN = 8;
-byte keyGndPin[keyGndN] = {22, 24, 26, 28};
-byte keyReadPin[keyReadN] = {30, 32, 34, 36, 38, 40, 42, 44};
+//Device: Arduino Mega
+//Connection:
+//- 32 keys and Gnd from Toy Piano to Arduino Mega:
+//22,24,26,...,36,
+//23,25,27,...,37,
+//38,40,42,...,52,
+//39,41,43,...,53
+//and Gnd
+//(key numbers are reverted)
 
-const byte keys = 32;  //number of keys
+const int keys = 32;
+int keyReadPin[keys] = {22, 24, 26, 28, 30, 32, 34, 36,
+                        23, 25, 27, 29, 31, 33, 35, 37,
+                        38, 40, 42, 44, 46, 48, 50, 52,
+                        39, 41, 43, 45, 47, 49, 51, 53
+                       };
+
 const byte note_keys_count = keys - 8; //notes used for notes
 const byte string_keys_indices[POLYPHONY] = {26, 28, 30, 31}; //"string" keys
 
@@ -25,22 +29,18 @@ byte midi_note_0 = 65; //F
 
 //---------------------------------------------------------------
 void keyboard_setup() {
-  for (int i = 0; i < keyGndN; i++) {
-    Serial.print(keyGndPin[i]); Serial.print(" ");
+  //Set
+  for (int i = 0; i < keys; i++) {
+    pinMode(keyReadPin[i], INPUT_PULLUP);
   }
-  for (int i = 0; i < keyReadN; i++) {
+  //Print
+  Serial.print("Keys pins: ");
+  for (int i = 0; i < keys; i++) {
     Serial.print(keyReadPin[i]); Serial.print(" ");
   }
   Serial.println();
   Serial.println("Now press the keys!");
 
-  //Set
-  for (int i = 0; i < keyGndN; i++) {
-    pinMode(keyGndPin[i], INPUT_PULLUP);     //disable current from control pin, see NOTE above
-  }
-  for (int i = 0; i < keyReadN; i++) {
-    pinMode(keyReadPin[i], INPUT_PULLUP);
-  }
 }
 
 //---------------------------------------------------------------
@@ -81,8 +81,8 @@ void key_pressed(byte key) {
 //---------------------------------------------------------------
 void keyboard_loop() {
   //clear notes and string keys
-  note_keys_n = 0;  
-  for (byte i = 0; i < POLYPHONY; i++) { 
+  note_keys_n = 0;
+  for (byte i = 0; i < POLYPHONY; i++) {
     note_keys[i] = -1;
     string_keys[i] = 0;
   }
@@ -90,40 +90,25 @@ void keyboard_loop() {
   bool was_changed = false;  //was keyboard state changed
 
   //Scan keys
-  for (char k = keyGndN - 1; k >= 0; k--) { //because "for" decreases, we need to use char for check ">=0" properly
-    //set control pin
-    for (byte j = 0; j < keyGndN; j++) {
-      if (j == k) {
-        pinMode(keyGndPin[j], OUTPUT);  //put current
-        digitalWrite(keyGndPin[j], LOW);
-      }
-      else {
-        pinMode(keyGndPin[j], INPUT_PULLUP);  //disable current, see NOTE above
-      }
+  for (int k = keys; k >= 0; k--) {
+    byte key = keys-1-k;
+    byte v = (digitalRead(keyReadPin[k]) == LOW) ? 1 : 0;
+    byte &state = key_state[key];
+    //key was pressed or released
+    if (state != v) {
+      was_changed = true;
+      Serial.print("key "); Serial.print(key); Serial.print(": ");
+      if (v) Serial.println("on");
+      else Serial.println("off");
     }
+    state = v;
 
-    delayMicroseconds(10); //pause to pin affected circuit
-
-    //read keys pins //TODO can use ports for reading faster, see 05_ArduinoMegaPortTest
-    for (char i = keyReadN - 1; i >= 0; i--) { //because "for" decreases, we need to use char for check ">=0" properly
-      byte key = keys - 1 - (i + keyReadN * k); //because of reverted
-      byte v = (digitalRead(keyReadPin[i]) == LOW) ? 1 : 0;
-      byte &state = key_state[key];
-      //key was pressed or released
-      if (state != v) {
-        was_changed = true;
-        Serial.print("key "); Serial.print(key); Serial.print(": ");
-        if (v) Serial.println("on");
-        else Serial.println("off");
-      }
-      state = v;
-
-      //process pressing events
-      if (v) {
-        key_pressed(key);
-      }
+    //process pressing events
+    if (v) {
+      key_pressed(key);
     }
   }
+
 
   //play
   if (was_changed) {
@@ -132,7 +117,7 @@ void keyboard_loop() {
               string_keys[2] ? note_keys[2] : -1,
               string_keys[3] ? note_keys[3] : -1);
   }
-  //test print
+  //test print of keyboard state - use for check all is connected
   //for (int i=0; i<keys; i++) {
   //  Serial.print(key_state[i]);
   //}

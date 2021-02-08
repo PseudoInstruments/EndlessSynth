@@ -94,8 +94,8 @@ long int t = 0;
 
 long int phase = 0;
 int sound_value = 0;
-const int diff_step = 127 * POLYPHONY; //step of diffusion subtraction - 1..127, kind of threshold for sound
-
+const int diff_step = //127 * POLYPHONY; //step of diffusion subtraction - 1..127, kind of threshold for sound
+                    127;    //just 127 - to make polyphony sounding more "phatty"
 
 
 //We should make this function as fast as possible, and trying to omit "/" and "%" operations
@@ -120,6 +120,7 @@ void timer_interrupt() {
   phase++;
 
   //output audio sample to buzzer
+  //NOTE: silence generates 1/0/1/0 sequence in this approach:
   if (sound_value >= 0) {
     PORTE = B00010000; //buzzer ON
     sound_value -= diff_step;       //diffusion propagation
@@ -128,7 +129,12 @@ void timer_interrupt() {
     PORTE = B00000000; //buzzer OFF;
     sound_value += diff_step;       //diffusion propagation
   }
-  //if (phase >= period_samples) phase = 0;
+  //On removing 1/0/1/0 silence sequence problem:
+  //Idea to use threshold for hysteresis: 
+  //>thresh -> HIGH, 
+  //-thresh..thresh - do nothing
+  //<-thresh -> LOW. 
+
 }
 
 
