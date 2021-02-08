@@ -15,17 +15,17 @@
 //(key numbers are reverted)
 
 const int keys = 32;
-int keyReadPin[keys] = {22, 24, 26, 28, 30, 32, 34, 36,
-                        23, 25, 27, 29, 31, 33, 35, 37,
-                        38, 40, 42, 44, 46, 48, 50, 52,
-                        39, 41, 43, 45, 47, 49, 51, 53
+int keyReadPin[keys] = {22, 23, 24, 25, 26, 27, 28, 29,
+                        30, 31, 32, 33, 34, 35, 36, 37,
+                        38, 39, 40, 41, 42, 43, 44, 45,
+                        46, 47, 48, 49, 50, 51, 52, 53
                        };
 
 const byte note_keys_count = keys - 8; //notes used for notes
-const byte string_keys_indices[POLYPHONY] = {26, 28, 30, 31}; //"string" keys
+const byte string_keys_indices[POLYPHONY] = {31, 30, 28, 26}; //"string" keys, note reversed order
 
-//Starting midi note
-byte midi_note_0 = 65; //F
+//Starting midi note - chenged with octave switch
+byte base_note = 65; //F
 
 //---------------------------------------------------------------
 void keyboard_setup() {
@@ -79,6 +79,8 @@ void key_pressed(byte key) {
 }
 
 //---------------------------------------------------------------
+//unsigned long int keyb_time_print_ = 0; //time for printing keyboard state
+
 void keyboard_loop() {
   //clear notes and string keys
   note_keys_n = 0;
@@ -90,9 +92,8 @@ void keyboard_loop() {
   bool was_changed = false;  //was keyboard state changed
 
   //Scan keys
-  for (int k = keys; k >= 0; k--) {
-    byte key = keys-1-k;
-    byte v = (digitalRead(keyReadPin[k]) == LOW) ? 1 : 0;
+  for (int key = keys - 1; key >= 0; key--) { //scan from right to left because of sorting "strings"
+    byte v = (digitalRead(keyReadPin[keys - 1 - key]) == LOW) ? 1 : 0;
     byte &state = key_state[key];
     //key was pressed or released
     if (state != v) {
@@ -112,10 +113,12 @@ void keyboard_loop() {
 
   //play
   if (was_changed) {
+    //set keys with using base_note, which is depends on choosen octave
     set_notes(string_keys[0] ? note_keys[0] : -1,
               string_keys[1] ? note_keys[1] : -1,
               string_keys[2] ? note_keys[2] : -1,
-              string_keys[3] ? note_keys[3] : -1);
+              string_keys[3] ? note_keys[3] : -1,
+              base_note);
   }
   //test print of keyboard state - use for check all is connected
   //for (int i=0; i<keys; i++) {

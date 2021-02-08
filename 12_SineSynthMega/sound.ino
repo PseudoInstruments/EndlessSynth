@@ -46,19 +46,19 @@ void set_freqs(int freq1_, int freq2_, int freq3_, int freq4_) {
 
 //---------------------------------------------------------------
 //Set playing notes
-//-1 means note off
-void set_notes(char midi_note1, char midi_note2, char midi_note3, char midi_note4) {
+//-1 means note off, that os freqi=0
+void set_notes(char midi_note1, char midi_note2, char midi_note3, char midi_note4, char base_note) {
   Serial.print("notes "); Serial.print(int(midi_note1)); 
   Serial.print(" "); Serial.print(int(midi_note2)); 
   Serial.print(" "); Serial.print(int(midi_note3)); 
-  Serial.print(" "); Serial.println(int(midi_note4)); 
+  Serial.print(" "); Serial.print(int(midi_note4)); 
   
-  freq1 = m_to_f_int(midi_note1);
-  freq2 = m_to_f_int(midi_note2);
-  freq3 = m_to_f_int(midi_note3);
-  freq4 = m_to_f_int(midi_note4); 
+  freq1 = (midi_note1!=-1) ? m_to_f_int(midi_note1 + base_note) : 0;
+  freq2 = (midi_note2!=-1) ? m_to_f_int(midi_note2 + base_note) : 0;
+  freq3 = (midi_note3!=-1) ? m_to_f_int(midi_note3 + base_note) : 0;
+  freq4 = (midi_note4!=-1) ? m_to_f_int(midi_note4 + base_note) : 0;
 
-  Serial.print("freq "); Serial.print(freq1); 
+  Serial.print("   freq "); Serial.print(freq1); 
   Serial.print(" "); Serial.print(freq2); 
   Serial.print(" "); Serial.print(freq3); 
   Serial.print(" "); Serial.println(int(freq4)); 
