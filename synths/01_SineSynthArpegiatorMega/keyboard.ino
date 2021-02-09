@@ -21,7 +21,7 @@ int keyReadPin[keys] = {22, 23, 24, 25, 26, 27, 28, 29,
                         46, 47, 48, 49, 50, 51, 52, 53
                        };
 
-const byte note_keys_count = keys - 8; //notes used for notes
+const byte note_keys_count = keys - 7; //notes used for notes
 const byte string_keys_indices[POLYPHONY] = {31, 30, 28}; //, 26}; //"string" keys, note reversed order
 
 //keys for octave switch
@@ -49,7 +49,6 @@ void keyboard_setup() {
     Serial.print(keyReadPin[i]); Serial.print(" ");
   }
   Serial.println();
-  Serial.println("Now press the keys!");
 
 }
 

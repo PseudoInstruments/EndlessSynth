@@ -1,7 +1,8 @@
-//EndlessSynth, playing polyphonical sine wave.
-//It supports up to 4 notes. Currently simple note on/off, without attack-release.
-//How to play: press up to 4 keys ("note") at the left and 1-4 right most white keys ("string").
+//EndlessSynth SineSynthArpegiatorMega, playing polyphonical sine wave.
+//3 polyphony, sine wave synthesis. Without attack-release.
+//How to play:  hold up to three notes by left hand and press 3 hit white \"string\" keys.
 //Combination of note key and string key plays a note
+//To switch octave use thee right black jeys
 
 //See "sound" for connecting sound details, 
 //"keyboard" for connecting keyboard details.
@@ -31,12 +32,19 @@ void prln(int i) {
 //---------------------------------------------------------------
 void setup() {
   Serial.begin(500000);
-  Serial.println("EndlessSynth Sine Wave Synth, v. 1.1 for Arduino Mega");
-  Serial.println("To hear a sound, press \"note\" keys at the left and 4 rightmost white \"string\" keys on piano toy keyboard");
-
+  Serial.println("----------------------------------------------------------------");  
+  Serial.println("EndlessSynth SineSynthArpegiatorMega, v. 1.1 for Arduino Mega");
+  Serial.println("3 polyphony, sine wave synthesis. Without attack-release.");
+  Serial.println("How to play:  hold up to three notes by left hand and press 3 hit white \"string\" keys.");
+  Serial.println("Combination of note key and string key plays a note");
+  Serial.println("To switch octave use thee right black keys");
+  Serial.println("----------------------------------------------------------------");  
+  
   keyboard_setup();
   sound_setup();
-  
+
+  Serial.println();
+  Serial.println("Synth is ready to play.");
 }
 
 //----------------------------------------------------------
