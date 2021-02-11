@@ -1,5 +1,6 @@
-//EndlessSynth, polyphony sine wave test using diffusion with thresholding method
+//EndlessSynth, polyphony sine wave test using diffusion with thresholding method and decaying
 //- it's required to supress "high tone sound" occuring for silence in case of simple diffusion.
+//Sine wave sounds cleaner than "pure" diffusion
 
 //It supports 2,3,4 notes - set POLYPHONY define below.
 //After starting it plays increasing chord.
@@ -34,7 +35,7 @@ const long shift_audio = 13;
 //---------------------------------------------------------------
 void setup() {
   Serial.begin(500000);
-  Serial.println("EndlessSynth Sine Wave Generator with Timer, v. 1.1 for Arduino Mega");
+  Serial.println("EndlessSynth Polyphony sine wave, diffusion with thresholding and decaying, v. 1.1 for Arduino Mega");
 
   Serial.print("Buzzer pin: "); Serial.println(pin_buz);
 
@@ -90,22 +91,34 @@ long int freq4 = 770;
 
 
 //----------------------------------------------------------
+//1-bit sound diffusion
+
+long int sound_value = 0;
+const int diff_step = //127 * POLYPHONY; //step of diffusion subtraction - 1..127, kind of threshold for sound
+  70; //127;    //just 127 - to make polyphony sounding more "phatty"
+
+const int thresh_sound = 10; //;  must be diff_step / 2, but for diff_keep <= 50 can be lower
+
+//const int diff_keep = 30; //50;  //decaying diffusion in percents 0..100, 0 - no diffusion, 1 - keep all diffusion
+//not used here, just >> instead. Can use table for fastening
+
+//----------------------------------------------------------
 //process timer interrupt event
 //sound generator
 long int t = 0;
 
-long int phase = 0;
-int sound_value = 0;
-const int diff_step = //127 * POLYPHONY; //step of diffusion subtraction - 1..127, kind of threshold for sound
-                    127;    //just 127 - to make polyphony sounding more "phatty"
 
-const int thresh_sound = diff_step / 2;
+
+long int phase = 0;
 
 
 //We should make this function as fast as possible, and trying to omit "/" and "%" operations
 void timer_interrupt() {
   t++;
 
+
+  sound_value = sound_value >> 2;  //decaying diffusion   //sound_value * diff_keep / 100;  
+    
   //phase - is changed audio_sample_rate times per second
   //wave_n - length of wavetable
   //freq - desired frequency

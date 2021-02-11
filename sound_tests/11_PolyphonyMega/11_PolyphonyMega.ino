@@ -32,7 +32,7 @@ const long shift_audio = 13;
 //---------------------------------------------------------------
 void setup() {
   Serial.begin(500000);
-  Serial.println("EndlessSynth Sine Wave Generator with Timer, v. 1.1 for Arduino Mega");
+  Serial.println("EndlessSynth Polyphony sine wave, clean diffusion, v. 1.1 for Arduino Mega");
 
   Serial.print("Buzzer pin: "); Serial.println(pin_buz);
 
