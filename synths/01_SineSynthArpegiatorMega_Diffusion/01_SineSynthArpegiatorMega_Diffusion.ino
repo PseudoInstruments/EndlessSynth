@@ -1,4 +1,4 @@
-//EndlessSynth SineSynthArpegiatorMega, playing polyphonical sine wave.
+//EndlessSynth SineSynthArpegiatorMega, playing polyphonical sine wave using thresholded diffusion without decaying.
 //3 polyphony, sine wave synthesis. Without attack-release.
 //How to play:  hold up to three notes by left hand and press 3 hit white \"string\" keys.
 //Combination of note key and string key plays a note
