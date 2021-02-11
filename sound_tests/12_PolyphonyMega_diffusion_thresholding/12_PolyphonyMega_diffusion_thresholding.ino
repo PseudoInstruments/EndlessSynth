@@ -1,6 +1,7 @@
-//EndlessSynth, polyphony sine wave test using diffusion with thresholding method and decaying
+//EndlessSynth, polyphony sine wave test using threshold+decay diffusion
 //- it's required to supress "high tone sound" occuring for silence in case of simple diffusion.
-//Sine wave sounds cleaner than "pure" diffusion
+//It sounds cleaner than "pure" diffusion from previous examples and appropriate for "silence" 
+//playing without beeping
 
 //It supports 2,3,4 notes - set POLYPHONY define below.
 //After starting it plays increasing chord.

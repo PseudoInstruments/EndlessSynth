@@ -1,5 +1,5 @@
 /* Program gets sound from microphone (A0)
-  and immediately outputs it to buzzer (pin 2) using diffusion thresholding algorithm,
+  and immediately outputs it to buzzer (pin 2) using threshold+decay diffusion algorithm,
   see "sound_tests/12_PolyphonyMega_diffusion_thresholding" for the details on this
   Can be used for electo-guitar connection too.
 
@@ -39,9 +39,9 @@ const byte pin_buz = 2; //Buzzer pin
 //--------------------------------------------------------------
 void setup() {
   Serial.begin(500000);
-  Serial.println("EndlessSynth Sound passtrough test (diffusion with thresholding), v. 1.1 for Arduino Uno or Mega");
+  Serial.println("EndlessSynth Sound passtrough test (threshold+decay diffusion), v. 1.1 for Arduino Uno or Mega");
   Serial.println("Program gets sound from microphone (A0) and immediately outputs");
-  Serial.println("it to buzzer (pin 2) using diffusion algorithm.");
+  Serial.println("it to buzzer (pin 2) using threshold+decay diffusion algorithm.");
   Serial.println("Note: please use potentiometer 10KOhm to move silence mic level to 2.5V");
 
   //will be computed
@@ -52,6 +52,8 @@ void setup() {
 }
 
 //--------------------------------------------------------------
+//1-bit sound diffusion
+
 long int sound_value = 0;
 const int diff_step = //127 * POLYPHONY; //step of diffusion subtraction - 1..127, kind of threshold for sound
   70; //127;    //just 127 - to make polyphony sounding more "phatty"
