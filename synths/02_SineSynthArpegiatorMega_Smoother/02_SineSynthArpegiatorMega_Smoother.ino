@@ -1,5 +1,6 @@
 //EndlessSynth SineSynthArpegiatorMega, playing polyphonical sine wave using threshold+decay diffusion.
 //3 polyphony, sine wave synthesis. Without attack-release.
+//"Smoother" sound settings.
 //How to play:  hold up to three notes by left hand and press 3 hit white \"string\" keys.
 //Combination of note key and string key plays a note
 //To switch octave use thee right black jeys
@@ -34,7 +35,7 @@ void setup() {
   Serial.begin(500000);
   Serial.println("----------------------------------------------------------------");  
   Serial.println("EndlessSynth SineSynthArpegiatorMega, v. 1.1 for Arduino Mega");
-  Serial.println("3 polyphony, sine wave synthesis. Without attack-release.");
+  Serial.println("3 polyphony, sine wave synthesis. Without attack-release. \"Smoother\" sound settings.");
   Serial.println("How to play:  hold up to three notes by left hand and press 3 hit white \"string\" keys.");
   Serial.println("Combination of note key and string key plays a note");
   Serial.println("To switch octave use thee right black keys");
