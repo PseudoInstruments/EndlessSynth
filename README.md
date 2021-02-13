@@ -4,6 +4,7 @@
 ## Contents
 
 * **keyboard_tests** - tests of connecting toy keyboards.
-* **sound_tests** - tets of synthesizing sound in Arduino
+* **mic_tests** - tests of using microphone with Arduino.
+* **synthesis_tests** - tests of synthesizing sound in Arduino.
 * **synths** - ready-to-use synths, which are bases on keyboard and sound tests.
 
