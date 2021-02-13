@@ -121,6 +121,8 @@ int sound_value = 0;
 const int diff_step = //127 * POLYPHONY; //step of diffusion subtraction - 1..127, kind of threshold for sound
   127;    //just 127 - to make polyphony sounding more "phatty"
 
+//threshold for switching buzzer, must be so that not to allow "silence beep"
+//in the next sketch more detailed formula using decaying of diffusion
 const int thresh_sound = diff_step / 2;
 
 

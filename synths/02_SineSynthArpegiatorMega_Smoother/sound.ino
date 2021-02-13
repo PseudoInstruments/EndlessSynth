@@ -119,11 +119,18 @@ long int sound_value = 0;
 const int diff_step = //127 * POLYPHONY; //step of diffusion subtraction - 1..127, kind of threshold for sound
   90; //127;    //just 127 - to make polyphony sounding more "phatty"
 
+
+const int diff_keep = 32; //decaying diffusion in percents 0..128, 0 - no diffusion, 128 - keep all diffusion
+const int diff_keep_denom = 128;
+
+//threshold for switching buzzer, must be so that not to allow "silence beep"
 const int thresh_sound = 20; 
   //diff_step / 2; //but for diff_keep <= 50 can be lower
 
-//const int diff_keep = 30; //50;  //decaying diffusion in percents 0..100, 0 - no diffusion, 1 - keep all diffusion
-//not used here, just >> instead. Can use table for fastening
+//Formula, but not tested for this sound
+//const int thresh_sound = ((long int) diff_step) * diff_keep / (2*diff_keep_denom) + 1; 
+
+
 
 
 

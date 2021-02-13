@@ -1,15 +1,46 @@
 //EndlessSynth SineSynthArpegiatorMega, playing polyphonical sine wave using threshold+decay diffusion.
-//3 polyphony, sine wave synthesis. Without attack-release.
-//"Smoother" sound settings.
-//How to play:  hold up to three notes by left hand and press 3 hit white \"string\" keys.
-//Combination of note key and string key plays a note
-//To switch octave use thee right black jeys
+//--------------------------------------------
+//Features:  
+//--------------------------------------------
+//- 3 polyphony
+//- sine wave synthesis
+//- without attack-release
+//- "smoother" sound settings in 1-bit algorithm.
 
-//See "sound" for connecting sound details, 
-//"keyboard" for connecting keyboard details.
+//--------------------------------------------
+//How to play:  
+//--------------------------------------------
+//Notes: 
+/   hold 1,2 or 3 notes by left hand and hit any of white rightest \"string\" keys.
+//   Combination of note key and string key plays a note, just liko on the guitar.
+//Octave switch: 
+//   use thee right black keys
 
-//Monitor port:
-//- baud must be set to 500000!
+//--------------------------------------------
+//Board & Monitor port speed: 
+//--------------------------------------------
+Arduino Mega (Note: Not Uno!)
+Baud must be set to 500000!
+//--------------------------------------------
+//Aditional libraries:
+//- install "TimerThree" using Library Manager
+//--------------------------------------------
+//Conection:
+//--------------------------------------------
+//Buzzer of sound output: pin 2
+const byte pin_buz = 2;
+
+//Keyboard:
+//Toy Piano sensor was soldered prepared, so we have 32 out pins and pin for GND.
+//- 32 keys and Gnd from Toy Piano to Arduino Mega:
+//22,24,26,...,36,
+//23,25,27,...,37,
+//38,40,42,...,52,
+//39,41,43,...,53
+//and Gnd
+//(key numbers are reverted)
+//--------------------------------------------
+
 //---------------------------------------------------------------
 //number of notes to play simultaneously, 1..4
 #define POLYPHONY (3)
@@ -34,11 +65,11 @@ void prln(int i) {
 void setup() {
   Serial.begin(500000);
   Serial.println("----------------------------------------------------------------");  
-  Serial.println("EndlessSynth SineSynthArpegiatorMega, v. 1.1 for Arduino Mega");
+  Serial.println("EndlessSynth SineSynthArpegiatorMega_Smoother, v. 1.1 for Arduino Mega");
   Serial.println("3 polyphony, sine wave synthesis. Without attack-release. \"Smoother\" sound settings.");
   Serial.println("How to play:  hold up to three notes by left hand and press 3 hit white \"string\" keys.");
   Serial.println("Combination of note key and string key plays a note");
-  Serial.println("To switch octave use thee right black keys");
+  Serial.println("To switch octave use three right black keys");
   Serial.println("----------------------------------------------------------------");  
   
   keyboard_setup();
