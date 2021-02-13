@@ -128,7 +128,7 @@ long int sound_value = 0; //diffusion value
 //  alg_step10bit 0..1023 - kind of "level of sound generation", the higher - the more dithering
 //  alg_diff10bit 0..1023 - memory of dithering, the higher - the more harshness
 void sound_set_1bitparams(int alg_step10bit, int alg_diff10bit) {
-  diff_step = ((long int)alg_step10bit) * (max_diff_step-min_diff_step) / 1024 + min_diff_step;
+  diff_step = ((long int)alg_step10bit) * (max_diff_step - min_diff_step) / 1024 + min_diff_step;
   diff_keep = ((long int)alg_diff10bit) * diff_keep_denom / 1024;
 
   //Formula for threshold
@@ -140,55 +140,41 @@ void sound_set_1bitparams(int alg_step10bit, int alg_diff10bit) {
   //Serial.print(", diff_keep float "); Serial.print(float(diff_keep)/diff_keep_denom);
   //Serial.print(", thresh_sound "); Serial.print(thresh_sound);
   //Serial.println();
-  
+
 }
 
 //----------------------------------------------------------
 //process timer interrupt event
 //sound generator
-long int t = 0;
-
 long int phase = 0;
-
-
 
 //We should make this function as fast as possible, and trying to omit "/" and "%" operations
 void timer_interrupt() {
-  t++;
-
   //decay accumulated diffusion, because in opposite case zero values will give constant high-tone
-  sound_value = (sound_value * diff_keep) >> 8;    // >> 8 means / diff_keep_denom //sound_value >> 2; 
+  sound_value = (sound_value * diff_keep) >> 8;    // >> 8 means / diff_keep_denom //sound_value >> 2;
 
-  //phase - is changed audio_sample_rate times per second
-  //wave_n - length of wavetable
-  //freq - desired frequency
-  //ph - must go freq times 0..wave_n-1
-  if (freq1) sound_value += wave_table[(((long long)phase * freq1 * wave_n) >> shift_audio) % wave_n];
-  if (freq2) sound_value += wave_table[(((long long)phase * freq2 * wave_n) >> shift_audio) % wave_n];
-  if (freq3) sound_value += wave_table[(((long long)phase * freq3 * wave_n) >> shift_audio) % wave_n];
-  //#if POLYPHONY>=4
-  //  if (freq4) sound_value += wave_table[(((long long)phase * freq4 * wave_n) >> shift_audio) % wave_n];
-  //#endif
+  //----------------------------------
+  if (mic_button) {
+    //Microphone
+    sound_value += (analogRead(A0) - 512) >> 1; //0..1023 -> -512..511 -> -256..255   - we do so because mic is quiet...
+  }
+  //----------------------------------
+  else {
+    //Sine wave
+    //phase - is changed audio_sample_rate times per second
+    //wave_n - length of wavetable
+    //freq - desired frequency
+    //ph - must go freq times 0..wave_n-1
+    if (freq1) sound_value += wave_table[(((long long)phase * freq1 * wave_n) >> shift_audio) % wave_n];
+    if (freq2) sound_value += wave_table[(((long long)phase * freq2 * wave_n) >> shift_audio) % wave_n];
+    if (freq3) sound_value += wave_table[(((long long)phase * freq3 * wave_n) >> shift_audio) % wave_n];
+    //  if (freq4) sound_value += wave_table[(((long long)phase * freq4 * wave_n) >> shift_audio) % wave_n];
+  }
+  //----------------------------------
 
   phase++;
 
-  //output audio sample to buzzer
-  //NOTE: silence generates 1/0/1/0 sequence in this approach:
-  /*if (sound_value >= 0) {
-    PORTE = B00010000; //buzzer ON
-    sound_value -= diff_step;       //diffusion propagation
-    }
-    else {
-    PORTE = B00000000; //buzzer OFF;
-    sound_value += diff_step;       //diffusion propagation
-    }*/
-
-  //On removing 1/0/1/0 silence sequence problem:
-  //Idea to use threshold for hysteresis:
-  //>thresh -> HIGH,
-  //-thresh..thresh - do nothing
-  //<-thresh -> LOW.
-
+  //output audio sample to buzzer using dithering algorithm threshold+decay
   if (sound_value >= thresh_sound) {
     PORTE = B00010000; //buzzer ON
     sound_value -= diff_step;       //diffusion propagation

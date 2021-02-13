@@ -3,6 +3,8 @@
 //Also to A0 connected toy microphone coupled with potentiometer to output to A0 512 in silence.
 //Also connected button from microphone. When button is pressed is sends signal instead synthesizing.
 //So synthesizer works as boombox 1-bit engine too.
+//Hint: setting both 1-bit sliders to zero and just presing button generates glitch sound!
+//But to normal mic sound - increase both 1-bit sliders.
 
 //--------------------------------------------
 //Features:  
@@ -13,12 +15,8 @@
 //- two sliders connected to A4 and A5 controls 1-bit algorithm.
 //    slider 1: "step" - kind of "level of sound generation", the higher - the more dithering
 //    slider 2: "keep" - memory of dithering, the higher - the more harshness
-//- microphone with button. Microphone is connected to A0 and button to pins 8 and 9.
-//    when button is pressed, the sound from mic sends to 1-bit audio output instead keys.
-//    microphone is connected using Arduino mic module with added 10kOhm potentiometer 
-//    to achieve values from A0 around 512 at silence for sound reading from ADC works correct.
-
 //- the third slider controls sound volume.
+//- microphone with button. 
 
 //--------------------------------------------
 //How to play:  
@@ -65,12 +63,18 @@ const byte pin_buz = 2;
 //  pin 2 - sound output
 
 
-//Toy microphone with button. 
-//  Toy microphone is connected to Arduino's standard mic module, where original mic removed 
-//  and soldered wires to connect to toy mic. 
-//  Mic module is connected to A0, Gnd and 5V, and button is connected to pins 8 and 9.
-//  To Mic module also added potentiometer (connected to A0, Gnd and 5V too) on 10 kOhm
-//  pulling up the mic module output, so the module with potentiometer outputs value 512 in silenc.
+//Microphone with button. 
+//  1) Take microphone unit for Arduino, connect it to Gnd, 5V, and output signal connect to A0.
+//  2) Remove microphone from the module and replace it with some connection to toy microphone.
+//  3) Pull-up output average from 0V to 2.5V. For that use potentiometer 10 kOhm.
+//     Normally microphone unit gives -2.5V...2.5V output,
+//     and to digitize signal carefully we need to pull up it to 0..5V range for A0.
+//    As a solution, use compact 10kOm potentiometer,
+//    connect left and right pins to Gnd, 5V, and output to A0 too.
+//    Next, adjust potentiometer to obtain 2.5V when Mic is in a silence (or, equally, 512 on A0).
+//    Now microphone outputs 0..5V to A0!
+//  4) Add to microphone button - insert it inside or keep outside microphone. 
+//    Connect button to pins 8 and 9.
 
 //--------------------------------------------
 
@@ -98,13 +102,16 @@ void prln(int i) {
 void setup() {
   Serial.begin(500000);
   Serial.println("----------------------------------------------------------------");  
-  Serial.println("EndlessSynth SineSynthArpegiatorMega_Sliders, v. 1.1 for Arduino Mega");
+  Serial.println("EndlessSynth SineSynthArpegiatorMega_Sliders_Boombox, v. 1.1 for Arduino Mega");
   Serial.println("3 polyphony, sine wave synthesis. Without attack-release. Sliders controls 1-bit sound settings.");
+  Serial.println("Microphone with button used as boombox");
   Serial.println("How to play:  hold up to three notes by left hand and press 3 hit white \"string\" keys.");
   Serial.println("Combination of note key and string key plays a note");
   Serial.println("To switch octave use three right black keys");
+  Serial.println("Press mic button to pass mic sound to output. Hint: putting both 1-bit sliders above zero generates glitch only from button.");
   Serial.println("----------------------------------------------------------------");  
   
+  mic_setup();
   keyboard_setup();
   sound_setup();
   sliders_setup();
@@ -116,6 +123,7 @@ void setup() {
 //----------------------------------------------------------
 void loop() {
   sliders_loop();
+  mic_loop();
   keyboard_loop();
   sound_loop();
 
