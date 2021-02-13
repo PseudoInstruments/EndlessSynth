@@ -1,6 +1,6 @@
 // **04_SineSynthArpegiatorMega_Sliders_Boombox** - - synthesizer for Arduino Mega and toy keyboard 
 //with two sliders controlling 1-bit dithering algorithm. Output goes through buzzer or "Troika" audio amplifier to minijack.
-//Also to A0 connected toy microphone coupled with potentiometer to output to A0 512 in silence.
+//Also to A0 connected toy microphone coupled with trimmer resistor to output to A0 512 in silence.
 //Also connected button from microphone. When button is pressed is sends signal instead synthesizing.
 //So synthesizer works as boombox 1-bit engine too.
 //The second slider is kind of mic sensitivity.
@@ -71,12 +71,12 @@ const byte pin_buz = 2;
 //Microphone with button. 
 //  1) Take microphone unit for Arduino, connect it to Gnd, 5V, and output signal connect to A0.
 //  2) Remove microphone from the module and replace it with some connection to toy microphone.
-//  3) Pull-up output average from 0V to 2.5V. For that use potentiometer 10 kOhm.
+//  3) Pull-up output average from 0V to 2.5V. For that use trimmer resistor 10 kOhm.
 //     Normally microphone unit gives -2.5V...2.5V output,
 //     and to digitize signal carefully we need to pull up it to 0..5V range for A0.
-//    As a solution, use compact 10kOm potentiometer,
+//    As a solution, use compact 10kOm trimmer resistor,
 //    connect left and right pins to Gnd, 5V, and output to A0 too.
-//    Next, adjust potentiometer to obtain 2.5V when Mic is in a silence (or, equally, 512 on A0).
+//    Next, adjust trimmer resistor to obtain 2.5V when Mic is in a silence (or, equally, 512 on A0).
 //    Now microphone outputs 0..5V to A0!
 //  4) Add to microphone button - insert it inside or keep outside microphone. 
 //    Connect button to pins 8 and 9.

@@ -24,7 +24,7 @@ byte mic_button=0;
 void mic_setup() {
   Serial.print("Program gets sound from microphone to A0, mic button pins: ");
   Serial.print(mic_button_pin1); Serial.print(","); Serial.println(mic_button_pin2);
-  Serial.println("Note: please use potentiometer 10KOhm to move silence mic level to 2.5V (or, equally, 512 on A0)");
+  Serial.println("Note: please use trimmer resistor 10KOhm to move silence mic level to 2.5V (or, equally, 512 on A0)");
 
 
   //setup mic button pins

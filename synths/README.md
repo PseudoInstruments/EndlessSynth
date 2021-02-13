@@ -69,6 +69,7 @@ But to normal mic sound - increase both 1-bit sliders.
 
 ### Roadmap
 
+* Mic: constrol mic volume (can digitally using potentioneter).
 * Sampler: sample sound and play by keys
 * Keyboard advance: use pairs of octave for more octaves or for switch samples/synth
 * Sound Engine: control sample rate - enable during mic enabled
