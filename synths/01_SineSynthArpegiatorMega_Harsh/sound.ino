@@ -7,7 +7,7 @@
 //Device: Arduino Mega (Note: Not Uno!)
 //Commutation:
 //- buzzer at pin 2
-const byte pin_buz = 2;
+//const byte pin_buz = 2;
 
 //Monitor port:
 //- baud must be set to 500000!

@@ -11,7 +11,7 @@
 //How to play:  
 //--------------------------------------------
 //Notes: 
-/   hold 1,2 or 3 notes by left hand and hit any of white rightest \"string\" keys.
+//   hold 1,2 or 3 notes by left hand and hit any of white rightest \"string\" keys.
 //   Combination of note key and string key plays a note, just liko on the guitar.
 //Octave switch: 
 //   use thee right black keys
@@ -19,8 +19,8 @@
 //--------------------------------------------
 //Board & Monitor port speed: 
 //--------------------------------------------
-Arduino Mega (Note: Not Uno!)
-Baud must be set to 500000!
+//  Arduino Mega (Note: Not Uno!)
+//  Baud must be set to 500000!
 //--------------------------------------------
 //Aditional libraries:
 //- install "TimerThree" using Library Manager
