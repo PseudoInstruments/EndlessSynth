@@ -97,7 +97,7 @@ void sound_setup() {
 
   //test_notes();
   //Start interrupt for sound generation
-  set_audio_sample_rate_index(0);  //Timer3.initialize(1000000 / audio_sample_rate);
+  set_audio_sample_rate_index(1);  //Timer3.initialize(1000000 / audio_sample_rate);
 
   Serial.print("Polyphony: "); Serial.println(POLYPHONY);
 }

@@ -4,7 +4,7 @@
 //Also connected button from microphone. When button is pressed is sends signal instead synthesizing.
 //So synthesizer works as boombox 1-bit engine too.
 //The second slider is kind of mic sensitivity.
-//Hint: setting both 1-bit sliders to zero and just presing button generates glitch sound!
+//Hint: setting "step" 1-bit slider to zero and "duration" to max can generate glitch sound!
 //But to normal mic sound - increase both 1-bit sliders.
 
 //--------------------------------------------
@@ -13,7 +13,7 @@
 //- sine wave synth, without attack and release
 //- two sliders connected to A4 and A5 controls 1-bit algorithm.
 //-   - slider 1: "step" - kind of "level of sound generation", the higher - the more dithering
-//-   - slider 2: "keep" - memory of dithering, the higher - the more harshness
+//-   - slider 2: "duration" - duration of dithering, the lower - the more harshness
 //- arpeggiator ("note" and "string" keys)
 //- harsh sound
 //- switch octaves
@@ -29,6 +29,8 @@
 //   Combination of note key and string key plays a note, just liko on the guitar.
 //Octave switch: 
 //   use thee right black keys
+//Sample rate switch:
+//   use right F and G (not works while mic mode enabled)
 //Press mic button so hear sound from mic.
 
 //--------------------------------------------
@@ -111,7 +113,9 @@ void setup() {
   Serial.println("How to play:  hold up to three notes by left hand and press 3 hit white \"string\" keys.");
   Serial.println("Combination of note key and string key plays a note");
   Serial.println("To switch octave use three right black keys");
-  Serial.println("Press mic button to pass mic sound to output. The second slider is kind of mic sensitivity.");
+  Serial.println("To switch sample rate press right F ang G (not works while mic mode enabled)");
+
+  Serial.println("Press mic button to pass mic sound to output. The last slider is kind of mic sensitivity.");
   Serial.println("----------------------------------------------------------------");  
   
   mic_setup();

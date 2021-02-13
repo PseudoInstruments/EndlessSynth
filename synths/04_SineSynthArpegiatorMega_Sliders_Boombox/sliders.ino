@@ -21,7 +21,7 @@ void sliders_setup() {
 void sliders_loop() {
   //set diff step and diffusion propagation
   int alg_step10bit = analogRead(A4); //0..1023 - kind of "level of sound generation", the higher - the more dithering
-  int alg_diff10bit = analogRead(A5); //0..1023 - memory of dithering, the higher - the more harshness
+  int alg_diff10bit = 1023-analogRead(A5); //0..1023 - duration of dithering, the lower - the more harshness, simple <0,>0 alg
   
   sound_set_1bitparams(alg_step10bit, alg_diff10bit);
 

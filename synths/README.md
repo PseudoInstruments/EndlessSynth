@@ -38,8 +38,8 @@ with two sliders controlling 1-bit dithering algorithm. Output goes through buzz
 
 * sine wave synth, without attack and release
 * two sliders connected to A4 and A5 controls 1-bit algorithm.
-   - slider 1: "step" - kind of "level of sound generation", the higher - the more dithering
-   - slider 2: "keep" - memory of dithering, the higher - the more harshness
+  - slider 1: "step" - kind of "level of sound generation", the higher - the more dithering
+  - slider 2: "duration" - duration of dithering, the lower - the more harshness
 * arpeggiator ("note" and "string" keys)
 * harsh sound
 * switch octaves
@@ -59,8 +59,8 @@ But to normal mic sound - increase both 1-bit sliders.
 
 * sine wave synth, without attack and release
 * two sliders connected to A4 and A5 controls 1-bit algorithm.
-   - slider 1: "step" - kind of "level of sound generation", the higher - the more dithering
-   - slider 2: "keep" - memory of dithering, the higher - the more harshness
+  - slider 1: "step" - kind of "level of sound generation", the higher - the more dithering
+  - slider 2: "duration" - duration of dithering, the lower - the more harshness
 * arpeggiator ("note" and "string" keys)
 * harsh sound
 * switch octaves
@@ -71,6 +71,6 @@ But to normal mic sound - increase both 1-bit sliders.
 
 * Sampler: sample sound and play by keys
 * Keyboard advance: use pairs of octave for more octaves or for switch samples/synth
-* Sound Engine: control sample rate, attact, decay, release
-* Synthesizing module: triangle, sawtooth, square waves, pulse synthesys.
+* Sound Engine: control sample rate - enable during mic enabled
+* Synthesizing module: triangle, sawtooth, square waves, pulse synthesis, envelope: attack, decay, release.
 
