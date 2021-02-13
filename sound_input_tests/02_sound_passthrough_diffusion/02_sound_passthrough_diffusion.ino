@@ -74,7 +74,8 @@ void loop() {
   for (int i = 0; i < n; i++) {
     //get sample
     sound_value = sound_value * diff_keep / 128;  //decaying diffusion
-    sound_value += (analogRead(A0) >> 2) - 128; //0..1023 -> 0..255 -> -128..127
+    v = analogRead(A0);
+    sound_value += (v >> 2) - 128; //0..1023 -> 0..255 -> -128..127
     //output
     if (sound_value >= thresh_sound) {
       digitalWrite(pin_buz, HIGH); //buzzer ON
@@ -100,7 +101,7 @@ void loop() {
     Serial.print("Computed audio sample rate: "); Serial.println(audio_sample_rate);
   }
 
-  //debug
-  //Serial.println(sound_value);
+  //debug - use for setting up potentiometer so it print 512
+  Serial.println(v);
 
 }

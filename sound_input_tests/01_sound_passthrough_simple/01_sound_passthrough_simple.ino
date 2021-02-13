@@ -77,8 +77,8 @@ void loop() {
     Serial.print("Computed audio sample rate: "); Serial.println(audio_sample_rate);
   }  
 
-  //test print
+  //debug - use for setting up potentiometer so it print 512
   Serial.println(v);
-  delay(30);
+  //delay(30);
   
 }
