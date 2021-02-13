@@ -2,10 +2,11 @@
 //--------------------------------------------
 //Features:  
 //--------------------------------------------
-//- 3 polyphony
-//- sine wave synthesis
-//- without attack-release
-//- "smoother" sound settings in 1-bit algorithm.
+//- sine wave synth, without attack and release
+//- smoother 1-bit dithering settings
+//- arpeggiator ("note" and "string" keys)
+//- harsh sound
+//- switch octaves
 
 //--------------------------------------------
 //How to play:  

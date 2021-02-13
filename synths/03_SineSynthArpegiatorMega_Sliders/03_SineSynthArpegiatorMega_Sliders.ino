@@ -2,14 +2,14 @@
 //--------------------------------------------
 //Features:  
 //--------------------------------------------
-//- 3 polyphony
-//- sine wave synthesis
-//- without attack-release
+//- sine wave synth, without attack and release
 //- two sliders connected to A4 and A5 controls 1-bit algorithm.
 //    slider 1: "step" - kind of "level of sound generation", the higher - the more dithering
 //    slider 2: "keep" - memory of dithering, the higher - the more harshness
+//- arpeggiator ("note" and "string" keys)
+//- harsh sound
+//- switch octaves
 
-//- the third slider controls sound volume.
 
 //--------------------------------------------
 //How to play:  

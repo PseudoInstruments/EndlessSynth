@@ -3,20 +3,23 @@
 //Also to A0 connected toy microphone coupled with potentiometer to output to A0 512 in silence.
 //Also connected button from microphone. When button is pressed is sends signal instead synthesizing.
 //So synthesizer works as boombox 1-bit engine too.
+//The second slider is kind of mic sensitivity.
 //Hint: setting both 1-bit sliders to zero and just presing button generates glitch sound!
 //But to normal mic sound - increase both 1-bit sliders.
 
 //--------------------------------------------
 //Features:  
 //--------------------------------------------
-//- 3 polyphony
-//- sine wave synthesis
-//- without attack-release
+//- sine wave synth, without attack and release
 //- two sliders connected to A4 and A5 controls 1-bit algorithm.
-//    slider 1: "step" - kind of "level of sound generation", the higher - the more dithering
-//    slider 2: "keep" - memory of dithering, the higher - the more harshness
-//- the third slider controls sound volume.
-//- microphone with button. 
+//-   - slider 1: "step" - kind of "level of sound generation", the higher - the more dithering
+//-   - slider 2: "keep" - memory of dithering, the higher - the more harshness
+//- arpeggiator ("note" and "string" keys)
+//- harsh sound
+//- switch octaves
+//- switch sample rate
+//- microphone with button for boombox mode
+
 
 //--------------------------------------------
 //How to play:  
@@ -108,7 +111,7 @@ void setup() {
   Serial.println("How to play:  hold up to three notes by left hand and press 3 hit white \"string\" keys.");
   Serial.println("Combination of note key and string key plays a note");
   Serial.println("To switch octave use three right black keys");
-  Serial.println("Press mic button to pass mic sound to output. Hint: putting both 1-bit sliders above zero generates glitch only from button.");
+  Serial.println("Press mic button to pass mic sound to output. The second slider is kind of mic sensitivity.");
   Serial.println("----------------------------------------------------------------");  
   
   mic_setup();

@@ -7,7 +7,6 @@ int keyReadPin[keys] = {22, 23, 24, 25, 26, 27, 28, 29,
                         46, 47, 48, 49, 50, 51, 52, 53
                        };
 
-const byte note_keys_count = keys - 7; //notes used for notes
 const byte string_keys_indices[POLYPHONY] = {31, 30, 28}; //, 26}; //"string" keys, note reversed order
 
 //keys for octave switch
@@ -15,10 +14,19 @@ const byte key_octave1=25;
 const byte key_octave2=27;  
 const byte key_octave3=29;  
 
+//keys for sample rate switch
+const byte key_sample_rate1=24;
+const byte key_sample_rate2=26;
+
+//keys used for notes
+const byte note_keys_count = keys - 8; 
+
 //octave base notes
 const byte note_octave1=65-3*12;
 const byte note_octave2=65-12;
 const byte note_octave3=65;   //F
+
+
 
 //Current base note - changed with octave switch
 byte base_note = note_octave2; 
@@ -85,7 +93,10 @@ void key_pressed(byte key) {
   if (key == key_octave1) { set_base_note(note_octave1); return; }
   if (key == key_octave2) { set_base_note(note_octave2); return; }
   if (key == key_octave3) { set_base_note(note_octave3); return; }
-  
+
+  //sample rate switch
+  if (key == key_sample_rate1) { set_audio_sample_rate_index(0); return; }
+  if (key == key_sample_rate2) { set_audio_sample_rate_index(1); return; }
 }
 
 //---------------------------------------------------------------

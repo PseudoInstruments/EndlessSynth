@@ -3,18 +3,44 @@
 
 #include <TimerThree.h>
 
-//use lower values if not enough computing power
-const long int audio_sample_rate = //44100;
-  //power of 2 to faster divide
-  8192;  //2^13
-//4096;  //2^12
+//---------------------------------------------------------------
+//Sound Engine
+//---------------------------------------------------------------
+//Audio sample rate - main parameter of sound engine.
+//It's the frequency of sound pulses.
+//Use lower values if not enough computing power; currently we use power of 2 to faster divide
 
-const long shift_audio = 13;
-//12;
+const long int audio_sample_rates[2] = //{2048,8192}; 
+                                      {4096, 8192};
+const byte audio_sample_rate_shifters[2] = //{11,13}; 
+                                      {12, 13};   //log_2 of sample rate, 4096=2^12 and so on
+
+long int audio_sample_rate = 2048; //4096;  
+byte audio_sample_rate_shifter = 11; //12; 
 
 
+byte audio_sample_rate_index = 255; //0 - 4096, 1 - 8192, 255 - not set
+
+//change audio sample rate
+void set_audio_sample_rate_index(byte index) {
+  if (audio_sample_rate_index!=index) {
+    audio_sample_rate_index = index;
+    audio_sample_rate = audio_sample_rates[index];
+    audio_sample_rate_shifter = audio_sample_rate_shifters[index];
+    Timer3.stop();
+    Timer3.detachInterrupt();
+    Timer3.initialize(1000000 / audio_sample_rate);
+    Timer3.attachInterrupt(timer_interrupt);
+    Timer3.start();
+
+    Serial.print("sample rate: "); Serial.println(audio_sample_rate);
+  }
+}
 
 
+//---------------------------------------------------------------
+//Synthesis
+//---------------------------------------------------------------
 //frequencies of sounds
 //0 means note off
 long int freq1 = 0;
@@ -71,8 +97,7 @@ void sound_setup() {
 
   //test_notes();
   //Start interrupt for sound generation
-  Timer3.initialize(1000000 / audio_sample_rate);
-  Timer3.attachInterrupt(timer_interrupt);
+  set_audio_sample_rate_index(0);  //Timer3.initialize(1000000 / audio_sample_rate);
 
   Serial.print("Polyphony: "); Serial.println(POLYPHONY);
 }
@@ -156,7 +181,7 @@ void timer_interrupt() {
   //----------------------------------
   if (mic_button) {
     //Microphone
-    sound_value += (analogRead(A0) - 512) >> 1; //0..1023 -> -512..511 -> -256..255   - we do so because mic is quiet...
+    sound_value += (analogRead(A0) - 512) >> 2; //0..1023 -> -512..511 -> -128..127   - we do so because mic is quiet...
   }
   //----------------------------------
   else {
@@ -165,9 +190,9 @@ void timer_interrupt() {
     //wave_n - length of wavetable
     //freq - desired frequency
     //ph - must go freq times 0..wave_n-1
-    if (freq1) sound_value += wave_table[(((long long)phase * freq1 * wave_n) >> shift_audio) % wave_n];
-    if (freq2) sound_value += wave_table[(((long long)phase * freq2 * wave_n) >> shift_audio) % wave_n];
-    if (freq3) sound_value += wave_table[(((long long)phase * freq3 * wave_n) >> shift_audio) % wave_n];
+    if (freq1) sound_value += wave_table[(((long long)phase * freq1 * wave_n) >> audio_sample_rate_shifter) % wave_n];
+    if (freq2) sound_value += wave_table[(((long long)phase * freq2 * wave_n) >> audio_sample_rate_shifter) % wave_n];
+    if (freq3) sound_value += wave_table[(((long long)phase * freq3 * wave_n) >> audio_sample_rate_shifter) % wave_n];
     //  if (freq4) sound_value += wave_table[(((long long)phase * freq4 * wave_n) >> shift_audio) % wave_n];
   }
   //----------------------------------
