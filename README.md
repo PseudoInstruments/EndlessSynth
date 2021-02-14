@@ -2,7 +2,7 @@
 1-bit synthesizers and other instruments using Arduino,
 with toy keyboard and microphone and self-made "guitar".
 
-##Instruments
+## Instruments
 
 ### Endless Boombox 
 
