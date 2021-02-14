@@ -1,6 +1,6 @@
 /* Simple boombox code.
 Copied from 01_sound_passthrough_simple
-Demo video: https://youtu.be/3pW5L71EReI
+Performance video: https://youtu.be/3pW5L71EReI
 
 Program gets sound from microphone (A0) 
 and immediately outputs it to buzzer (pin 2) using simple thresholding, without diffusion.
