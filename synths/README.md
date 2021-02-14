@@ -1,4 +1,4 @@
-# EndlessSynth synthesizers codes
+# EndlessSynth synthesizers
 
 This is the main codes of EndlessSynthe project, dedicated to creating 1-bit synthesizer 
 using Arduino and toy keyboard.

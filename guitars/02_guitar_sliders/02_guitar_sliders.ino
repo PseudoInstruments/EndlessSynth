@@ -1,4 +1,6 @@
-/* Guitar with sliders
+/* Endless Guitar is a 1-string 1-bit guitar with controllable volume, sample rate and sensitivity.
+
+Performance video: https://youtu.be/i0PbnIoiwZM
 
 1-bit algorithm - simple thresholding.
 
