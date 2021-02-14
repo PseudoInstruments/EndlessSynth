@@ -51,6 +51,7 @@ const byte sliders_5v_pin = 6;
 const byte slider2_analog_pin = A4;   //sample rate
 const byte slider3_analog_pin = A5;   //pwm
 
+
 int debug = 0;    //control from keyboard to begin debugging
 
 //--------------------------------------------------------------
@@ -79,7 +80,7 @@ void setup() {
 //--------------------------------------------------------------
 //Constants
 const int audio_delay_mcs0 = 0;   
-const int audio_delay_mcs1 = 400;   
+const int audio_delay_mcs1 = 4000;//400;   
 const int audio_thresh0 = 512;     
 const int audio_thresh1 = 512+10;     
 
@@ -89,6 +90,9 @@ int audio_delay_mcs = 10;   //delay in sound loop
 int audio_thresh = 512;     //threshold for PWM, sensitivity
 
 int audio_input_ = 0;
+
+int loops_ = 1000;
+
 //--------------------------------------------------------------
 inline void control_step() {
   if (Serial.available() > 0) { //we expect only "1" rare to on/off debugging
@@ -110,6 +114,7 @@ inline void control_step() {
   if (debug) {
     //use audio input for setting up trimmer resistor so it print 512
     Serial.print("audio input "); Serial.print(audio_input_);
+    Serial.print("  audio loops "); Serial.print(loops_);
     Serial.print("  sliders "); Serial.print(slider2); 
     Serial.print(","); Serial.print(slider3);
     Serial.print("  audio_delay_mcs "); Serial.print(audio_delay_mcs); 
@@ -123,15 +128,22 @@ inline void control_step() {
 //--------------------------------------------------------------
 void loop() {
 
+  //run control step
   control_step();
+
+  //run audio loop 
+  loops_ = map(audio_delay_mcs, audio_delay_mcs0, audio_delay_mcs1, 500, 40); //1000, 10);  
+  //NOTE - this simple formula gives good sound but in the middle part of slider 2 it freezes a control rate a bit
+
+  //this algorithm more precise, but sounding not so good:
   
-  //run loop to measure time and deduce sample rate
-  int n = map(audio_delay_mcs, audio_delay_mcs0, audio_delay_mcs1, 1000, 200);   
-  //NOTE: n audio loops are used to make control rate less than audio rate
-  //currently formula for n just empirical, and control changing when delay mcs was changed.
-  
+  //long int freq = (1000000 / (audio_delay_mcs + 100));
+  //Serial.println(freq);
+  //loops_ = map(freq, 9000, 200, 1000, 30); //TODO make as params and tune. I see debug speed to tune 
+  //loops_ = constrain(loops_, 30, 1000);
+     
   unsigned long time0 = micros();
-  for (int i=0; i<n; i++) {
+  for (int i=0; i<loops_; i++) {
     //get sample
     audio_input_ = analogRead(A0);
     //output
@@ -147,7 +159,7 @@ void loop() {
   if (!was_measured) {
     was_measured = 1;
     unsigned long delta = micros() - time0;
-    long int audio_sample_rate = 1000000.0 * n / delta;
+    long int audio_sample_rate = 1000000.0 * loops_ / delta;
     Serial.print("Computed audio sample rate: "); Serial.println(audio_sample_rate);
   }  
 
