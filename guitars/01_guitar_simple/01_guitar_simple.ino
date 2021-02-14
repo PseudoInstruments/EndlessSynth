@@ -1,7 +1,9 @@
 /* Program gets sound from microphone (A0) 
 and immediately outputs it to buzzer (pin 2) using simple thresholding, without diffusion.
 Can be used for electo-guitar connection too.
- 
+
+Copied from 01_sound_passthrough_simple
+
 Controller: Arduino Uno
 
 ----------------------------------------

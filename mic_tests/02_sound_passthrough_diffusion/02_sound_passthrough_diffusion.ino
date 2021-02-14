@@ -3,6 +3,8 @@
   see "sound_tests/12_PolyphonyMega_diffusion_thresholding" for the details on this
   Can be used for electo-guitar connection too.
 
+  This is simpler than synths because don't uses timer interrupts.
+
   Controller: Arduino Uno or Mega
 
   ----------------------------------------

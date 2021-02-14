@@ -74,4 +74,4 @@ But to normal mic sound - increase both 1-bit sliders.
 * Keyboard advance: use pairs of octave for more octaves or for switch samples/synth
 * Sound Engine: control sample rate - enable during mic enabled
 * Synthesizing module: triangle, sawtooth, square waves, pulse synthesis, envelope: attack, decay, release.
-
+* Sound output: remove offset to -5V because it's hard to use mixer.
