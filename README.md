@@ -21,8 +21,7 @@ Code and implementation details: boomboxes/01_boombox_simple
 Endless Guitar is a 1-string 1-bit guitar with controllable volume, sample rate and sensitivity.
 
 How it works: 
-<iframe width="560" height="315" src="https://www.youtube.com/embed/se3GxTyyy_U" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-
+[![How it works](https://img.youtube.com/vi/v=se3GxTyyy_U/0.jpg)](https://www.youtube.com/watch?v=v=se3GxTyyy_U)
 
 Code and implementation details: guitars/02_guitar_sliders
 
