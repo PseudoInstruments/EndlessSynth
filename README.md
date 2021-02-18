@@ -4,6 +4,8 @@ with toy keyboard and microphone and self-made "guitar".
 
  ![Perf image](https://raw.githubusercontent.com/EndlessBits/EndlessSynth/main/doc/perf-2021-02-18-12h20m.png)
   
+Made by Endless Attractions Museum, https://eamuseum.com/Endless-Instruments
+
 ## Instruments
 
 ### Endless Boombox 
@@ -11,7 +13,9 @@ with toy keyboard and microphone and self-made "guitar".
 Endless boombox is a instrument made from toy microphone and Arduino Uno. 
 It processes input sound to 1 bit.
 
-Performance video: https://youtu.be/3pW5L71EReI
+Performance video: 
+
+[![How it works](https://img.youtube.com/vi/3pW5L71EReI/0.jpg)](https://www.youtube.com/watch?v=3pW5L71EReI)
 
 Code and implementation details: boomboxes/01_boombox_simple
 
@@ -21,6 +25,7 @@ Code and implementation details: boomboxes/01_boombox_simple
 Endless Guitar is a 1-string 1-bit guitar with controllable volume, sample rate and sensitivity.
 
 How it works: 
+
 [![How it works](https://img.youtube.com/vi/se3GxTyyy_U/0.jpg)](https://www.youtube.com/watch?v=se3GxTyyy_U)
 
 Code and implementation details: guitars/02_guitar_sliders
@@ -34,17 +39,18 @@ Also from keys user can switch octaves and sample rate.
 The style of playing is like guitar - you choose "notes" by the left hand and hit "strings" by the right hand.
 This style fits well for live performance of arpeggios found in 8-bit games music.
 
-Performance video: https://youtu.be/sMg1RHxQQ2w
+How it works: 
+
+[![How it works](https://img.youtube.com/vi/sMg1RHxQQ2w/0.jpg)](https://www.youtube.com/watch?v=sMg1RHxQQ2w)
 
 Code and assembly insructions: synths folder.
 
 
 ## Performances
 
- https://youtu.be/nv2vj5iOq3Y 
- 
- https://youtu.be/5nkdpzOd9-w 
+[![Performance part 2](https://img.youtube.com/vi/nv2vj5iOq3Y/0.jpg)](https://www.youtube.com/watch?v=nv2vj5iOq3Y)
 
+[![Performance part 3](https://img.youtube.com/vi/5nkdpzOd9-w/0.jpg)](https://www.youtube.com/watch?v=5nkdpzOd9-w)
  
 
 ## Contents
