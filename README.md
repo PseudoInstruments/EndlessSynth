@@ -2,8 +2,6 @@
 1-bit synthesizers and other instruments using Arduino,
 with toy keyboard and microphone and self-made "guitar".
 
- ![Perf image](https://raw.githubusercontent.com/EndlessBits/EndlessSynth/main/doc/perf-2021-02-18-12h20m.png)
-  
 Made by Endless Attractions Museum, https://eamuseum.com/Endless-Instruments
 
 ## Instruments
