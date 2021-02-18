@@ -2,6 +2,9 @@
 1-bit synthesizers and other instruments using Arduino,
 with toy keyboard and microphone and self-made "guitar".
 
+ EndlessSynth/doc/perf-2021-02-18-12h20m.png 
+ ![Perf image](https://raw.githubusercontent.com/EndlessBits/EndlessSynth/main/doc/perf-2021-02-18-12h20m.png)
+  
 ## Instruments
 
 ### Endless Boombox 
@@ -17,7 +20,7 @@ Code and implementation details: boomboxes/01_boombox_simple
 
 Endless Guitar is a 1-string 1-bit guitar with controllable volume, sample rate and sensitivity.
 
-Performance video: https://youtu.be/i0PbnIoiwZM
+How it works: https://www.youtube.com/watch?v=se3GxTyyy_U
 
 Code and implementation details: guitars/02_guitar_sliders
 
@@ -35,9 +38,18 @@ Performance video: https://youtu.be/sMg1RHxQQ2w
 Code and assembly insructions: synths folder.
 
 
+## Performances
+
+ https://youtu.be/nv2vj5iOq3Y 
+ 
+ https://youtu.be/5nkdpzOd9-w 
+
+ 
+
 ## Contents
 
 * **boomboxes** - Endless Boombox codes and instructions.
+* **doc** - Some images.
 * **guitars** - Endless Guitar codes and instructions.
 * **keyboard_tests** - tests of connecting toy keyboards.
 * **mic_tests** - tests of using microphone with Arduino.
