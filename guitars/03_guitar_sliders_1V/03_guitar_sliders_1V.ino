@@ -62,8 +62,8 @@ void setup() {
   Serial.begin(500000);
   Serial.println("EndlessSynth Guitar with sliders and 1.1V ARef (no diffusion), v. 1.2 for Arduino Uno or Mega");
   Serial.println("Program gets sound from microphone (A0) and immediately outputs.");
-  Serial.println("Sliders: A4, A5.");
-  Serial.println("it to buzzer (pin 2) using simple thresholding.");
+  Serial.println("Audio output: pin 2");
+  Serial.println("Slider 1 - between pin2 and audio output, Slider 2 - A4, Slider 3 - A5.");
   Serial.println("Send '1' to on/off debug print");
   Serial.println("Note: ARef is 1.1V for increased sensitivity.");
   Serial.println("Please adjust trimmer resistor 10KOhm to move silence level to 512 on A0 (in debug print mode)");
