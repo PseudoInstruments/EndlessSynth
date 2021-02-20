@@ -26,7 +26,7 @@ How it works:
 
 [![How it works](https://img.youtube.com/vi/se3GxTyyy_U/0.jpg)](https://www.youtube.com/watch?v=se3GxTyyy_U)
 
-Code and implementation details: guitars/02_guitar_sliders
+Code and implementation details: guitars/03_guitar_sliders_1V
 
 ### Endless Synth
 

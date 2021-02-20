@@ -1,25 +1,23 @@
-/* Program gets sound from microphone (A0) 
+/* Program gets sound from A0 
 and immediately outputs it to buzzer (pin 2) using simple thresholding, without diffusion.
-Can be used for electo-guitar connection too.
 
 Copied from 01_sound_passthrough_simple
-
-Controller: Arduino Uno
+ 
+Controller: Arduino Uno (or Mega)
 
 ----------------------------------------
 Connection
 ----------------------------------------
-1) Microphone:
-Take microphone unit for Arduino:
+1) Guitar pickup:
   connect it to Gnd, 5V, and output signal connect to A0.
   
-2) Trimmer resistor for pulling-up microphone:
-Note, that microphone unit gives -2.5V...2.5V output, 
-so to digitize signal carefully we need to pull up it to 0..5V range for A0.
+2) Trimmer resistor for pulling-up Guitar input to A0 = 512 in silence:
+Note, that pickup gives -0.1V..0.1V, 
+so to digitize signal carefully we need to pull up it to 0..1.1V range for A0.
 As a solution, I use compact 10KOm trimmer resistor, 
 connect left and right pins to Gnd, 5V, and output to A0 too.
-Next, I adjust trimmer resistor to obtain 2.5V when Mic is in a silence (or, equally, 512 on A0).
-Now microphone outputs 0..5V to A0!
+Next, I adjust trimmer resistor to obtain value A0 = 512 when pickup is in a silence.
+To see it, send "1" to Arduino using Arduino IDE'a Monitor Port to enable debug print mode.
 
 3) Buzzer (or audio output) to pin 2.
 
