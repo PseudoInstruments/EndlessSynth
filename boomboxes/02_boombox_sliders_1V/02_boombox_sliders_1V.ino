@@ -7,7 +7,7 @@
   Controller: Arduino Uno, Mega, Nano.
 
   ----------------------------------------
-  Features
+  Adjustment before playing
   ----------------------------------------
   - Built-in LED lighing when zero-level is achieved, so helping adjust trimming resistor without computer. 
   So, before start playing, adjust resistor in silence to achieve LED flashing. It means zero level it tuned correctly.
@@ -62,7 +62,7 @@ void setup() {
   Serial.println("Program gets sound from A0 and immediately outputs");
   Serial.println("it to pin 2 using thresholding, without diffusion.");
   Serial.println("slider 1 - between pin2 and audio output, slider 2 - A4, slider 3 - A5.");
-  Serial.println("Note: please adjust trimmer resistor 10KOhm to move silence mic level 512 on A0.");
+  Serial.println("Note: please adjust trimmer resistor 10KOhm to move silence audio level 512 on A0 in debug print mode.");
   Serial.println("You can do it without computer - see built-in LED, it lighing when zero-level is achieved.");
 
   //will be computed
