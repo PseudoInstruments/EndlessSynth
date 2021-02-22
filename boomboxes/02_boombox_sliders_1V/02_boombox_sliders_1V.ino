@@ -1,22 +1,26 @@
 /* Simple boombox code with improved sensitivity 1.1V and sliders
-  .
+  Code can be used as 1-bit sound processor for convert drum machine sound to 1 bit, or similar.
 
-  Program gets sound from microphone (A0)
-  and immediately outputs it to buzzer (pin 2) using simple thresholding, without diffusion.
-  Can be used for electo-guitar connection too.
+  Program gets sound from A0 and immediately outputs it to pin 2 using simple thresholding, without diffusion.
+  It uses sliders at A4 and A5 for constrolling sample rate and sensitivity.
 
+  Controller: Arduino Uno, Mega, Nano.
 
-  Controller: Arduino Uno
+  ----------------------------------------
+  Features
+  ----------------------------------------
+  - Built-in LED lighing when zero-level is achieved, so helping adjust trimming resistor without computer. 
+  So, before start playing, adjust resistor in silence to achieve LED flashing. It means zero level it tuned correctly.
 
   ----------------------------------------
   Connection
   ----------------------------------------
-  1) Microphone:
-  Take microphone unit for Arduino:
-  connect it to Gnd, 5V, and output signal connect to A0.
+  1) Audio Input:
+  Using with mic: take microphone unit for Arduino, connect it to Gnd, 5V, and output signal connect to A0.
+  Using with drum nachine: use just 3.5 input connected to Gnd and A0.
 
-  2) Trimmer resistor for pulling-up microphone:
-  Note, that microphone unit gives -0.5V...0.5V output,
+  2) Trimmer resistor for pulling-up audio input:
+  Note, that sound devices gives -2.5V..2.5V or 0.5V...0.5V output,
   so to digitize signal carefully we need to pull up it to 0..5V range for A0.
   As a solution, I use compact 10KOm trimmer resistor,
   connect left and right pins to Gnd, 5V, and output to A0 too.
@@ -42,7 +46,8 @@
 
 */
 
-const byte pin_buz = 2; //Buzzer pin
+const byte pin_buz = 2; //Audio output pin
+const byte pin_led = 13;  //Built-in led pin
 
 //slider1 affects volume output directly, without arduino
 const byte slider2_analog_pin = A4;   //sample rate
@@ -53,16 +58,20 @@ int debug = 0;    //control from keyboard to begin debugging
 //--------------------------------------------------------------
 void setup() {
   Serial.begin(500000);
-  Serial.println("Endless Boombox with sliders improved sensitivity, v. 1.2 for Arduino Uno or Mega");
-  Serial.println("Program gets sound from microphone (A0) and immediately outputs");
-  Serial.println("it to buzzer (pin 2) using thresholding.");
+  Serial.println("Endless Boombox with sliders improved sensitivity, v. 1.3 for Arduino Uno, Mega, Nano");
+  Serial.println("Program gets sound from A0 and immediately outputs");
+  Serial.println("it to pin 2 using thresholding, without diffusion.");
   Serial.println("slider 1 - between pin2 and audio output, slider 2 - A4, slider 3 - A5.");
-  Serial.println("Note: please adjust trimmer resistor 10KOhm to move silence mic level 512 on A0");
+  Serial.println("Note: please adjust trimmer resistor 10KOhm to move silence mic level 512 on A0.");
+  Serial.println("You can do it without computer - see built-in LED, it lighing when zero-level is achieved.");
 
   //will be computed
   //Serial.print("Audio sample rate: "); Serial.println(audio_sample_rate);
 
   pinMode(pin_buz, OUTPUT); //activate buzzer
+
+  pinMode(pin_led, OUTPUT); //activate led
+  
 
   //ARef - set to 1.1V, for increasing sensitivity
   analogReference(INTERNAL);
@@ -78,6 +87,11 @@ const int audio_thresh_hyster = 2;
 
 //Sound parameters
 int audio_delay_mcs = 10;   //delay in sound loop
+
+//zero value range for adjusting trimming resistor - inside range the led is lighting
+const int audio_thresh_adj0 = 512-5;  
+const int audio_thresh_adj1 = 512+5;  
+
 
 int audio_thresh0 = 512;     //two thresholds for hysteresis (stability)
 int audio_thresh1 = audio_thresh0 + audio_thresh_hyster;
@@ -102,6 +116,14 @@ inline void control_step() {
   audio_delay_mcs = map(slider2, 0, 1023, audio_delay_mcs0, audio_delay_mcs1);
   audio_thresh0 = map(slider3, 0, 1023, audio_thresh_slider1, audio_thresh_slider0); //reverted range
   audio_thresh1 = audio_thresh0 + audio_thresh_hyster;
+
+  //lighting LED if audio inside adjusting range - helping for adjusting trimming resistor
+  if (audio_input_ >= audio_thresh_adj0 && audio_input_ <= audio_thresh_adj1) {
+    digitalWrite(pin_led, HIGH);
+  }
+  else {
+    digitalWrite(pin_led, LOW);
+  }
 
   //debug print
   if (debug) {
