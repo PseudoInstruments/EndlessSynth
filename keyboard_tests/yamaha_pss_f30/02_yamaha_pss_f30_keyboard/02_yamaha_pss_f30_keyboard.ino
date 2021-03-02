@@ -78,21 +78,22 @@ void loop() {
     digitalWrite(keyGnd[k], HIGH);              
 
   }
-  Serial.println();
+  //Serial.println();
   
-
-  //print keys
+  Serial.print("   ");
+  //print keys events in the same line
   for (int i=0; i<keys; i++) {
       byte &state0 = key_state0[i];
       byte &state = key_state[i];
       if (state0 != state) {
-        Serial.print("key "); Serial.print(i); Serial.print(": ");
-        if (state) Serial.println("on");
-        else Serial.println("off");
+        Serial.print("key_"); Serial.print(i); Serial.print("=");
+        if (state) Serial.print("1 ");
+        else Serial.print("0 ");
       }
       state0 = state;
 
   }  
+  Serial.println();
  
   delay(100);
 }
