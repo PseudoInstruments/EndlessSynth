@@ -1,4 +1,4 @@
-//EndlessSynth, Yamaha PSS F30 Keyboard Pins Test
+//EndlessSynth, Yamaha PSS F30 Read Keyboard
 //This sketch shows that keyboard is really polyphinoc, but it doesn't use half of read pins
 
 //Scheme: //http://sandsoftwaresound.net/wp-content/uploads/2019/12/Reface_key_schematic.jpg
@@ -8,7 +8,6 @@
 
 
 //Device: Arduino Mega
-
 //Monitor port:
 //- baud must be set to 500000!
 
@@ -18,12 +17,13 @@
 //but here we read all values)
 
 const byte keyGndN = 7;
-const byte keyReadN = 11; 
-byte keyGnd[keyGndN] = {53, 51, 49, 47, 45, 43, 41};
-byte keyRead[keyReadN] = {42, 40, 38, 36, 34, 32, 30, 28, 26, 24, 22};
+const byte keyReadN = 6; 
+byte keyGnd[keyGndN] = {52, 50, 48, 46, 44, 42, 40};
+byte keyRead[keyReadN] = {32, 30, 28, 26, 24, 22};
 
 
 const byte keys = 37;  //number of keys
+byte key_state0[keys]; //old key state
 byte key_state[keys]; //key state - pressed or released 
 //TODO can store in a bit mask
 
@@ -70,14 +70,8 @@ void loop() {
       if (v) Serial.print("X");
       else Serial.print(".");
 
-      //byte key = keys - 1 - (i+keyReadN*k); //because of reverted 
-      //byte &state = key_state[key];
-      //if (state != v) {
-      //  Serial.print("key "); Serial.print(key); Serial.print(": ");
-      //  if (v) Serial.println("on");
-      //  else Serial.println("off");
-      //}
-      //state = v;
+      byte key = keys - 1 - (i+keyReadN*k); //because of reverted 
+      key_state[key] = v;
     }
 
     //disable control pin
@@ -87,13 +81,18 @@ void loop() {
   Serial.println();
   
 
-  //test print
-  //for (int i=0; i<keys; i++) {
-  //  Serial.print(key_state[i]);
-  //}
-  //Serial.println();
-  
-  
-  delay(100);
+  //print keys
+  for (int i=0; i<keys; i++) {
+      byte &state0 = key_state0[i];
+      byte &state = key_state[i];
+      if (state0 != state) {
+        Serial.print("key "); Serial.print(i); Serial.print(": ");
+        if (state) Serial.println("on");
+        else Serial.println("off");
+      }
+      state0 = state;
 
+  }  
+ 
+  delay(100);
 }
