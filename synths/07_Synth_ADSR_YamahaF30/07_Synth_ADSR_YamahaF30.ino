@@ -1,10 +1,13 @@
-// **06_SynthArpegiatorMega_YamahaPSSF30** - - synthesizer for Arduino Mega and keyboard YAMAHA PSS F30
+// **07_Synth_ADSR_YamahaF30** - - synthesizer for Arduino Mega and keyboard YAMAHA PSS F30
+//New:
+//- ADSR-engine for sound 
+//- optimized sound engine computations (removed "/" in wave_table[...] computation, so higher audio rate
+
 //Output goes through buzzer audio amplifier to minijack.
 //Slider 2 - sample rate.
 //Slider 3 - tone.
 //F,G - switch timbre: pulse and sawtooth
 //Note: sometimes freezes three notes!
-
 
 //This parameters enables/disables using sliders
 //So if you want check synth without connecting sliders, set it to 0:
@@ -25,8 +28,9 @@ const int SLIDERS_ENABLED = //1;
 //- arpeggiator ("note" and "string" keys)
 //- harsh sound
 //- switch octaves
-//F,G - switch timbre: pulse and sawtooth
-//Note: sometimes freezes three notes!
+//- F,G - switch timbre
+//- ADSR-engine for sound 
+//- optimized sound engine computations (removed "/" in wave_table[...] computation, so higher audio rate
 
 //--------------------------------------------
 //How to play:

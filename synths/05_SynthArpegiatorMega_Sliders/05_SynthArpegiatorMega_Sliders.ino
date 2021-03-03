@@ -1,4 +1,4 @@
-// **04_SineSynthArpegiatorMega_Sliders** - - synthesizer for Arduino Mega and toy keyboard
+// **05_SynthArpegiatorMega_Sliders** - - synthesizer for Arduino Mega and toy keyboard
 //Output goes through buzzer or "Troika" audio amplifier to minijack.
 //Slider 2 - sample rate.
 //Slider 3 - tone.
