@@ -20,9 +20,9 @@ void sliders_setup() {
 //---------------------------------------------------------------
 void sliders_loop() {
   //set diff step and diffusion propagation
-  int slider2 = analogRead(A4); //0..1023 - kind of "level of sound generation", the higher - the more dithering
-  int slider3 = analogRead(A5); //0..1023 - duration of dithering, the lower - the more harshness, simple <0,>0 alg
-
+  int slider2 = analogRead(A4); //0..1023 - sample rate
+  int slider3 = analogRead(A5); //0..1023 - tone adjustment
+  
   sound_set_1bitparams(slider2, slider3);
 
   //Debug print

@@ -1,5 +1,5 @@
 //EndlessSynth, Yamaha PSS F30 Read Keyboard
-//This sketch shows that keyboard is really polyphinoc, but it doesn't use half of read pins
+//This sketch shows that keyboard is really polyphonic, but it doesn't use half of read pins
 
 //Scheme: //http://sandsoftwaresound.net/wp-content/uploads/2019/12/Reface_key_schematic.jpg
 //(But I have only 11 signal outputs, not 12)
@@ -13,8 +13,8 @@
 
 //Connection:
 //7 - control pins - choosing keys block, 
-//11 - signal pins  (some keys are doubled, so enough to use only six - 1,3,5,7,9,11,
-//but here we read all values)
+//11 - signal pins, but it's uses only six - 1,3,5,7,9,11 - we connect only them
+
 
 const byte keyGndN = 7;
 const byte keyReadN = 6; 
@@ -31,12 +31,11 @@ byte key_state[keys]; //key state - pressed or released
 void setup() {
   Serial.begin(500000);
   Serial.println("EndlessSynth Yamaha PSS F30 Keyboard Reader 1.1");
-  Serial.print("  control pins:");
+  Serial.print("  control pins: ");
   for (int i=0; i<keyGndN; i++) {
     Serial.print(keyGnd[i]); Serial.print(" ");
   }
-  Serial.println();
-  Serial.println("  read pins:");
+  Serial.print(",  signal pins: ");
   for (int i=0; i<keyReadN; i++) {
     Serial.print(keyRead[i]); Serial.print(" ");
   }
