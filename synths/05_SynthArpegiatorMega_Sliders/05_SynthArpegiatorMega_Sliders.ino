@@ -123,7 +123,7 @@ void setup() {
   Serial.println("Combination of note key and string key plays a note");
   Serial.println("To switch octave use three right black keys");
   Serial.println("Slider2 (A4) - sample rate, Slider 3 (A5) - tone.");
-  Serial.println("To switch timbre right F (pulse) ang G (sawtooth");
+  Serial.println("To switch timbre right F (pulse) ang G (sawtooth)");
   //Serial.println("Press mic button to pass mic sound to output. The last slider is kind of mic sensitivity.");
 
   Serial.println("----------------------------------------------------------------");

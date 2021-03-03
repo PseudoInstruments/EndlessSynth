@@ -36,7 +36,7 @@ void setup() {
     Serial.print(keyGnd[i]); Serial.print(" ");
   }
   Serial.println();
-  Serial.println("  read pins:");
+  Serial.println("  signal pins:");
   for (int i=0; i<keyReadN; i++) {
     Serial.print(keyRead[i]); Serial.print(" ");
   }
