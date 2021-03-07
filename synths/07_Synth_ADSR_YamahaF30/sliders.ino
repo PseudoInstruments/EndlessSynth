@@ -1,8 +1,14 @@
 //This file contains working with sliders
-//http://newt.phys.unsw.edu.au/jw/notes.html
 
-const byte slider_1_pin = A4;
-const byte slider_2_pin = A4;
+//"apin" means "analog pin"
+const byte apin_Tone = A3;
+const byte apin_Attack = A4;
+const byte apin_Decay = A5;
+const byte apin_Sustain = A6;
+const byte apin_Release = A7;
+
+const byte apin_ = A7;
+
 const byte slider_5V_pin = 4;
 const byte slider_Gnd_pin = 5;
 

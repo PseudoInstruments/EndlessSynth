@@ -66,31 +66,6 @@ const byte pin_buz = 2;
 //(See keyboard text for possible updates)
 
 
-//Sliders:
-//We are using board with three 10 kOhm potentiomeners,
-//Sliders 1,2 - step and diffusion of 1-bit algorithm.
-//  A4,A5 - output of two of them,
-//  pin 4 as 5V,
-//  pin 5 as Gnd.
-//-   You have an option to not connect sliders - set SLIDERS_ENABLED to 0 above
-//Slider 3 - volume
-//  pin 4 (common with sliders 1,2) - Gnd
-//  pin 2 - sound output
-
-
-//Microphone with button.
-//  1) Take microphone unit for Arduino, connect it to Gnd, 5V, and output signal connect to A0.
-//  2) Remove microphone from the module and replace it with some connection to toy microphone.
-//  3) Pull-up output average from 0V to 2.5V. For that use trimmer resistor 10 kOhm.
-//     Normally microphone unit gives -2.5V...2.5V output,
-//     and to digitize signal carefully we need to pull up it to 0..5V range for A0.
-//    As a solution, use compact 10kOm trimmer resistor,
-//    connect left and right pins to Gnd, 5V, and output to A0 too.
-//    Next, adjust trimmer resistor to obtain 2.5V when Mic is in a silence (or, equally, 512 on A0).
-//    Now microphone outputs 0..5V to A0!
-//  4) Add to microphone button - insert it inside or keep outside microphone.
-//    Connect button to pins 8 and 9.
-
 //--------------------------------------------
 
 int debug = 0;

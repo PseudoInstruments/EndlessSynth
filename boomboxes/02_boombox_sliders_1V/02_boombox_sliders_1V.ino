@@ -15,24 +15,44 @@
   ----------------------------------------
   Connection
   ----------------------------------------
-  1) Audio Input:
-  Using with mic: take microphone unit for Arduino, connect it to Gnd, 5V, and output signal connect to A0.
-  Using with drum nachine: use just 3.5 input connected to Gnd and A0.
+ Audio input
+1) Guitar pickup:
+  connect it to Gnd, 5V, and output signal connect to A0.
+  
+2) Trimmer resistor 10 kOhm for pulling-up Guitar input to A0 = 512 in silence:
+Note, that pickup gives -0.1V..0.1V, 
+so to digitize signal carefully we need to pull up it to 0..1.1V range for A0.
+As a solution, I use compact 10KOm trimmer resistor, 
+connect left and right pins to Gnd, 5V, and output to A0 too.
+Next, I adjust trimmer resistor to obtain value A0 = 512 when pickup is in a silence.
+To see it, send "1" to Arduino using Arduino IDE'a Monitor Port to enable debug print mode.
 
-  2) Trimmer resistor for pulling-up audio input:
-  Note, that sound devices gives -2.5V..2.5V or 0.5V...0.5V output,
-  so to digitize signal carefully we need to pull up it to 0..5V range for A0.
-  As a solution, I use compact 10KOm trimmer resistor,
-  connect left and right pins to Gnd, 5V, and output to A0 too.
-  Next, I adjust trimmer resistor to obtain 2.5V when Mic is in a silence (or, equally, 512 on A0).
-  Now microphone outputs 0..5V to A0!
+3) Trimmer resistor 10 kOhm for decreasing power to sliders. 
+It's inputs connected to pins 5 (Gnd) and 6 (5V)
 
-  3) Buzzer or audio output passed through slider 1 to pin 2.
+Audio output
+3) Audio output to mini-jack (or buzzer). If you have no slider for volume control, 
+connect audio output directly to pin 2 and Gnd.
+If you have slider for volume control (I potentiometer 10 kOhm) , connect Gnd and pin 2 to slider's inputs,
+then connect minijack (buzzer) slider's output and Gnd.
 
-  4) Three sliders:
-  slider 1 - volume, passed from pin 2 to slider to audio output
-  slider 2 - sample rate to A4
-  slider 3 - sensitivity to A5
+4) Sliders - in this sketch used two sliders (I mean potentiometers 10kOhm) for controlling sound parameters.
+Also you need trimmer resistor 10 kOhm.
+From Arduino we will use output power: pin 5 (Gnd) and pin 6 (5V).
+
+The final goal is to connect:
+A4 - sample rate
+A5 - sensitivity
+
+Connect both sliders and trimmer resistor's inputs to pin 5 (Gnd).
+Connect trimmer's resistor second input to pin 6 (5V).
+The output of trimmer's resistor connect to second input of sliders.
+Finally, connect sliders outputs to A4 and A5.
+The trimmer resostor is reqired because in this sketch we are using Aref 1.1V for Arduino analog inputs, 
+so without trimming sliders output value 1023 in the middle of slider's position.
+Using trimmer resistor allows to adjust power to slider.
+So after start sketch, send in Monitor Port "1" to start debug print, and adjust resistor to obtain sliders going to 1023 only at final position.
+(Remark: using trimmer resistor instead fixed resistor is because it's flexible to adjust for different number of sliders and various Aref.)
 
   ----------------------------------------
   Programming details

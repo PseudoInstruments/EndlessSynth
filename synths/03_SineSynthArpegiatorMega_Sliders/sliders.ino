@@ -1,5 +1,4 @@
 //This file contains working with sliders
-//http://newt.phys.unsw.edu.au/jw/notes.html
 
 const byte slider_1_pin = A4;
 const byte slider_2_pin = A4;
