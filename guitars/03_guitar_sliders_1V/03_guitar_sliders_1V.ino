@@ -3,7 +3,7 @@ In this version I increased sensitivity by 5 times using ARef 1.1V (instead defa
 
 
 Program gets sound from A0 and immediately outputs it to buzzer (pin 2) using thresholding, without diffusion. 
-Controller: Arduino Uno (or Mega)
+Controller: Arduino Uno or Nano
 
 ----------------------------------------
 Adjustment before playing
@@ -23,6 +23,8 @@ Sliders:
 1 - controls volume - connected directly to DAC and Arduino audio output.
 2 - controls sample rate
 3 - controls sensitivity bias for ADC zero level, in our case it means PWM, sensitivity for guitar.
+
+//Note: nonlinearity - slider slows start TODO linearize sliders values
  
 ----------------------------------------
 Connection
@@ -78,7 +80,7 @@ http://microsin.net/programming/avr/real-time-digital-audio-processing-using-ard
 
  */
 
-const byte pin_buz = 2; //Buzzer pin
+const byte pin_buz = 2; //Audio output
 const byte pin_led = 13;  //Built-in led pin
 
 const byte sliders_gnd_pin = 5;
@@ -88,20 +90,23 @@ const byte sliders_5v_pin = 6;
 const byte slider2_analog_pin = A4;   //sample rate
 const byte slider3_analog_pin = A5;   //pwm
 
+const unsigned int analog_min = 20;     //it's appears minimal value is 20, not 0 in the current setup
+const unsigned int analog_max = 1023;
+
 
 int debug = 0;    //control from keyboard to begin debugging
 
 //--------------------------------------------------------------
 void setup() {
   Serial.begin(500000);
-  Serial.println("EndlessSynth Guitar with sliders and 1.1V ARef (no diffusion), v. 1.3 for Arduino Uno, Mega, Nano");
+  Serial.println("EndlessSynth Guitar with sliders and 1.1V ARef (no diffusion), v. 1.4 for Arduino Uno, Nano");
   Serial.println("Program gets sound from microphone (A0) and immediately outputs.");
   Serial.println("Audio output: pin 2");
   Serial.println("Slider 1 - between pin2 and audio output, Slider 2 - A4, Slider 3 - A5.");
-  Serial.println("Send '1' to on/off debug print");
   Serial.println("Note: ARef is 1.1V for increased sensitivity.");
   Serial.println("Note: please adjust trimmer resistor 10KOhm to move silence audio level 512 on A0 in debug print mode.");
   Serial.println("You can do it without computer - see built-in LED, it lighing when zero-level is achieved.");
+  Serial.println("Send '1' to on/off debug print");
   
 
   //will be computed
@@ -161,8 +166,8 @@ inline void control_step() {
   int slider2 = analogRead(slider2_analog_pin);  //0..1023
   int slider3 = analogRead(slider3_analog_pin);  //0..1023
 
-  audio_delay_mcs = map(slider2,0,1023,audio_delay_mcs0,audio_delay_mcs1);
-  audio_thresh0 = map(slider3, 0, 1023, audio_thresh_slider1, audio_thresh_slider0); //reverted range
+  audio_delay_mcs = map(slider2, analog_min, analog_max,audio_delay_mcs0,audio_delay_mcs1);
+  audio_thresh0 = map(slider3, analog_min, analog_max, audio_thresh_slider1, audio_thresh_slider0); //reverted range
   audio_thresh1 = audio_thresh0 + audio_thresh_hyster;
 
   //lighting LED if audio inside adjusting range - helping for adjusting trimming resistor

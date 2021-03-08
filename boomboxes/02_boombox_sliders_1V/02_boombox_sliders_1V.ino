@@ -4,7 +4,7 @@
   Program gets sound from A0 and immediately outputs it to pin 2 using simple thresholding, without diffusion.
   It uses sliders at A4 and A5 for constrolling sample rate and sensitivity.
 
-  Controller: Arduino Uno, Mega, Nano.
+  Controller: Arduino Uno, Nano.
 
   ----------------------------------------
   Adjustment before playing
@@ -44,6 +44,9 @@ The final goal is to connect:
 A4 - sample rate
 A5 - sensitivity
 
+//Note: nonlinearity - slider slows start TODO linearize sliders values
+
+
 Connect both sliders and trimmer resistor's inputs to pin 5 (Gnd).
 Connect trimmer's resistor second input to pin 6 (5V).
 The output of trimmer's resistor connect to second input of sliders.
@@ -73,12 +76,15 @@ const byte pin_led = 13;  //Built-in led pin
 const byte slider2_analog_pin = A4;   //sample rate
 const byte slider3_analog_pin = A5;   //pwm
 
+const unsigned int analog_min = 20;     //it's appears minimal value is 20, not 0 in the current setup
+const unsigned int analog_max = 1023;
+
 int debug = 0;    //control from keyboard to begin debugging
 
 //--------------------------------------------------------------
 void setup() {
   Serial.begin(500000);
-  Serial.println("Endless Boombox with sliders improved sensitivity, v. 1.3 for Arduino Uno, Mega, Nano");
+  Serial.println("Endless Boombox with sliders improved sensitivity, v. 1.4 for Arduino Uno, Nano");
   Serial.println("Program gets sound from A0 and immediately outputs");
   Serial.println("it to pin 2 using thresholding, without diffusion.");
   Serial.println("slider 1 - between pin2 and audio output, slider 2 - A4, slider 3 - A5.");
@@ -133,8 +139,8 @@ inline void control_step() {
   int slider2 = analogRead(slider2_analog_pin);  //0..1023
   int slider3 = analogRead(slider3_analog_pin);  //0..1023
 
-  audio_delay_mcs = map(slider2, 0, 1023, audio_delay_mcs0, audio_delay_mcs1);
-  audio_thresh0 = map(slider3, 0, 1023, audio_thresh_slider1, audio_thresh_slider0); //reverted range
+  audio_delay_mcs = map(slider2, analog_min, analog_max, audio_delay_mcs0, audio_delay_mcs1);
+  audio_thresh0 = map(slider3, analog_min, analog_max, audio_thresh_slider1, audio_thresh_slider0); //reverted range
   audio_thresh1 = audio_thresh0 + audio_thresh_hyster;
 
   //lighting LED if audio inside adjusting range - helping for adjusting trimming resistor
