@@ -11,16 +11,11 @@
 //4 Sustain 
 //5 Release
 //6 Sample Rate  (Timbre settings)
-//7 
-//8 
-
+//7 Diffusion
+//8 [Reserved]
+//Note: If you have no sliders, set SLIDERS_ENABLED=0 below
 
 //F,G - switch timbre: pulse and sawtooth
-
-//This parameters enables/disables using sliders
-//So if you want check synth without connecting sliders, set it to 0:
-const int SLIDERS_ENABLED = //1;
-    0;
 
 
 //--------------------------------------------
@@ -75,6 +70,13 @@ const byte pin_buz = 2;
 
 //--------------------------------------------
 
+//This parameter enables/disables using sliders
+//So if you want check synth without connecting sliders, set it to 0:
+const int SLIDERS_ENABLED = 1;
+  //0;
+
+byte sliders_debug = 0;     //debug mode for sliders - printing, "2" from keyboard
+
 int debug = 0;
 int debug_now = 0;  //signal for debug
 long int last_debug_time = 0;
@@ -86,25 +88,19 @@ long int last_debug_time = 0;
 
 //print routines - use their for shortening code
 void pr(const char *str) {
-  if (debug) {
-    Serial.print(str);
-  }
+  Serial.print(str);
 }
 void prln(const char *str) {
-  if (debug) {
-    Serial.println(str);
-  }
+  Serial.println(str);
 }
-
 void pr(int i) {
-  if (debug) {
-    Serial.print(i);
-  }
+  Serial.print(i);
 }
 void prln(int i) {
-  if (debug) {
-    Serial.println(i);
-  }
+  Serial.println(i);
+}
+void prln() {
+  Serial.println();
 }
 
 //---------------------------------------------------------------
@@ -132,7 +128,7 @@ void setup() {
 
   Serial.println();
   Serial.println("Synth is ready to play.");
-  Serial.println("Send '1' to on/off debug print");
+  Serial.println("Send '1' to on/off debug print, '2' to debug sliders");
 
 }
 
@@ -144,6 +140,10 @@ void loop() {
       debug = 1 - debug;
       Serial.print("Debug "); Serial.println(debug);
     }
+    if (key == '2') {
+      sliders_debug = 1 - sliders_debug;
+      Serial.print("Sliders_debug "); Serial.println(sliders_debug);
+    }
   }
 
 
@@ -152,7 +152,7 @@ void loop() {
   keyboard_loop();
   sound_loop();
 
-  delay(5); //2);
+  delay(5); //2); //Delay, so ~200 fps
 
   //debug print "rare"
   if (debug) {
