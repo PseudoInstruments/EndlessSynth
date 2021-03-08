@@ -22,9 +22,9 @@ const byte apin_Decay = A4;
 const byte apin_Sustain = A5;
 const byte apin_Release = A6;
 
-const byte apin_sample_rate = A8;
-const byte apin_diffusion = A9;
-const byte apin_reserved = A10;      //not used
+const byte apin_Sample_rate = A8;
+const byte apin_Diffusion = A9;
+const byte apin_Reserved = A10;      //not used
 
 const byte slider_Gnd_pin = 4;  //Gnd for sliders
 const byte slider_5V_pin = 5;   //+5V for sliders
@@ -32,9 +32,9 @@ const byte slider_5V_pin = 5;   //+5V for sliders
 //---------------------------------------------------------------
 void sliders_setup() {
   if (SLIDERS_ENABLED)  {
-    pr("Sliders Tone: A2, ADSR: A3456, sample rate: A8, diffusion: A9, [reserved] A10, sliders power: pin 4 as Gnd, pin 5 as 5V");
+    pr("Sliders Tone: A2, ADSR: A3456, sample rate: A8, Diffusion: A9, [Reserved] A10, sliders power: pin 4 as Gnd, pin 5 as 5V");
   }
-  else Serial.println("[Sliders disabled]");
+  else prln("[Sliders disabled]");
 
   if (SLIDERS_ENABLED) {
     //set up pins
@@ -47,19 +47,19 @@ void sliders_setup() {
 
 //---------------------------------------------------------------
 void sliders_loop() {
-  //set diff step and diffusion propagation
+  //set diff step and Diffusion propagation
   int Tone = (SLIDERS_ENABLED) ? analogRead(apin_Tone) : 512; //0..1023
   int Attack = (SLIDERS_ENABLED) ? analogRead(apin_Attack) : 0;
   int Decay = (SLIDERS_ENABLED) ? analogRead(apin_Decay) : 1023;
   int Sustain = (SLIDERS_ENABLED) ? analogRead(apin_Sustain) : 0;
   int Release = (SLIDERS_ENABLED) ? analogRead(apin_Release) : 0;
 
-  int sample_rate = (SLIDERS_ENABLED) ? analogRead(apin_sample_rate) : 0;
-  int diffusion = (SLIDERS_ENABLED) ? analogRead(apin_diffusion) : 512;
-  int reserved = (SLIDERS_ENABLED) ? analogRead(apin_reserved) : 512;
+  int Sample_rate = (SLIDERS_ENABLED) ? analogRead(apin_Sample_rate) : 0;
+  int Diffusion = (SLIDERS_ENABLED) ? analogRead(apin_Diffusion) : 512;
+  int Reserved = (SLIDERS_ENABLED) ? analogRead(apin_Reserved) : 512;
 
 
-//  sound_set_1bitparams(slider2, slider3);
+  sound_set_sliders(Tone, Sample_rate);
 
   //Debug print
   if (sliders_debug) {
@@ -72,11 +72,11 @@ void sliders_loop() {
       pr(", Sustain="); pr(Sustain);
       pr(", Release="); pr(Release);
 
-      pr(", sample_rate="); pr(sample_rate);
-      pr(", diffusion="); pr(diffusion);
-      pr(", reserved="); pr(reserved);
+      pr(", Sample_rate="); pr(Sample_rate);
+      pr(", Diffusion="); pr(Diffusion);
+      pr(", Reserved="); pr(Reserved);
 
-      prln();
+      prln("");
     }
   }
 }

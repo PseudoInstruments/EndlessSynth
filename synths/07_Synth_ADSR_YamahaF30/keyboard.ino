@@ -41,15 +41,15 @@ byte base_note = note_octave2;
 
 //---------------------------------------------------------------
 void keyboard_setup() {
-  Serial.print("Keyboard Yamaha PSS F30 control pins: ");
+  pr("Keyboard Yamaha PSS F30 control pins: ");
   for (int i = 0; i < keyGndN; i++) {
-    Serial.print(keyGnd[i]); Serial.print(" ");
+    pr(keyGnd[i]); pr(" ");
   }
-  Serial.print(",  signal pins: ");
+  pr(",  signal pins: ");
   for (int i = 0; i < keyReadN; i++) {
-    Serial.print(keyRead[i]); Serial.print(" ");
+    pr(keyRead[i]); pr(" ");
   }
-  Serial.println();
+  prln();
 
   //Set pins
   for (int i = 0; i < keyGndN; i++) {
@@ -77,8 +77,8 @@ byte string_keys[POLYPHONY];
 void set_base_note(char note) {
   if (base_note != note) {
     base_note = note;
-    Serial.print("Base note: ");
-    Serial.println(int(note));
+    pr("Base note: ");
+    prln(int(note));
   }
 }
 
@@ -88,7 +88,7 @@ void key_pressed(byte key) {
   //this is note key
   if (key < note_keys_count) {
     if (note_keys_n < POLYPHONY) { //add to array
-      //Serial.print("note_key "); Serial.print(note_keys_n); Serial.print(" = "); Serial.println(key);
+      //pr("note_key "); pr(note_keys_n); pr(" = "); prln(key);
       note_keys[note_keys_n++] = key;
       //because we scan keys ordered, note_keys will be ordered too
     }
@@ -99,7 +99,7 @@ void key_pressed(byte key) {
   //TODO can map all keys
   for (byte i = 0; i < POLYPHONY; i++) {
     if (key == string_keys_indices[i]) {
-      //Serial.print("string_key "); Serial.println(i);
+      //pr("string_key "); prln(i);
       string_keys[i] = 1;
       return;
     }
@@ -151,7 +151,7 @@ void keyboard_loop() {
   for (byte k = 0; k < keyGndN; k++) {
     //enable control pin
     digitalWrite(keyGnd[k], LOW);
-    delayMicroseconds(10);  //need wait 2 mcs, but let's wait for more...
+    //delayMicroseconds(10);  //need wait 2 mcs, but let's wait for more...
 
     //Scan pins
     //TODO can use ports for reading faster, see 05_ArduinoMegaPortTest
@@ -165,9 +165,9 @@ void keyboard_loop() {
       if (state != v) {
         was_changed = true;
         if (debug) {
-          Serial.print("key "); Serial.print(key); Serial.print(": ");
-          if (v) Serial.println("on");
-          else Serial.println("off");
+          pr("key "); pr(key); pr(": ");
+          if (v) prln("on");
+          else prln("off");
         }
       }
       state = v;
@@ -193,9 +193,9 @@ void keyboard_loop() {
   }
   //test print of keyboard state - use for check all is connected
   //for (int i=0; i<keys; i++) {
-  //  Serial.print(key_state[i]);
+  //  pr(key_state[i]);
   //}
-  //Serial.println();
+  //prln();
 
 }
 

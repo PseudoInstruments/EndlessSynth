@@ -15,8 +15,8 @@ float m_to_f_float(float midi_note) {
 }
 
 void test_notes() {
-  Serial.println("Test notes:");
-  Serial.print("A "); Serial.println(m_to_f_int(69));
-  Serial.print("B "); Serial.println(m_to_f_int(70));
+  prln("Test notes:");
+  pr("A "); prln(m_to_f_int(69));
+  pr("B "); prln(m_to_f_int(70));
 }
 //---------------------------------------------------------------
