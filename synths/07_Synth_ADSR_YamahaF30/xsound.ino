@@ -178,17 +178,15 @@ void sound_update_speedup_values() {
 
 //---------------------------------------------------------------
 void sound_setup() {
-  pr("Buzzer pin: "); prln(pin_buz);
+  pr("Audio output pin: "); prln(pin_buz);
   pr("Starting with audio sample rate: "); prln(audio_sample_rate);
-
-  //Wavetable
-  make_wavetable();
 
   //Set port/pin mode for Arduino Mega for buzzer
   //Ports in Arduino https://www.arduino.cc/en/Reference/PortManipulation
   //Pins in Arduino Mega https://www.arduino.cc/en/Hacking/PinMapping2560
   //pin 2 is 4 bit of Port E (in scheme PE2)
-  DDRE = B00010000;    //pinMode(2,OUTPUT);
+  //DDRE = B00010000;    //Can' do it because all other PORTE pins will be disabled, but we need enable for sliders power
+  pinMode(2,OUTPUT);
 
   //test_notes();
   //Start interrupt for sound generation
