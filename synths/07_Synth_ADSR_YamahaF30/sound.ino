@@ -169,13 +169,7 @@ unsigned long long freq3_wave_n = 0;
 //---------------------------------------------------------------
 //Set playing notes
 //-1 means note off, that os freqi=0
-void set_notes(char midi_note1, char midi_note2, char midi_note3, char midi_note4, char base_note) {
-  if (debug) {
-    pr("notes "); pr(int(midi_note1));
-    pr(" "); pr(int(midi_note2));
-    pr(" "); pr(int(midi_note3));
-   //pr(" "); pr(int(midi_note4));
-  }
+void sound_set_notes(char midi_note1, char midi_note2, char midi_note3, char midi_note4, char base_note) {
   
   freq1 = (midi_note1 != -1) ? m_to_f_int(midi_note1 + base_note) : 0;
   freq2 = (midi_note2 != -1) ? m_to_f_int(midi_note2 + base_note) : 0;
@@ -240,7 +234,7 @@ void sound_setup() {
   pr("Polyphony: "); prln(POLYPHONY);
 
   //set default tone and sample rate
-  sound_set_sliders(512, 512, 512);
+  sliders_loop();
 }
 
 

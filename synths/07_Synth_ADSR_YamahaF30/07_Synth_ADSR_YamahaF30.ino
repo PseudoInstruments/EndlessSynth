@@ -81,10 +81,10 @@ byte debug_now = 0;  //signal for debug
 long int last_debug_time = 0;
 
 byte sliders_debug = 0;     //debug mode for sliders - enabled by '2' from Serial
+byte adsr_debug = 0;    //debug for ASDR, enabled by '3' from Serial
+byte demo_play = 0;   //enabled by '0' from Serial
 
-byte demo_play = 0;   //enabled by '3' from Serial
-
-const int FPS = 200;  //control FPS. note: really a bit less because we use simple delay(1000/FPS) for FPS control.
+const int FPS = 200;  //control FPS. note: really a much less because we use simple delay(1000/FPS) for FPS control.
 const int FPS_delay = 1000 / FPS;
 
 //---------------------------------------------------------------
@@ -116,7 +116,7 @@ void setup() {
   prln("----------------------------------------------------------------");
   prln("EndlessSynth 06_SynthArpegiatorMega_YamahaPSSF30, v. 1.2 for Arduino Mega and Yamaha PSSF30 keyboard");
   prln("Features:");
-  prln("3 polyphony, sine wave synthesis.");
+  prln("3 polyphony, sine wave synthesis, ADSR envelope");
   prln("How to play:  hold up to three notes by left hand and press 3 hit white \"string\" keys.");
   prln("Combination of note key and string key plays a note");
   prln("To switch octave use three right black keys");
@@ -133,12 +133,22 @@ void setup() {
   keyboard_setup();
   sound_setup();
   sliders_setup();
+  ADSR_setup();
 
   prln("----------------------------------------------------------------");
   prln("Synth is ready to play.");
-  prln("Send '1' to on/off debug print, '2' to debug sliders, '3' to run demo play");
+  prln("Send '1' to on/off debug print, '2' to debug sliders, '3' to debug ADSR, '0' to run demo play");
   prln("----------------------------------------------------------------");
 
+}
+
+//----------------------------------------------------------
+//universal function for switching values
+void toggle_debug(byte key, byte key_expected, const char *text, byte &value) {
+  if (key == key_expected) {
+    value = 1 - value;
+    pr(text); prln(value);
+  }
 }
 
 //----------------------------------------------------------
@@ -146,32 +156,25 @@ void loop() {
   //Serial commands
   if (Serial.available() > 0) { //we expect only "1" rare to on/off debugging
     int key = Serial.read();
-    if (key == '1') {
-      debug = 1 - debug;
-      pr("Debug "); prln(debug);
-    }
-    if (key == '2') {
-      sliders_debug = 1 - sliders_debug;
-      pr("Sliders_debug "); prln(sliders_debug);
-    }
-    if (key == '3') {
-      demo_play = 1 - demo_play;
-      pr("Demo_play "); prln(demo_play);      
-    }
+    toggle_debug(key, '1', "Debug ", debug);
+    toggle_debug(key, '2', "Sliders_debug ", sliders_debug);
+    toggle_debug(key, '3', "ASDR_debug ", adsr_debug);
+    toggle_debug(key, '0', "Demo_play ", demo_play);
   }
 
-  //Control update at 200 fps - see FPS value
+  //Control update at ~200 (really much less) fps - see FPS value
+  unsigned int time = millis();
+  ADSR_loop(time);
   sliders_loop();
   mic_loop();
-  keyboard_loop();
+  keyboard_loop(time);
   sound_loop();
 
-  //Delay, so ~200 fps
+  //Delay for FPS
   delay(FPS_delay);  
 
   //compute signal for "rare" debug print
   if (debug) {
-    long int time = millis();
     if (time > last_debug_time + 200) {
       debug_now = 1;
       last_debug_time = time;

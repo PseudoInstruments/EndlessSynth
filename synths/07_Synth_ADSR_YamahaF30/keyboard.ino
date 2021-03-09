@@ -134,10 +134,25 @@ void key_pressed(byte key) {
   //if (key == key_sample_rate2) { set_audio_sample_rate_index(1); return; }
 }
 
+
+//---------------------------------------------------------------
+//Set playing notes
+//-1 means note off, that os freqi=0
+void keyboard_change(char midi_note1, char midi_note2, char midi_note3, char midi_note4, char base_note) {
+  sound_set_notes(midi_note1, midi_note2, midi_note3, midi_note4, base_note); 
+  
+  if (debug) {
+    pr("notes "); pr(int(midi_note1));
+    pr(" "); pr(int(midi_note2));
+    pr(" "); pr(int(midi_note3));
+   //pr(" "); pr(int(midi_note4));
+  }
+}
+  
 //---------------------------------------------------------------
 //unsigned long int keyb_time_print_ = 0; //time for printing keyboard state
 
-void keyboard_loop() {
+void keyboard_loop(unsigned int time) {
   //clear notes and string keys
   note_keys_n = 0;
   for (byte i = 0; i < POLYPHONY; i++) {
@@ -185,7 +200,7 @@ void keyboard_loop() {
   //play
   if (was_changed) {
     //set keys with using base_note, which is depends on choosen octave
-    set_notes(string_keys[0] ? note_keys[0] : -1,
+    keyboard_change(string_keys[0] ? note_keys[0] : -1,
               string_keys[1] ? note_keys[1] : -1,
               string_keys[2] ? note_keys[2] : -1,
               string_keys[3] ? note_keys[3] : -1,
@@ -198,7 +213,7 @@ void keyboard_loop() {
     t = (t+1)%(FPS/2);
     if (t == 0) {
       //random notes     
-      set_notes(random(24), -1, -1, -1, base_note);
+      keyboard_change(random(24), -1, -1, -1, base_note);
     }
   }
   
