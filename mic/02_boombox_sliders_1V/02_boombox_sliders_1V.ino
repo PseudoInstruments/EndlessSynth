@@ -103,6 +103,20 @@ void setup() {
   analogReference(INTERNAL);
 }
 
+
+//--------------------------------------------------------------
+//Utils
+int clampi(int i, int a, int b) {
+  if (i < a) return a;
+  if (i > b) return b;
+  return i;
+}
+
+int mapi_clamp(int i, int a, int b, int A, int B) {
+  return clampi(map(i, a, b, A, B), A, B);
+}
+
+
 //--------------------------------------------------------------
 //Constants
 const int audio_delay_mcs0 = 0;
@@ -139,8 +153,8 @@ inline void control_step() {
   int slider2 = analogRead(slider2_analog_pin);  //0..1023
   int slider3 = analogRead(slider3_analog_pin);  //0..1023
 
-  audio_delay_mcs = map(slider2, analog_min, analog_max, audio_delay_mcs0, audio_delay_mcs1);
-  audio_thresh0 = map(slider3, analog_min, analog_max, audio_thresh_slider1, audio_thresh_slider0); //reverted range
+  audio_delay_mcs = mapi_clamp(slider2, analog_min, analog_max, audio_delay_mcs0, audio_delay_mcs1);
+  audio_thresh0 = mapi_clamp(slider3, analog_min, analog_max, audio_thresh_slider1, audio_thresh_slider0); //reverted range
   audio_thresh1 = audio_thresh0 + audio_thresh_hyster;
 
   //lighting LED if audio inside adjusting range - helping for adjusting trimming resistor

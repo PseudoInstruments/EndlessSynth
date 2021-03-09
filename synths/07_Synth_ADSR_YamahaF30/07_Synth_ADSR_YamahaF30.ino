@@ -3,7 +3,7 @@
 //- ADSR-engine for sound 
 //- optimized sound engine computations (removed "/" in wave_table[...] computation, so higher audio rate
 //- Added sliders
-//- New timbres - triangle and sine+noise
+//- New timbres - triangle and noised
 
 //Output goes through pin 2 to minijack.
 //8 potentiometers:
@@ -14,7 +14,7 @@
 //5 Release
 //6 Sample Rate  (Sound settings)
 //7 Diffusion
-//8 Timbre      sine, triangle, sawtooth, sine+noise
+//8 Timbre      sine, triangle, sawtooth, noised
 //Note: If you have no sliders, set SLIDERS_ENABLED=0 below
 
 //right F,G - switch timbre

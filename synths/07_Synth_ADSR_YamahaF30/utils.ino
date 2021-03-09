@@ -12,6 +12,10 @@ int clampi(int i, int a, int b) {
   return i;
 }
 
+int mapi_clamp(int i, int a, int b, int A, int B) {
+  return clampi(map(i, a, b, A, B), A, B);
+}
+
 //---------------------------------------------------------------
 //print routines - use their for shortening code
 void pr(const char *str) {

@@ -5,7 +5,7 @@
 
   This is simpler than synths because don't uses timer interrupts.
 
-  Controller: Arduino Uno or Mega
+  Controller: Arduino Uno or Nano
 
   ----------------------------------------
   Connection
