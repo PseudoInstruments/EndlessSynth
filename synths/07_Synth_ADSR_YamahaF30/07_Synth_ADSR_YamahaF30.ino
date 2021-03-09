@@ -102,7 +102,7 @@ void setup() {
   prln("----------------------------------------------------------------");
   prln("EndlessSynth 06_SynthArpegiatorMega_YamahaPSSF30, v. 1.2 for Arduino Mega and Yamaha PSSF30 keyboard");
   prln("Features:");
-  prln("3 polyphony, sine wave synthesis, ADSR envelope");
+  prln("3 polyphony, ADSR envelope, timbres: sine, tri, saw, sine+noise");
   prln("How to play:  hold up to three notes by left hand and press 3 hit white \"string\" keys.");
   prln("Combination of note key and string key plays a note");
   prln("To switch octave use three right black keys");
@@ -114,9 +114,10 @@ void setup() {
   pr("Control FPS: "); prln(FPS);
   mic_setup();
   keyboard_setup();
-  sound_setup();
+  timbres_setup();
   sliders_setup();
   ADSR_setup();
+  sound_setup();
 
   prln("----------------------------------------------------------------");
   prln("Synth is ready to play.");
