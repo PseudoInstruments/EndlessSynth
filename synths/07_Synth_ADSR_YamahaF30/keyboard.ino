@@ -191,6 +191,17 @@ void keyboard_loop() {
               string_keys[3] ? note_keys[3] : -1,
               base_note);
   }
+
+  //demo play
+  if (demo_play) {
+    static int t = 0;
+    t = (t+1)%(FPS/2);
+    if (t == 0) {
+      //random notes     
+      set_notes(random(24), -1, -1, -1, base_note);
+    }
+  }
+  
   //test print of keyboard state - use for check all is connected
   //for (int i=0; i<keys; i++) {
   //  pr(key_state[i]);

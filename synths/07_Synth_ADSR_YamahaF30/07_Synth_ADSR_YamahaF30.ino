@@ -15,7 +15,7 @@
 //8 [Reserved]
 //Note: If you have no sliders, set SLIDERS_ENABLED=0 below
 
-//F,G - switch timbre: pulse and sawtooth
+//right F,G - switch timbre
 
 
 //--------------------------------------------
@@ -75,11 +75,17 @@ const byte pin_buz = 2;
 const int SLIDERS_ENABLED = 1;
   //0;
 
-byte sliders_debug = 0;     //debug mode for sliders - printing, "2" from keyboard
 
-int debug = 0;
-int debug_now = 0;  //signal for debug
+byte debug = 0;       //enabled by '1'  from Serial
+byte debug_now = 0;  //signal for debug
 long int last_debug_time = 0;
+
+byte sliders_debug = 0;     //debug mode for sliders - enabled by '2' from Serial
+
+byte demo_play = 0;   //enabled by '3' from Serial
+
+const int FPS = 200;  //control FPS. note: really a bit less because we use simple delay(1000/FPS) for FPS control.
+const int FPS_delay = 1000 / FPS;
 
 //---------------------------------------------------------------
 //number of notes to play simultaneously, 1..4
@@ -106,55 +112,64 @@ void prln() {
 //---------------------------------------------------------------
 void setup() {
   Serial.begin(500000);
-  Serial.println("----------------------------------------------------------------");
-  Serial.println("EndlessSynth 06_SynthArpegiatorMega_YamahaPSSF30, v. 1.1 for Arduino Mega and Yamaha PSSF30 keyboard");
-  Serial.println("3 polyphony, sine wave synthesis. Without attack-release.");
-  Serial.println("How to play:  hold up to three notes by left hand and press 3 hit white \"string\" keys.");
-  Serial.println("Combination of note key and string key plays a note");
-  Serial.println("To switch octave use three right black keys");
+  prln();
+  prln("----------------------------------------------------------------");
+  prln("EndlessSynth 06_SynthArpegiatorMega_YamahaPSSF30, v. 1.2 for Arduino Mega and Yamaha PSSF30 keyboard");
+  prln("Features:");
+  prln("3 polyphony, sine wave synthesis.");
+  prln("How to play:  hold up to three notes by left hand and press 3 hit white \"string\" keys.");
+  prln("Combination of note key and string key plays a note");
+  prln("To switch octave use three right black keys");
   
-  if (SLIDERS_ENABLED)  Serial.println("Sliders enabled: Slider2 (A4) - sample rate, Slider 3 (A5) - tone.");
-  else Serial.println("[Sliders disabled]");
+  if (SLIDERS_ENABLED)  prln("Sliders enabled: Slider2 (A4) - sample rate, Slider 3 (A5) - tone.");
+  else prln("[Sliders disabled]");
   
-  Serial.println("To switch timbre right F (sine) ang G (sawtooth)");
-  //Serial.println("Press mic button to pass mic sound to output. The last slider is kind of mic sensitivity.");
+  prln("To switch timbre right F and G");
+  //prln("Press mic button to pass mic sound to output. The last slider is kind of mic sensitivity.");
 
-  Serial.println("----------------------------------------------------------------");
-
+  prln("----------------------------------------------------------------");
+  pr("Control FPS: "); prln(FPS);
   mic_setup();
   keyboard_setup();
   sound_setup();
   sliders_setup();
 
-  Serial.println();
-  Serial.println("Synth is ready to play.");
-  Serial.println("Send '1' to on/off debug print, '2' to debug sliders");
+  prln("----------------------------------------------------------------");
+  prln("Synth is ready to play.");
+  prln("Send '1' to on/off debug print, '2' to debug sliders, '3' to run demo play");
+  prln("----------------------------------------------------------------");
 
 }
 
 //----------------------------------------------------------
 void loop() {
+  //Serial commands
   if (Serial.available() > 0) { //we expect only "1" rare to on/off debugging
     int key = Serial.read();
     if (key == '1') {
       debug = 1 - debug;
-      Serial.print("Debug "); Serial.println(debug);
+      pr("Debug "); prln(debug);
     }
     if (key == '2') {
       sliders_debug = 1 - sliders_debug;
-      Serial.print("Sliders_debug "); Serial.println(sliders_debug);
+      pr("Sliders_debug "); prln(sliders_debug);
+    }
+    if (key == '3') {
+      demo_play = 1 - demo_play;
+      pr("Demo_play "); prln(demo_play);      
     }
   }
 
-
+  //Control update at 200 fps - see FPS value
   sliders_loop();
   mic_loop();
   keyboard_loop();
   sound_loop();
 
-  delay(5); //2); //Delay, so ~200 fps
+  //Delay, so ~200 fps
+  delay(FPS_delay);  
 
-  //debug print "rare"
+  //compute signal for "rare" debug print
   if (debug) {
     long int time = millis();
     if (time > last_debug_time + 200) {

@@ -32,7 +32,7 @@ const byte slider_5V_pin = 5;   //+5V for sliders
 //---------------------------------------------------------------
 void sliders_setup() {
   if (SLIDERS_ENABLED)  {
-    pr("Sliders Tone: A2, ADSR: A3456, sample rate: A8, Diffusion: A9, [Reserved] A10, sliders power: pin 4 as Gnd, pin 5 as 5V");
+    prln("Sliders Tone: A2, ADSR: A3456, sample rate: A8, Diffusion: A9, [Reserved] A10, sliders power: pin 4 as Gnd, pin 5 as 5V");
   }
   else prln("[Sliders disabled]");
 
