@@ -6,16 +6,16 @@ Made by Endless Attractions Museum, https://eamuseum.com/Endless-Instruments
 
 ## Instruments
 
-### Endless Boombox 
+### Endless Mic 
 
-Endless boombox is a instrument made from toy microphone and Arduino Uno. 
+Endless Mic is a instrument made from toy microphone and Arduino Uno. 
 It processes input sound to 1 bit.
 
 Performance video: 
 
 [![How it works](https://img.youtube.com/vi/3pW5L71EReI/0.jpg)](https://www.youtube.com/watch?v=3pW5L71EReI)
 
-Code and implementation details: boomboxes/01_boombox_simple
+Code and implementation details: mic/01_boombox_simple
 
 
 ### Endless Guitar
