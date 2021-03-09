@@ -26,8 +26,11 @@ const byte apin_Sample_rate = A8;
 const byte apin_Diffusion = A9;
 const byte apin_Reserved = A10;      //not used
 
-const byte slider_Gnd_pin = 4;  //Gnd for sliders
-const byte slider_5V_pin = 5;   //+5V for sliders
+//power pins for sliders
+//note: because sound engine uses ports for output - be careful, and if you change pins here,
+//check how it works with ports in sound.ini
+const byte slider_5V_pin = 6;   //+5V for sliders  
+const byte slider_Gnd_pin = 5;  //Gnd for sliders - it's PORTE 3
 
 //---------------------------------------------------------------
 void sliders_setup() {
@@ -59,14 +62,14 @@ void sliders_loop() {
   int Reserved = (SLIDERS_ENABLED) ? analogRead(apin_Reserved) : 512;
 
 
-  sound_set_sliders(Tone, Sample_rate);
+  sound_set_sliders(Tone, Sample_rate, Diffusion);
 
   //Debug print
   if (sliders_debug) {
     static byte t = 0;
     t = (t + 1) % 10;
     if (t == 0) {
-      pr("Tone="); pr(Tone);
+      pr("SLIDERS Tone="); pr(Tone);
       pr(", Attack="); pr(Attack);
       pr(", Decay="); pr(Decay);
       pr(", Sustain="); pr(Sustain);
