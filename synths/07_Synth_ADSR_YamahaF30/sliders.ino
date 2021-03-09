@@ -24,7 +24,7 @@ const byte apin_Release = A6;
 
 const byte apin_Sample_rate = A8;
 const byte apin_Diffusion = A9;
-const byte apin_Reserved = A10;      //not used
+const byte apin_Timbre = A10;      
 
 //power pins for sliders
 //note: because sound engine uses ports for output - be careful, and if you change pins here,
@@ -35,7 +35,7 @@ const byte slider_Gnd_pin = 5;  //Gnd for sliders - it's PORTE 3
 //---------------------------------------------------------------
 void sliders_setup() {
   if (SLIDERS_ENABLED)  {
-    prln("Sliders Tone: A2, ADSR: A3456, sample rate: A8, Diffusion: A9, [Reserved] A10, sliders power: pin 4 as Gnd, pin 5 as 5V");
+    prln("Sliders: Tone: A2, ADSR: A3456, sample rate: A8, Diffusion: A9, Timbre A10, sliders power: pin 4 as Gnd, pin 5 as 5V");
   }
   else prln("[Sliders disabled]");
 
@@ -59,10 +59,11 @@ void sliders_loop() {
 
   int Sample_rate = (SLIDERS_ENABLED) ? analogRead(apin_Sample_rate) : 0;
   int Diffusion = (SLIDERS_ENABLED) ? analogRead(apin_Diffusion) : 512;
-  int Reserved = (SLIDERS_ENABLED) ? analogRead(apin_Reserved) : 512;
+  int Timbre = (SLIDERS_ENABLED) ? analogRead(apin_Timbre) : 512;
 
 
   sound_set_sliders(Tone, Sample_rate, Diffusion);
+  set_timbre_slider(Timbre);
 
   //Debug print
   if (sliders_debug) {
@@ -77,7 +78,7 @@ void sliders_loop() {
 
       pr(", Sample_rate="); pr(Sample_rate);
       pr(", Diffusion="); pr(Diffusion);
-      pr(", Reserved="); pr(Reserved);
+      pr(", Timbre="); pr(Timbre);
 
       prln("");
     }

@@ -23,12 +23,12 @@ const byte key_octave1 = keys - 7;
 const byte key_octave2 = keys - 5;
 const byte key_octave3 = keys - 3;
 
-//keys for sample rate switch
-const byte key_timbre1 = keys - 6;
-const byte key_timbre2 = keys - 8;
+//keys for timbre switch
+//const byte key_timbre1 = keys - 6;
+//const byte key_timbre2 = keys - 8;
 
 //keys used for notes
-const byte note_keys_count = keys - 8;
+const byte note_keys_count = keys - 7;
 
 //octave base notes
 const byte note_octave1 = 60 - 3 * 12;
@@ -120,14 +120,14 @@ void key_pressed(byte key) {
   }
 
   //timbre switch
-  if (key == key_timbre1) {
+  /*if (key == key_timbre1) {
     set_timbre(0);
     return;
   }
   if (key == key_timbre2) {
     set_timbre(1);
     return;
-  }
+  }*/
 
   //sample rate switch
   //if (key == key_sample_rate1) { set_audio_sample_rate_index(0); return; }

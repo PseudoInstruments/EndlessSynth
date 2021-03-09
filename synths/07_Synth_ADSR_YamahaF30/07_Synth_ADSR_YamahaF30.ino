@@ -2,6 +2,8 @@
 //New:
 //- ADSR-engine for sound 
 //- optimized sound engine computations (removed "/" in wave_table[...] computation, so higher audio rate
+//- Added sliders
+//- New timbres - triangle and sine+noise
 
 //Output goes through pin 2 to minijack.
 //8 potentiometers:
@@ -10,9 +12,9 @@
 //3 Decay
 //4 Sustain 
 //5 Release
-//6 Sample Rate  (Timbre settings)
+//6 Sample Rate  (Sound settings)
 //7 Diffusion
-//8 [Reserved]
+//8 Timbre      sine, triangle, sawtooth, sine+noise
 //Note: If you have no sliders, set SLIDERS_ENABLED=0 below
 
 //right F,G - switch timbre
@@ -92,22 +94,6 @@ const int FPS_delay = 1000 / FPS;
 #define POLYPHONY (3)
 //#define POLYPHONY (4) //For some reason 4 halts the system :)
 
-//print routines - use their for shortening code
-void pr(const char *str) {
-  Serial.print(str);
-}
-void prln(const char *str) {
-  Serial.println(str);
-}
-void pr(int i) {
-  Serial.print(i);
-}
-void prln(int i) {
-  Serial.println(i);
-}
-void prln() {
-  Serial.println();
-}
 
 //---------------------------------------------------------------
 void setup() {
@@ -120,11 +106,8 @@ void setup() {
   prln("How to play:  hold up to three notes by left hand and press 3 hit white \"string\" keys.");
   prln("Combination of note key and string key plays a note");
   prln("To switch octave use three right black keys");
-  
-  if (SLIDERS_ENABLED)  prln("Sliders enabled: Slider2 (A4) - sample rate, Slider 3 (A5) - tone.");
-  else prln("[Sliders disabled]");
-  
-  prln("To switch timbre right F and G");
+    
+  //prln("To switch timbre right F and G");
   //prln("Press mic button to pass mic sound to output. The last slider is kind of mic sensitivity.");
 
   prln("----------------------------------------------------------------");
