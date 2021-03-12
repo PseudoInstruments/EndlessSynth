@@ -82,6 +82,9 @@ void setup() {
 //--------------------------------------------------------------
 //Utils
 int clampi(int i, int a, int b) {
+  if (a > b) {
+    int t = a; a = b; b = t;
+  }
   if (i < a) return a;
   if (i > b) return b;
   return i;
@@ -94,10 +97,11 @@ int mapi_clamp(int i, int a, int b, int A, int B) {
 
 //--------------------------------------------------------------
 //Constants
-const int audio_delay_mcs0 = 0;
-const int audio_delay_mcs1 = 500;//400;
+const int audio_delay_mcs0 = 500;
+const int audio_delay_mcs1 = 0;
 const int audio_thresh_fader0 = 512;
-const int audio_thresh_fader1 = 512 + 40;
+const int audio_thresh_fader1 = 900;
+
 const int audio_thresh_hyster = 2;
 
 //Sound parameters
@@ -167,9 +171,9 @@ inline void control_step() {
     Serial.print("  faders "); Serial.print(fader2);
     Serial.print(","); Serial.print(fader3);
     Serial.print(","); Serial.print(fader4);
-    Serial.print("  audio_delay_mcs "); Serial.print(audio_delay_mcs);
-    Serial.print("  audio_thresh "); Serial.print(audio_thresh0);
-    Serial.print("  audio_diff "); Serial.print(audio_diff_keep);
+    Serial.print("  delay_mcs "); Serial.print(audio_delay_mcs);
+    Serial.print("  diffusion "); Serial.print(audio_diff_keep);
+    Serial.print("  thresh "); Serial.print(audio_thresh0);
 
     Serial.println();
   }
