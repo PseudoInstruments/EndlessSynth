@@ -136,10 +136,14 @@ void key_pressed(byte key) {
 
 
 //---------------------------------------------------------------
-//Set playing notes
+//Set playing notes - to xsound and adsr
 //-1 means note off, that os freqi=0
-void keyboard_change(char midi_note1, char midi_note2, char midi_note3, char midi_note4, char base_note) {
+void keyboard_change(unsigned int time, char midi_note1, char midi_note2, char midi_note3, char midi_note4, char base_note) {
+  bool is_pressed = (midi_note1 != -1 || midi_note2 != -1 || midi_note3 != -1 || midi_note4 != -1);
+  //pr("some key "); prln(is_pressed);
   sound_set_notes(midi_note1, midi_note2, midi_note3, midi_note4, base_note); 
+
+  ADSR_key_event(time, is_pressed);
   
   if (debug) {
     pr("notes "); pr(int(midi_note1));
@@ -200,10 +204,11 @@ void keyboard_loop(unsigned int time) {
   //play
   if (was_changed) {
     //set keys with using base_note, which is depends on choosen octave
-    keyboard_change(string_keys[0] ? note_keys[0] : -1,
+    keyboard_change(time, 
+              string_keys[0] ? note_keys[0] : -1,
               string_keys[1] ? note_keys[1] : -1,
               string_keys[2] ? note_keys[2] : -1,
-              string_keys[3] ? note_keys[3] : -1,
+              -1, //string_keys[3] ? note_keys[3] : -1,
               base_note);
   }
 
@@ -213,7 +218,7 @@ void keyboard_loop(unsigned int time) {
     t = (t+1)%(FPS/2);
     if (t == 0) {
       //random notes     
-      keyboard_change(random(24), -1, -1, -1, base_note);
+      keyboard_change(time, random(24), -1, -1, -1, base_note);
     }
   }
   

@@ -78,27 +78,28 @@ inline void set_audio_sample_rate(int rate) {
 //----------------------------------------------------------
 //Apply sliders
 //----------------------------------------------------------
+extern const int diff_keep_max;
 void sound_set_sliders(int slider_tone, int slider_sample_rate, int slider_diffusion) {
   tone_adjust_ = 3 * float(slider_tone - 512) / 512.0; //-3..3
   int rate = map(slider_sample_rate, 0, 1023, audio_sample_rate1, audio_sample_rate0);
   set_audio_sample_rate(rate);
 
   //diffusion
-  set_diff_keep(map(slider_diffusion,0,1023,0,256));
+  set_diff_keep(map(slider_diffusion,0,1023,0,diff_keep_max));
 }
 
 //  alg_step10bit 0..1023 - kind of "level of sound generation", the higher - the more dithering
 //  alg_diff10bit 0..1023 - memory of dithering, the higher - the more harshness
 /*void sound_set_1bitparams(int alg_step10bit, int alg_diff10bit) {
-  diff_step = ((long int)alg_step10bit) * (max_diff_step - min_diff_step) / 1024 + min_diff_step;
+  audio_volume = ((long int)alg_step10bit) * (max_audio_volume - min_audio_volume) / 1024 + min_audio_volume;
   diff_keep = ((long int)alg_diff10bit) * diff_keep_denom / 1024;
 
   //Formula for threshold
-  thresh_sound = ((long int) diff_step) * diff_keep / (diff_keep_denom) + 1; //I expect to use 2*diff_keep_denom, but beep occurs:)
+  thresh_sound = ((long int) audio_volume) * diff_keep / (diff_keep_denom) + 1; //I expect to use 2*diff_keep_denom, but beep occurs:)
 
 
   //Debug print - uncomment to print sliders values
-  //pr("diff_step "); pr(diff_step);
+  //pr("audio_volume "); pr(audio_volume);
   //pr(", diff_keep float "); pr(float(diff_keep)/diff_keep_denom);
   //pr(", thresh_sound "); pr(thresh_sound);
   //prln();
@@ -204,25 +205,31 @@ void sound_setup() {
 //----------------------------------------------------------
 //1-bit sound diffusion parameters
 
-const int min_diff_step = 1;    //Parameter for slider
-const int max_diff_step = 256;    //Parameter for slider
-int diff_step = //127 * POLYPHONY; //step of diffusion subtraction - 1..127, kind of threshold for sound
-  90; //127;    //just 127 - to make polyphony sounding more "phatty"
+//Audio volume - changed by ADSR
+const int audio_volume_min = 0;    
+const int audio_volume_max = 127;
+const int audio_volume_shift = 7; // << 7 instead "/audio_volume_max"
 
+int audio_volume = 127; //volume of the sound, controlled by ADSR
+
+
+int audio_step = //127 * POLYPHONY; //step of diffusion subtraction for 1 bit algorithm - 1..127, kind of threshold for sound
+  audio_volume_max; //90; //127;    //just 127 - to make polyphony sounding more "phatty"
 
 int diff_keep = 16; //64; //decaying diffusion 0..256, 0 - no diffusion, 256 - keep all diffusion
-const int diff_keep_denom = 256;
+const int diff_keep_max = 256;
+const int diff_keep_shift = 8;
 
 //threshold for switching buzzer, must be so that not to allow "silence beep"
-int thresh_sound = 20;
-//diff_step / 2; //but for diff_keep <= 50 can be lower
+int thresh_sound = 1; //20;
+//audio_volume / 2; //but for diff_keep <= 50 can be lower
 
 //Formula, but not tested for this sound
-//const int thresh_sound = ((long int) diff_step) * diff_keep / (2*diff_keep_denom) + 1;
+//const int thresh_sound = ((long int) audio_volume) * diff_keep / (2*diff_keep_denom) + 1;
 
 //Variable of sound output
 long int sound_value = 0; //error diffusion value
-
+long int sound_temp = 0;
 
 //----------------------------------------------------------
 //set decaying diffusion 0..256, 0 - no diffusion, 256 - keep all diffusion
@@ -237,7 +244,7 @@ long long phase = 0;
 //We should make this function as fast as possible, and trying to omit "/" and "%" operations
 void timer_interrupt() {
   //decay accumulated diffusion, because in opposite case zero values will give constant high-tone
-  sound_value = (sound_value * diff_keep) >> 8;    // >> 8 means / diff_keep_denom //sound_value >> 2;
+  sound_value = (sound_value * diff_keep) >> diff_keep_shift;    
 
   //----------------------------------
   //if (mic_button) {
@@ -255,10 +262,12 @@ void timer_interrupt() {
     //optimize 2:
     //    freq1_wave_n = freq1 * wave_n * 1048576 / audio_sample_rate; //2^24
     //    wave_table[((phase * freq1_wave_n) >> 24) % wave_n]
-    if (freq1) sound_value += wave_table[((phase * freq1_wave_n) >> SOUND_WAVE_SHIFT) % wave_n];
-    if (freq2) sound_value += wave_table[((phase * freq2_wave_n) >> SOUND_WAVE_SHIFT) % wave_n];
-    if (freq3) sound_value += wave_table[((phase * freq3_wave_n) >> SOUND_WAVE_SHIFT) % wave_n];
-    //  if (freq4) sound_value += wave_table[(((long long)phase * freq4 * wave_n) >> shift_audio) % wave_n];
+    sound_temp = 0;
+    if (freq1) sound_temp += wave_table[((phase * freq1_wave_n) >> SOUND_WAVE_SHIFT) % wave_n];
+    if (freq2) sound_temp += wave_table[((phase * freq2_wave_n) >> SOUND_WAVE_SHIFT) % wave_n];
+    if (freq3) sound_temp += wave_table[((phase * freq3_wave_n) >> SOUND_WAVE_SHIFT) % wave_n];
+
+    sound_value += (sound_temp * audio_volume) >> audio_volume_shift;
   }
   //----------------------------------
 
@@ -270,13 +279,13 @@ void timer_interrupt() {
   if (sound_value >= thresh_sound) {
     PORTE = B00010000; //buzzer ON   
     //PORTE |= B00010000; //better, because doesn't affect other pins, but very slow
-    sound_value -= diff_step;       //diffusion propagation
+    sound_value -= audio_step;       //diffusion propagation
   }
   else {
     if (sound_value <= -thresh_sound) {
       PORTE = B00000000; //buzzer OFF;
       //PORTE &= B11101111; //better, because doesn't affect other pins, but very slow
-      sound_value += diff_step;       //diffusion propagation
+      sound_value += audio_step;       //diffusion propagation
     }
   }
 
@@ -287,7 +296,7 @@ void timer_interrupt() {
 unsigned long int sound_time = 0;
 
 void sound_loop() {
-  unsigned long time = millis();
+  /*unsigned long time = millis();
   if (time > sound_time + 200) {
     sound_time = time;
     long int time = millis();
@@ -299,7 +308,7 @@ void sound_loop() {
 
     //pr("\trate: ");
     //prln(double(t) / (time / 1000.0));
-  }
+  }*/
 }
 
 
