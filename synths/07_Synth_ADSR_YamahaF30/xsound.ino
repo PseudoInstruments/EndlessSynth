@@ -228,7 +228,7 @@ int thresh_sound = 1; //20;
 //const int thresh_sound = ((long int) audio_volume) * diff_keep / (2*diff_keep_denom) + 1;
 
 //Variable of sound output
-long int sound_value = 0; //error diffusion value
+long int sound_value = 0; //error diffusion value,   also affected by ADSR
 long int sound_temp = 0;
 
 //----------------------------------------------------------

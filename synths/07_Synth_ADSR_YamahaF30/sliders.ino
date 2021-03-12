@@ -64,6 +64,7 @@ void sliders_loop() {
 
   sound_set_sliders(Tone, Sample_rate, Diffusion);
   set_timbre_slider(Timbre);
+  set_adsr_sliders(Attack, Decay, Sustain, Release);
 
   //Debug print
   if (sliders_debug) {
