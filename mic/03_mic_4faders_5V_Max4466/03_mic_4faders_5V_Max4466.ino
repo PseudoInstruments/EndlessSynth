@@ -7,7 +7,7 @@
   2) Using linear rotative faders 5kOhm. (May use 10kOhm).
   1 - volume - directly between pin 2 and audio output, without Arduino
   2 - sample rate, A3
-  3 - diffusion, A4
+  3 - diffusion, A4   (kind of release)
   4 - sensitivity, A5
 
   Program gets sound from A0 and outputs it to audio output(pin 2) with diffusion.
@@ -63,7 +63,7 @@ int debug = 0;    //control from keyboard to begin debugging
 void setup() {
   Serial.begin(500000);
   Serial.println("Endless Mic Processor with 4 faders, 5V, Max4466, v. 1.3 for Arduino Uno, Nano");
-  Serial.println("Program gets sound from A0 and outputs to pin 2 using diffusion.");
+  Serial.println("Program gets sound from A0 and outputs to pin 2 using diffusion (kind of release).");
   Serial.println("4 faders: volume - between pin2 and audio output; sample rate - A3, diffusion - A4, sensitivity - a5.");
 
   //will be computed
@@ -115,7 +115,7 @@ const int audio_thresh_adj1 = 512 + 5;
 int audio_thresh0 = 512;     //two thresholds for hysteresis (stability)
 int audio_thresh1 = audio_thresh0 + audio_thresh_hyster;
 
-int audio_diff_step = 90;  //127
+int audio_diff_step = 400; //90;  //127
 
 const int audio_diffusion0 = 0;
 const int audio_diffusion1 = 256;
