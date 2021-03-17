@@ -100,7 +100,7 @@ void setup() {
   Serial.begin(500000);
   prln();
   prln("----------------------------------------------------------------");
-  prln("EndlessSynth 06_SynthArpegiatorMega_YamahaPSSF30, v. 1.2 for Arduino Mega and Yamaha PSSF30 keyboard");
+  prln("EndlessSynth 07_Synth_FilterLfo_YamahaF30, v. 1.2 for Arduino Mega and Yamaha PSSF30 keyboard");
   prln("Features:");
   prln("3 polyphony, ADSR envelope, timbres: sine, tri, saw, sine+noise");
   prln("How to play:  hold up to three notes by left hand and press 3 hit white \"string\" keys.");

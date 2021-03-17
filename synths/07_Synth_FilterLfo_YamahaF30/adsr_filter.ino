@@ -49,7 +49,7 @@ const int filter_min = 1;
 const int filter_max = timbre_range*127/100;
 
 const float lfo_speed_min = 0;
-const float lfo_speed_max = wave_n * 5 * .001f; //10*1000;  //Hz*1000
+const float lfo_speed_max = wave_n * 10 * .001f; //10*1000;  //Hz*1000
 
 
 //Filter current state
@@ -109,9 +109,10 @@ void ADSR_key_event(unsigned int time, byte pressed) {
 //---------------------------------------------------------------
 //update event
 void ADSR_loop(unsigned long time) {
-  unsigned long time_prev = 0;
+  static unsigned long time_prev = 0;
   //LFO
-  lfo_phase_ += (time - time_prev) * Filter_LFO_Speed;
+  unsigned long delta_ms = time - time_prev;
+  lfo_phase_ += delta_ms * Filter_LFO_Speed;
   time_prev = time;
 
   long int phase = int(lfo_phase_) % wave_n;
@@ -126,9 +127,9 @@ void ADSR_loop(unsigned long time) {
   //audio_step = Filter_1; //audio_volume_max - Sustain_vol;// * 5;
 
   if (debug_now) {
-      pr("phase "); pr(phase);  
-      pr("  audio_step "); prln(audio_step); 
-      pr("  delta "); prln(time - time_prev);
+      //pr("phase "); prln(phase);  
+      //pr("  audio_step "); prln(audio_step); 
+      //pr("  delta "); prln(delta_ms);
   }
 
 }
