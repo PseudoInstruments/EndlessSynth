@@ -8,10 +8,10 @@
 //Output goes through pin 2 to minijack.
 //8 potentiometers:
 //1 Tone
-//2 Filter Center
-//3 Filter LFO range
+//2 Filter Value 1
+//3 Filter Value 2
 //4 Filter LFO speed
-//5 Not used
+//5 Filter LFO shape - sine, ramp
 //6 Sample Rate  (Sound settings)
 //7 Diffusion
 //8 Timbre      sine, triangle, sawtooth, noised
@@ -147,7 +147,7 @@ void loop() {
   }
 
   //Control update at ~200 (really much less) fps - see FPS value
-  unsigned int time = millis();
+  unsigned long time = millis();
   ADSR_loop(time);
   sliders_loop();
   mic_loop();

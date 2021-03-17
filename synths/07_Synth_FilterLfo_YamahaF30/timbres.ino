@@ -5,6 +5,7 @@
 //---------------------------------------------------------------
 //TODO put to const memory - print to console and after copy here
 const unsigned int wave_n = 256;
+const int timbre_range = 100; //127;
 char wave_sine[wave_n];
 char wave_tri[wave_n];
 char wave_saw[wave_n];
@@ -14,7 +15,7 @@ char *wave_table = wave_noised; //ORIGINAL TIMBRE, can be switched
 
 //---------------------------------------------------------------
 void timbres_setup() {
-  int volume = 100; //0..127
+  int volume = timbre_range; //100; //0..127
   for (int i = 0; i < wave_n; i++) {
     wave_tri[i] = map(absi(i - wave_n / 2), 0, wave_n / 2, volume, -volume); //using absi because "abs" works not correct here
     wave_sine[i] = int(sin(i * 2 * PI / wave_n) * volume);  //-volume..volume

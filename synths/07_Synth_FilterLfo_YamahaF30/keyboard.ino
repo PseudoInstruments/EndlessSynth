@@ -138,7 +138,7 @@ void key_pressed(byte key) {
 //---------------------------------------------------------------
 //Set playing notes - to xsound and adsr
 //-1 means note off, that os freqi=0
-void keyboard_change(unsigned int time, char midi_note1, char midi_note2, char midi_note3, char midi_note4, char base_note) {
+void keyboard_change(unsigned long time, char midi_note1, char midi_note2, char midi_note3, char midi_note4, char base_note) {
   bool is_pressed = (midi_note1 != -1 || midi_note2 != -1 || midi_note3 != -1 || midi_note4 != -1);
   //pr("some key "); prln(is_pressed);
   sound_set_notes(midi_note1, midi_note2, midi_note3, midi_note4, base_note); 
@@ -156,7 +156,7 @@ void keyboard_change(unsigned int time, char midi_note1, char midi_note2, char m
 //---------------------------------------------------------------
 //unsigned long int keyb_time_print_ = 0; //time for printing keyboard state
 
-void keyboard_loop(unsigned int time) {
+void keyboard_loop(unsigned long time) {
   //clear notes and string keys
   note_keys_n = 0;
   for (byte i = 0; i < POLYPHONY; i++) {
