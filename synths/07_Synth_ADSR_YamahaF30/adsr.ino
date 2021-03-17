@@ -19,6 +19,9 @@ extern int audio_volume;
 extern const int audio_volume_max;
 extern long int sound_value;    //we change it to 0 when sound off to prevent from 1-bit "beep"
 
+extern int audio_step;
+
+
 void ADSR_setup() {
   audio_volume = 0;
 }
@@ -36,12 +39,12 @@ void set_adsr_sliders(int Attack_slider, int Decay_slider, int Sustain_slider, i
   Attack_ms = map(Attack_slider, 0, 1023, 0, 500);
   Decay_ms = map(Decay_slider, 0, 1023, 0, 500);
 
-  const int min_vol = 64;   //NOTE: LOWER - will beep
+  const int min_vol = 1; //64;   //NOTE: LOWER - will beep
   Sustain_vol = map(Sustain_slider, 0, 1023, min_vol, audio_volume_max);
   Release_ms = map(Release_slider, 0, 1023, 0, 500);
 
-  pr("ADSR "); pr(Attack_ms); pr(" "); pr(Decay_ms); pr(" "); pr(Sustain_vol); pr(" "); pr(Release_ms);
-  prln();
+  //pr("ADSR "); pr(Attack_ms); pr(" "); pr(Decay_ms); pr(" "); pr(Sustain_vol); pr(" "); pr(Release_ms);
+  //prln();
 }
 
 
@@ -73,7 +76,13 @@ void ADSR_loop(unsigned int time) {
   //pr(time);
   //audio_volume = int(clampi(audio_volume_max * (sin(time*0.001)*0.5 + 0.5),0,127));
   //prln(audio_volume);
-  audio_volume = Sustain_vol;
+  
+  //audio_volume = Sustain_vol;
+  audio_step = audio_volume_max - Sustain_vol;// * 5;
+
+  if (debug_now) {
+    pr("audio_step "); prln(audio_step);
+  }
   
 }
 

@@ -16,13 +16,23 @@ char *wave_table = wave_noised; //ORIGINAL TIMBRE, can be switched
 void timbres_setup() {
   int volume = 100; //0..127
   for (int i = 0; i < wave_n; i++) {
-    wave_sine[i] = int(sin(i * 2 * PI / wave_n) * volume);  //-volume..volume
     wave_tri[i] = map(absi(i - wave_n / 2), 0, wave_n / 2, volume, -volume); //using absi because "abs" works not correct here
+    wave_sine[i] = int(sin(i * 2 * PI / wave_n) * volume);  //-volume..volume
     wave_saw[i] = map(i, 0, wave_n - 1, -volume, volume);
     wave_noised[i] = map(abs(i - wave_n / 2), 0, wave_n / 2, volume, -volume);  //here we use strange "abs" behavior, see ths printing below in comments
     //clampi(wave_saw[i] + wave_saw[(i*3)%wave_n]/2, -volume, volume);
     //(random(volume / 4) - volume / 8)
   }
+
+
+  //test PWM for sound volume
+  /*for (int i = 0; i < wave_n; i ++) {
+    int j = (i * 2) % wave_n; //twice for cycle
+    wave_sine[i] = (j < wave_n/2)?wave_tri[i]:0;
+    wave_saw[i] = (j < wave_n/8)?wave_tri[i]:0;
+    wave_noised[i] = (j < wave_n/16)?wave_tri[i]:0;
+    
+  }*/
 
   /*prln("Wavetable");
   for (int i = 0; i < wave_n; i++) {

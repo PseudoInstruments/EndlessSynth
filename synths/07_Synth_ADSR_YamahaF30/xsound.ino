@@ -23,7 +23,7 @@ const long audio_sample_rate_step = 20; //"big" difference when change frame rat
 //const byte audio_sample_rate_shifters[2] = //{11,13};
 //                                      {12, 13};   //log_2 of sample rate, 4096=2^12 and so on
 
-long int audio_sample_rate = 2048; //4096;
+long int audio_sample_rate = 0; //2048; //4096;
 //byte audio_sample_rate_shifter = 11; //12;
 
 
@@ -214,7 +214,7 @@ int audio_volume = 127; //volume of the sound, controlled by ADSR
 
 
 int audio_step = //127 * POLYPHONY; //step of diffusion subtraction for 1 bit algorithm - 1..127, kind of threshold for sound
-  audio_volume_max; //90; //127;    //just 127 - to make polyphony sounding more "phatty"
+  audio_volume_max * 90 / 127;  //more phatty than just max;
 
 int diff_keep = 16; //64; //decaying diffusion 0..256, 0 - no diffusion, 256 - keep all diffusion
 const int diff_keep_max = 256;
@@ -267,7 +267,7 @@ void timer_interrupt() {
     if (freq2) sound_temp += wave_table[((phase * freq2_wave_n) >> SOUND_WAVE_SHIFT) % wave_n];
     if (freq3) sound_temp += wave_table[((phase * freq3_wave_n) >> SOUND_WAVE_SHIFT) % wave_n];
 
-    sound_value += (sound_temp * audio_volume) >> audio_volume_shift;
+    sound_value += sound_temp;//(sound_temp * audio_volume) >> audio_volume_shift;
   }
   //----------------------------------
 
