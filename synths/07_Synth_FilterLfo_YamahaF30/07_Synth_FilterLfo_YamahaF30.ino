@@ -1,6 +1,6 @@
-// **07_Synth_ADSR_YamahaF30** - - synthesizer for Arduino Mega and keyboard YAMAHA PSS F30
+// **07_Synth_FilterLfo_YamahaF30** - - synthesizer for Arduino Mega and keyboard YAMAHA PSS F30
 //New:
-//- ADSR-engine for sound 
+//- Filter-LFO engine for sound. It's "audio_step" value which corresponds to diffusion properties
 //- optimized sound engine computations (removed "/" in wave_table[...] computation, so higher audio rate
 //- Added sliders
 //- New timbres - triangle and noised
@@ -8,10 +8,10 @@
 //Output goes through pin 2 to minijack.
 //8 potentiometers:
 //1 Tone
-//2 Attack       (ADSR settings)
-//3 Decay
-//4 Sustain 
-//5 Release
+//2 Filter Center
+//3 Filter LFO range
+//4 Filter LFO speed
+//5 Not used
 //6 Sample Rate  (Sound settings)
 //7 Diffusion
 //8 Timbre      sine, triangle, sawtooth, noised
