@@ -1,4 +1,5 @@
-/* Endless Drums Processor converts input sound to 1 bit using two sliders, with 1V ADC ARef.
+/* Endless Drums Processor converts input sound 
+  from drum machine to 1 bit using two sliders, with 1V ADC ARef.
   In this version I increased sensitivity by 5 times using ARef 1.1V (instead default 5V) for ADC.
 
   Program gets sound from A0 and immediately outputs it to audio output(pin 2) with diffusion.
@@ -8,7 +9,7 @@
   Adjustment before playing
   ----------------------------------------
   - Built-in LED lighing when zero-level is achieved, so helping adjust trimming resistor without computer.
-  So, before start playing, adjust resistor in silence to achieve LED flashing. It means zero level it tuned correctly.
+  So, before start playing, adjust resistor in silence to achieve LED flashing. It means zero level it tuned correctly. 
 
   ----------------------------------------
   Connection
