@@ -10,8 +10,11 @@ const byte pin_audio_output = 2;
 
 //---------------------------------------------------------------
 //Keyboard
-byte pins_Keyboard_read[keyGndN] = {52, 50, 48, 46, 44, 42, 40};
-byte pins_Keyboard_block[keyReadN] = {32, 30, 28, 26, 24, 22};
+const byte pins_Keyboard_readN = 7;
+const byte pins_Keyboard_blockN = 6;
+
+byte pins_Keyboard_read[pins_Keyboard_readN] = {52, 50, 48, 46, 44, 42, 40};
+byte pins_Keyboard_block[pins_Keyboard_blockN] = {32, 30, 28, 26, 24, 22};
 //---------------------------------------------------------------
 
 //Control blocks
@@ -32,7 +35,7 @@ const byte pin_Timbre5 = 11;
 
 const byte pin_Arp = 12;
 const byte pin_Latch_Left = 13;
-const byte pin_Latch Right = 14;
+const byte pin_Latch_Right = 14;
 const byte pot_Diffusion = A5;
 
 //  Block 2 - synth

@@ -10,40 +10,8 @@
 //---------------------------------------------------------------
 //Sound Engine
 //---------------------------------------------------------------
-//Audio sample rate - main parameter of sound engine.
-//It's the frequency of sound pulses.
-//Use lower values if not enough computing power; currently we use power of 2 to faster divide
-
-const long audio_sample_rate0 = 2000; 
-const long audio_sample_rate1 = 8000;    //More frame rate gives overflow and three notes freeze synth
-const long audio_sample_rate_step = 20; //"big" difference when change frame rate
-
-//const long int audio_sample_rates[2] = {2000,4000}; //{2048,8192};
-//{4096, 8192};
-//const byte audio_sample_rate_shifters[2] = //{11,13};
-//                                      {12, 13};   //log_2 of sample rate, 4096=2^12 and so on
-
 long int audio_sample_rate = 0; //2048; //4096;
 //byte audio_sample_rate_shifter = 11; //12;
-
-
-//byte audio_sample_rate_index = 255; //0 - 4096, 1 - 8192, 255 - not set
-
-//change audio sample rate
-/*void set_audio_sample_rate_index(byte index) {
-  if (audio_sample_rate_index!=index) {
-    audio_sample_rate_index = index;
-    audio_sample_rate = audio_sample_rates[index];
-    //audio_sample_rate_shifter = audio_sample_rate_shifters[index];
-    Timer3.stop();
-    Timer3.detachInterrupt();
-    Timer3.initialize(1000000 / audio_sample_rate);
-    Timer3.attachInterrupt(timer_interrupt);
-    Timer3.start();
-
-    pr("sample rate: "); prln(audio_sample_rate);
-  }
-  }*/
 
 //---------------------------------------------------------------
 inline void set_audio_sample_rate(int rate) {
@@ -73,38 +41,6 @@ inline void set_audio_sample_rate(int rate) {
     }
   }
 }
-
-
-//----------------------------------------------------------
-//Apply sliders
-//----------------------------------------------------------
-extern const int diff_keep_max;
-void sound_set_sliders(int slider_tone, int slider_sample_rate, int slider_diffusion) {
-  tone_adjust_ = 3 * float(slider_tone - 512) / 512.0; //-3..3
-  int rate = map(slider_sample_rate, 0, 1023, audio_sample_rate1, audio_sample_rate0);
-  set_audio_sample_rate(rate);
-
-  //diffusion
-  set_diff_keep(map(slider_diffusion,0,1023,0,diff_keep_max));
-}
-
-//  alg_step10bit 0..1023 - kind of "level of sound generation", the higher - the more dithering
-//  alg_diff10bit 0..1023 - memory of dithering, the higher - the more harshness
-/*void sound_set_1bitparams(int alg_step10bit, int alg_diff10bit) {
-  audio_volume = ((long int)alg_step10bit) * (max_audio_volume - min_audio_volume) / 1024 + min_audio_volume;
-  diff_keep = ((long int)alg_diff10bit) * diff_keep_denom / 1024;
-
-  //Formula for threshold
-  thresh_sound = ((long int) audio_volume) * diff_keep / (diff_keep_denom) + 1; //I expect to use 2*diff_keep_denom, but beep occurs:)
-
-
-  //Debug print - uncomment to print sliders values
-  //pr("audio_volume "); pr(audio_volume);
-  //pr(", diff_keep float "); pr(float(diff_keep)/diff_keep_denom);
-  //pr(", thresh_sound "); pr(thresh_sound);
-  //prln();
-  }*/
-
 
 //---------------------------------------------------------------
 //Synthesis
@@ -204,12 +140,6 @@ void sound_setup() {
 //Sound generation
 //----------------------------------------------------------
 //1-bit sound diffusion parameters
-
-//Audio volume - changed by ADSR
-const int audio_volume_min = 0;    
-const int audio_volume_max = 127;
-const int audio_volume_shift = 7; // << 7 instead "/audio_volume_max"
-
 int audio_volume = 127; //volume of the sound, controlled by ADSR
 
 //This value is used in LFO filter:
@@ -218,8 +148,6 @@ int audio_step = //127 * POLYPHONY; //step of diffusion subtraction for 1 bit al
 
   
 int diff_keep = 16; //64; //decaying diffusion 0..256, 0 - no diffusion, 256 - keep all diffusion
-const int diff_keep_max = 256;
-const int diff_keep_shift = 8;
 
 //threshold for switching buzzer, must be so that not to allow "silence beep"
 int thresh_sound = 1; //20;

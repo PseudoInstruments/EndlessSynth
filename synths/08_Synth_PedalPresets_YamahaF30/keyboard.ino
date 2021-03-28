@@ -8,9 +8,6 @@
 //See "aconnection": pins_Keyboard_read, pins_Keyboard_block 
 //------------------------------------------------------
 
-const byte pins_Keyboard_readN = 7;
-const byte pins_Keyboard_blockN = 6;
-
 const int keys = 37;
 
 //keys for playing "strings" by right hand

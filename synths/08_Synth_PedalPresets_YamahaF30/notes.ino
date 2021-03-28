@@ -9,7 +9,7 @@ int m_to_f_int(int midi_note) {
 
 //float version
 float m_to_f_float(float midi_note) {
-  return pow(2,(slider_tone_adjust_ + midi_note-69)/12)*440; //Hz
+  return pow(2,(Pot_Tone + midi_note-69)/12)*440; //Hz    //Uses slider Tone
   //note: for midi_note>100 sometimes occurs overflow
 }
 
