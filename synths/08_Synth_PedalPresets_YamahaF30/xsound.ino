@@ -144,7 +144,7 @@ int audio_volume = 127; //volume of the sound, controlled by ADSR
 
 //This value is used in LFO filter:
 int audio_step = //127 * POLYPHONY; //step of diffusion subtraction for 1 bit algorithm - 1..127, kind of threshold for sound
-  audio_volume_max * 90 / 127;  //more phatty than just max;
+  Digital_Volume_Max * 90 / 127;  //more phatty than just max;
 
   
 int diff_keep = 16; //64; //decaying diffusion 0..256, 0 - no diffusion, 256 - keep all diffusion

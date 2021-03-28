@@ -4,58 +4,37 @@
 //Note: If you have no sliders, set SLIDERS_ENABLED=0 in the main sketch file.
 
 //---------------------------------------------
-//Pots, switches, keys
+//Macroses
 //---------------------------------------------
-//  Block 1 - main settings:
 
-float Pot_Tone = 0; //adjustment of tone, -3..3
-int Pot_Diffusion = 0;
-int Pot_Sample_Rate = 0;
-
+//Macros for defining integer pot:
 //const byte pot_Pedal = A3;
-byte Pin_Timbre1;
-byte Pin_Timbre2;
-byte Pin_Timbre3;
-byte Pin_Timbre4;
-byte Pin_Timbre5;
+//const int Pedal_Min = 0;
+//const int Pedal_Max = 1023;
+//int Pot_Pedal;
 
-byte Pin_Arp;
-byte Pin_Latch_Left;
-byte Pin_Latch_Right;
+#define DEF_POTI(NAME, A_PIN, VMIN, VMAX) \
+  const byte pot##_##NAME = A_PIN; \
+  const int NAME##_Min = VMIN; \
+  const int NAME##_Max = VMAX; \
+  int Pot##_##NAME;
+
+//Macros for defining float pot:
+#define DEF_POTF(NAME, A_PIN, VMIN, VMAX) \
+  const byte pot##_##NAME = A_PIN; \
+  const int NAME##_Min = VMIN; \
+  const int NAME##_Max = VMAX; \
+  float Pot##_##NAME;
+
+//Macros for defining input pin:
+#define DEF_PIN(NAME, DIGITAL_PIN) \
+  const byte pin##_##NAME = DIGITAL_PIN; \
+  byte Pin##_##NAME;
 
 
-//  Block 2 - synth
-byte Pin_ADSR;
-//const byte pot_Decay = A6;
-byte Pin_Sustain;
-//const byte pot_Attack = A7;
-//const byte pot_Release = A8;
-
-//const byte pot_LFO_Range = A9;
-//const byte pot_LFO_Rate = A10;
-byte Pin_LFO_Shape1;
-byte Pin_LFO_Shape2;
-//const byte pot_Digital_Volume = A11;  //(sound effect 1)
-//const byte pot_Filter = A12;          //(sound effect 2)
-
-byte Pin_Enable_Pedal1;
-byte Pin_Enable_Pedal2;
-byte Pin_Enable_Pedal3;
-byte Pin_Enable_LFO1;
-byte Pin_Enable_LFO2;
-byte Pin_Enable_LFO3;
-
-//Block 3 - presets
-byte Pin_Presets;
-byte Pin_Preset1;
-byte Pin_Preset2;
-byte Pin_Preset3;
-byte Pin_Preset4;
-byte Pin_Preset5;
-byte Pin_Preset6;
-byte Pin_Preset7;
-byte Pin_Preset8;
-
+//---------------------------------------------------------------
+//Define all controls
+INPUTS_APPLY(DEF)
 
 //---------------------------------------------------------------
 //function for setup pin - used in pins_iterate
@@ -70,8 +49,11 @@ void read_pin_in(byte pin, byte &value) {
 }
 
 //---------------------------------------------------------------
-//perform action on all pins - set up or read
-void pins_iterate(void (*fun)(byte pin, byte &value)) {
+//perform action on all analog and digital pins - set up or read
+void inputs_iterate(void (*fun_pin)(byte pin, byte &value)) {
+
+ // FUN_PIN(
+  /*
   // Block 1
   fun(pin_Timbre1, Pin_Timbre1);
   fun(pin_Timbre2, Pin_Timbre2);
@@ -86,7 +68,6 @@ void pins_iterate(void (*fun)(byte pin, byte &value)) {
 
   //  Block 2 - synth
   fun(pin_ADSR, Pin_ADSR);
-  fun(pin_Sustain, Pin_Sustain);
 
   fun(pin_LFO_Shape1, Pin_LFO_Shape1);
   fun(pin_LFO_Shape2, Pin_LFO_Shape2);
@@ -107,7 +88,8 @@ void pins_iterate(void (*fun)(byte pin, byte &value)) {
   fun(pin_Preset5, Pin_Preset5);
   fun(pin_Preset6, Pin_Preset6);
   fun(pin_Preset7, Pin_Preset7);
-  fun(pin_Preset8, Pin_Preset8);
+  fun(pin_Preset8, Pin_Preset8);*/
+  
 }
 
 //---------------------------------------------------------------
@@ -125,8 +107,9 @@ void sliders_setup() {
     digitalWrite(pin_Sliders_Gnd, LOW);
 
     //set up pins for switches and keys
+    /*
     pins_iterate(set_pin_in);
-
+*/
   }
 }
 
@@ -144,13 +127,13 @@ inline void read_potf(byte a_pin, float &value, int out0, int out1, int default_
 //---------------------------------------------------------------
 void sliders_loop() {
   //Read digital pins 
-  pins_iterate(read_pin_in);
+/*  pins_iterate(read_pin_in);
 
   //Read pots
   read_potf(pot_Tone, Pot_Tone, tone_min, tone_max); 
   read_poti(pot_Sample_Rate, Pot_Sample_Rate, audio_sample_rate1, audio_sample_rate0);
   read_poti(pot_Diffusion, Pot_Diffusion, 0, diff_keep_max);
-
+*/
   /*
     //set diff step and Diffusion propagation
     int Attack = (SLIDERS_ENABLED) ? analogRead(apin_Attack) : 0;
