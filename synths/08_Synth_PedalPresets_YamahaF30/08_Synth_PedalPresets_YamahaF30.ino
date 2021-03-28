@@ -125,7 +125,6 @@ void setup() {
   prln("To switch octave use three right black keys");
   prln("----------------------------------------------------------------");
   pr("Control FPS: "); prln(FPS);
-  mic_setup();
   keyboard_setup();
   timbres_setup();
   sliders_setup();
@@ -163,7 +162,6 @@ void loop() {
   unsigned long time = millis();
   ADSR_loop(time);
   sliders_loop();
-  mic_loop();
   keyboard_loop(time);
   sound_loop();
 
