@@ -1,36 +1,60 @@
 //Sliders
-
-//8 potentiometers 10 kOhm:
-//1 Tone
-//2 Attack       (ADSR settings)
-//3 Decay
-//4 Sustain
-//5 Release
-//6 Sample Rate  (Timbre settings)
-//7 Diffusion
-//8 [Reserved]
+//See description of controls in the main file
+//See connections in "aconnections"
 //Note: If you have no sliders, set SLIDERS_ENABLED=0 in the main sketch file.
 
-//Note: nonlinearity - slider slows start TODO linearize sliders values
+//---------------------------------------------
+//Pots, switches, keys
+//---------------------------------------------
+//  Block 1 - main settings:
+
+float slider_tone_adjust_ = 0; //-1..1 - adjustment of tone
 
 
-//Connection:
-//("apin" means "analog pin")
-const byte apin_Tone = A2;
-const byte apin_Attack = A3;
-const byte apin_Decay = A4;
-const byte apin_Sustain = A5;
-const byte apin_Release = A6;
+const byte pot_Tone = A2;
+const byte pot_Pedal = A3;
+const byte pin_Timbre1 = ;
+const byte pin_Timbre2;
+const byte pin_Timbre3;
+const byte pin_Timbre4;
+const byte pin_Timbre5;
 
-const byte apin_Sample_rate = A8;
-const byte apin_Diffusion = A9;
-const byte apin_Timbre = A10;      
+const byte pin_Arp;
+const byte pin_Latch Left;
+const byte pin_Latch Right;
+const byte pot_Diffusion = A5;
+//  Block 2 - synth
+const byte pin_ADSR;
+const byte pot_Decay = A6;
+const byte pit_Sustain;
+const byte pot_Attack = A7;
+const byte pot_Release = A8;
+const byte pot_LFO_Range = A9;
+const byte pot_LFO_Rate = A10;
+const byte pin_LFO_Shape1;
+const byte pin_LFO_Shape2;
+const byte pot_Digital_Volume = A11;  //(sound effect 1)
+const byte pot_Filter = A12;          //(sound effect 2)
+const byte pot_Sample_Rate = A13;     //(sound effect 3)
+const byte pin_Enable_Pedal1;
+const byte pin_Enable_Pedal2;
+const byte pin_Enable_Pedal3;
+const byte pin_Enable_LFO1;
+const byte pin_Enable_LFO2;
+const byte pin_Enable_LFO3;
 
-//power pins for sliders
-//note: because sound engine uses ports for output - be careful, and if you change pins here,
-//check how it works with ports in sound.ini
-const byte slider_5V_pin = 6;   //+5V for sliders  
-const byte slider_Gnd_pin = 5;  //Gnd for sliders - it's PORTE 3
+//Block 3 - presets
+const byte pin_Presets;
+const byte pin_Preset1;
+const byte pin_Preset2;
+const byte pin_Preset3;
+const byte pin_Preset4;
+const byte pin_Preset5;
+const byte pin_Preset6;
+const byte pin_Preset7;
+const byte pin_Preset8;
+
+
 
 //---------------------------------------------------------------
 void sliders_setup() {

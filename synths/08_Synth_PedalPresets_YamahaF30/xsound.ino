@@ -179,7 +179,7 @@ void sound_update_speedup_values() {
 
 //---------------------------------------------------------------
 void sound_setup() {
-  pr("Audio output pin: "); prln(pin_buz);
+  pr("Audio output pin: "); prln(pin_audio_output);
   pr("Starting with audio sample rate: "); prln(audio_sample_rate);
 
   //Set port/pin mode for Arduino Mega for buzzer
@@ -312,72 +312,5 @@ void sound_loop() {
   }*/
 }
 
-
-//---------------------------------------------------------------
-//Mega port manipulating: https://forum.arduino.cc/index.php?topic=52534.0
-/*
- we use PORTE for audio output, so disable all others, be careful
-  
-0   PORTE 0    PORTE!
-1   PORTE 1     PORTE!  
-2   PORTE 4     PORTE!  audio output   
-3   PORTE 5     PORTE!
-4   PORTG 5             sliders 5V
-5   PORTE 3     PORTE!  sliders Gnd    
-6   PORTH 3
-7   PORTH 4
-
-8   PORTH 5
-9   PORTH 6
-10   PORTB 4
-11   PORTB 5
-12   PORTB 6
-13   PORTB 7
-
-14   PORTJ 1
-15   PORTJ 0
-16   PORTH 1
-17   PORTH 0
-18   PORTD 3
-19   PORTD 2
-20   PORTD 1
-21   PORTD 0
-
-22   PORTA 0
-23   PORTA 1
-24   PORTA 2
-25   PORTA 3
-26   PORTA 4
-27   PORTA 5
-28   PORTA 6
-29   PORTA 7
-
-30   PORTB 7
-31   PORTB 6
-32   PORTB 5
-33   PORTB 4
-34   PORTB 3
-35   PORTB 2
-36   PORTB 1
-37   PORTB 0
-
-38   PORTD 7
-39   PORTG 2
-40   PORTG 1
-41   PORTG 0
-42   PORTL 7
-43   PORTL 6
-44   PORTL 5
-45   PORTL 4
-
-46   PORTL 3
-47   PORTL 2
-48   PORTL 1
-49   PORTL 0
-50   PORTB 3
-51   PORTB 2
-52   PORTB 1
-53   PORTB 0 
- */
 
 //---------------------------------------------------------------

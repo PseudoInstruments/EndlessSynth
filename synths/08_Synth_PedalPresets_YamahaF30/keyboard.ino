@@ -1,17 +1,15 @@
 //YAMAHA PSS F30 Keyboard Reader
 //This is truly polyphonic keyboard with 37 keys.
 
+//------------------------------------------------------
 //Connection:
-//7 - control pins - choosing keys block,
-//11 - signal pins, but it's uses only six - 1,3,5,7,9,11 - we connect only them
+//7 control pins - choosing keys block,
+//11 signal pins, but it's uses only six - 1,3,5,7,9,11 - and we are using only them
+//See "aconnection": pins_Keyboard_read, pins_Keyboard_block 
+//------------------------------------------------------
 
-const byte keyGndN = 7;
-const byte keyReadN = 6;
-
-//Pins for connecting:
-byte keyGnd[keyGndN] = {52, 50, 48, 46, 44, 42, 40};
-byte keyRead[keyReadN] = {32, 30, 28, 26, 24, 22};
-
+const byte pins_Keyboard_readN = 7;
+const byte pins_Keyboard_blockN = 6;
 
 const int keys = 37;
 
@@ -42,22 +40,22 @@ byte base_note = note_octave2;
 //---------------------------------------------------------------
 void keyboard_setup() {
   pr("Keyboard Yamaha PSS F30 control pins: ");
-  for (int i = 0; i < keyGndN; i++) {
-    pr(keyGnd[i]); pr(" ");
+  for (int i = 0; i < pins_Keyboard_readN; i++) {
+    pr(pins_Keyboard_read[i]); pr(" ");
   }
   pr(",  signal pins: ");
-  for (int i = 0; i < keyReadN; i++) {
-    pr(keyRead[i]); pr(" ");
+  for (int i = 0; i < pins_Keyboard_blockN; i++) {
+    pr(pins_Keyboard_block[i]); pr(" ");
   }
   prln();
 
   //Set pins
-  for (int i = 0; i < keyGndN; i++) {
-    pinMode(keyGnd[i], OUTPUT);
-    digitalWrite(keyGnd[i], HIGH);
+  for (int i = 0; i < pins_Keyboard_readN; i++) {
+    pinMode(pins_Keyboard_read[i], OUTPUT);
+    digitalWrite(pins_Keyboard_read[i], HIGH);
   }
-  for (int i = 0; i < keyReadN; i++) {
-    pinMode(keyRead[i], INPUT_PULLUP);
+  for (int i = 0; i < pins_Keyboard_blockN; i++) {
+    pinMode(pins_Keyboard_block[i], INPUT_PULLUP);
   }
 
 }
@@ -167,17 +165,17 @@ void keyboard_loop(unsigned long time) {
   bool was_changed = false;  //was keyboard state changed
 
   //Scan keys
-  for (byte k = 0; k < keyGndN; k++) {
+  for (byte k = 0; k < pins_Keyboard_readN; k++) {
     //enable control pin
-    digitalWrite(keyGnd[k], LOW);
+    digitalWrite(pins_Keyboard_read[k], LOW);
     //delayMicroseconds(10);  //need wait 2 mcs, but let's wait for more...
 
     //Scan pins
     //TODO can use ports for reading faster, see 05_ArduinoMegaPortTest
 
-    for (byte i = 0; i < keyReadN; i++) {
-      byte key = keys - 1 - (i + keyReadN * k); //because of reverted
-      byte v = (digitalRead(keyRead[i]) == LOW) ? 1 : 0;
+    for (byte i = 0; i < pins_Keyboard_blockN; i++) {
+      byte key = keys - 1 - (i + pins_Keyboard_blockN * k); //because of reverted
+      byte v = (digitalRead(pins_Keyboard_block[i]) == LOW) ? 1 : 0;
 
       byte &state = key_state[key];
       //key was pressed or released
@@ -198,7 +196,7 @@ void keyboard_loop(unsigned long time) {
 
     }
     //disable control pin
-    digitalWrite(keyGnd[k], HIGH);
+    digitalWrite(pins_Keyboard_read[k], HIGH);
   }
 
   //play

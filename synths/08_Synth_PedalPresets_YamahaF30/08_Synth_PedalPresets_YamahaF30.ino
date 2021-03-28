@@ -23,8 +23,9 @@
 //--------------------------------------------
 //Communication:
 //--------------------------------------------
-//Output goes through pin 2 to minijack.
-//Pots, switches, keys: (I using linear pots 10 kOhm)
+//Audio output goes through pin 2 to volume pot and to Jack connector.
+
+//Pots, switches, keys: (I using linear pots 10 kOhm, see "sliders" file for the pins map)
 //  Block 1 - main settings:
 //1 - Volume pot (directly to sound out, without Arduino)
 //2 - Tone pot
@@ -78,8 +79,6 @@
 //--------------------------------------------
 //Connection:
 //--------------------------------------------
-//Buzzer of sound output: pin 2
-const byte pin_buz = 2;
 
 //YAMAHA PSS F30 Keyboard Reader
 //This is truly polyphonic keyboard with 37 keys.
