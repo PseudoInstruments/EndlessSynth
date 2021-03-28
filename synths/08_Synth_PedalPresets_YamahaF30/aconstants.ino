@@ -11,6 +11,10 @@ const long audio_sample_rate0 = 2000;
 const long audio_sample_rate1 = 8000;    //More frame rate gives overflow and three notes freeze synth
 const long audio_sample_rate_step = 20; //"big" difference when change frame rate
 
+//Tone range
+const float tone_min = -3;
+const float tone_max = 3;
+
 //----------------------------------------------------------
 //Sound generation
 //----------------------------------------------------------

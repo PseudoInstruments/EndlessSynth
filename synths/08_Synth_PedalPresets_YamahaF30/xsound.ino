@@ -225,6 +225,10 @@ void timer_interrupt() {
 unsigned long int sound_time = 0;
 
 void sound_loop() {
+  set_audio_sample_rate(Pot_Sample_Rate);
+  set_diff_keep(Pot_Diffusion);
+
+
   /*unsigned long time = millis();
   if (time > sound_time + 200) {
     sound_time = time;
