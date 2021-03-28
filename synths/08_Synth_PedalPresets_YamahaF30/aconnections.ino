@@ -31,6 +31,7 @@ const byte pin_Sliders_Gnd = 5;  //Gnd for sliders - it's PORTE 3
   FUN##_POTI(Pedal, A3, 0, 1023); \
   FUN##_POTI(Diffusion, A4, 8, 256); \  
   /*decaying diffusion 0..256, 0 - no diffusion, 256 - keep all diffusion*/ \
+  const int Diffusion_shift = 7;  /*127 -> power*/ \
                                                 \
   FUN##_PIN(Timbre1, 7); \
   FUN##_PIN(Timbre2, 8); \

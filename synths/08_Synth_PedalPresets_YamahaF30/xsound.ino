@@ -13,6 +13,8 @@
 long int audio_sample_rate = 0; //2048; //4096;
 //byte audio_sample_rate_shifter = 11; //12;
 
+const long audio_sample_rate_step = 20; //"big" difference when change frame rate
+
 //---------------------------------------------------------------
 inline void set_audio_sample_rate(int rate) {
   //change sample rate only if big difference
@@ -173,7 +175,7 @@ long long phase = 0;
 //We should make this function as fast as possible, and trying to omit "/" and "%" operations
 void timer_interrupt() {
   //decay accumulated diffusion, because in opposite case zero values will give constant high-tone
-  sound_value = (sound_value * diff_keep) >> diff_keep_shift;    
+  sound_value = (sound_value * diff_keep) >> Diffusion_shift;    
 
   //----------------------------------
   //if (mic_button) {

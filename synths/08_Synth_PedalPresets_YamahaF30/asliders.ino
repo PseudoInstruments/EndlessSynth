@@ -38,9 +38,9 @@
 #define SETUP_PIN(NAME, DIGITAL_PIN) { pinMode(DIGITAL_PIN, INPUT_PULLUP); }
 
 //Read
-#define READ_POTI(NAME, A_PIN, VMIN, VMAX) {}
-#define READ_POTF(NAME, A_PIN, VMIN, VMAX) {}
-#define READ_PIN(NAME, DIGITAL_PIN) {}
+#define READ_POTI(NAME, A_PIN, VMIN, VMAX) { Pot##_##NAME = map(SLIDERS_ENABLED?(analogRead(A_PIN)):512, 0, 1023, VMIN, VMAX); }
+#define READ_POTF(NAME, A_PIN, VMIN, VMAX) { Pot##_##NAME = mapf(SLIDERS_ENABLED?(analogRead(A_PIN)):512, 0, 1023, VMIN, VMAX); }
+#define READ_PIN(NAME, DIGITAL_PIN) { Pin##_##NAME = SLIDERS_ENABLED?(digitalRead(DIGITAL_PIN)?0:1):0; }
 
 //---------------------------------------------------------------
 //Define all controls
@@ -49,44 +49,32 @@ INPUTS_APPLY(DEF)
 //---------------------------------------------------------------
 //function for read pin - used in pins_iterate
 void read_pin_in(byte pin, byte &value) {
-  value = digitalRead(pin)?0:1;
+  value = digitalRead(pin) ? 0 : 1;
 }
 
 //---------------------------------------------------------------
 void sliders_setup() {
-  if (SLIDERS_ENABLED)  {
-    prln("[Sliders enabled]");
+  if (!SLIDERS_ENABLED)  {
+    prln("[Sliders disabled]");
+    return;
   }
-  else prln("[Sliders disabled]");
+  
+  prln("[Sliders enabled]");
+  //set up power pins
+  pinMode(pin_Sliders_5V, OUTPUT);
+  pinMode(pin_Sliders_Gnd, OUTPUT);
+  digitalWrite(pin_Sliders_5V, HIGH);
+  digitalWrite(pin_Sliders_Gnd, LOW);
 
-  if (SLIDERS_ENABLED) {
-    //set up power pins
-    pinMode(pin_Sliders_5V, OUTPUT);
-    pinMode(pin_Sliders_Gnd, OUTPUT);
-    digitalWrite(pin_Sliders_5V, HIGH);
-    digitalWrite(pin_Sliders_Gnd, LOW);
-
-    //Set up pins for switches and keys
-    INPUTS_APPLY(SETUP)
-  }
-}
-
-//---------------------------------------------------------------
-//read analog pin and set slider
-inline void read_poti(byte a_pin, int &value, int out0, int out1, int default_value = 512) {
-  value = SLIDERS_ENABLED?(analogRead(a_pin)):default_value;
-  value = map(value, 0, 1023, out0, out1);
-}
-
-inline void read_potf(byte a_pin, float &value, int out0, int out1, int default_value = 512) {
-  value = mapf(SLIDERS_ENABLED?(analogRead(a_pin)):default_value, 0, 1023, out0, out1);
+  //Set up pins for switches and keys
+  INPUTS_APPLY(SETUP)
 }
 
 //---------------------------------------------------------------
 void sliders_loop() {
   //Read all controls
   INPUTS_APPLY(READ)
-  
+
   /*
     //Debug print
     if (sliders_debug) {
