@@ -35,7 +35,7 @@ const byte slider_Gnd_pin = 5;  //Gnd for sliders - it's PORTE 3
 //---------------------------------------------------------------
 void sliders_setup() {
   if (SLIDERS_ENABLED)  {
-    prln("Sliders: Tone: A2, ADSR: A3456, sample rate: A8, Diffusion: A9, Timbre A10, sliders power: pin 4 as Gnd, pin 5 as 5V");
+    prln("Sliders: Tone: A2, ADSR: A3456, sample rate: A8, Diffusion: A9, Timbre A10, sliders power: pin 5 as Gnd, pin 6 as 5V");
   }
   else prln("[Sliders disabled]");
 
