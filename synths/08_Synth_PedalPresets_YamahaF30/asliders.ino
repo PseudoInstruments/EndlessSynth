@@ -38,9 +38,9 @@
 #define SETUP_PIN(ID, NAME, SHORT_NAME, DIGITAL_PIN, PRINTID) { pinMode(DIGITAL_PIN, INPUT_PULLUP); pr("   "); pr(ID); pr("     "); pr(#NAME); pr(" -> D"); prln(DIGITAL_PIN); }
 
 //Read
-#define READ_POTI(ID, NAME, SHORT_NAME, A_PIN, VMIN, VMAX, PRINTID) { Pot##_##NAME = map(SLIDERS_ENABLED?(analogRead(A_PIN)):512, 0, 1023, VMIN, VMAX); }
-#define READ_POTF(ID, NAME, SHORT_NAME, A_PIN, VMIN, VMAX, PRINTID) { Pot##_##NAME = mapf(SLIDERS_ENABLED?(analogRead(A_PIN)):512, 0, 1023, VMIN, VMAX); }
-#define READ_PIN(ID, NAME, SHORT_NAME, DIGITAL_PIN, PRINTID) { Pin##_##NAME = SLIDERS_ENABLED?(digitalRead(DIGITAL_PIN)?0:1):0; }
+#define READ_POTI(ID, NAME, SHORT_NAME, A_PIN, VMIN, VMAX, PRINTID) { Pot##_##NAME = map(SLIDERS_ENABLED_##ID?(analogRead(A_PIN)):512, 0, 1023, VMIN, VMAX); }
+#define READ_POTF(ID, NAME, SHORT_NAME, A_PIN, VMIN, VMAX, PRINTID) { Pot##_##NAME = mapf(SLIDERS_ENABLED_##ID?(analogRead(A_PIN)):512, 0, 1023, VMIN, VMAX); }
+#define READ_PIN(ID, NAME, SHORT_NAME, DIGITAL_PIN, PRINTID) { Pin##_##NAME = SLIDERS_ENABLED_##ID?(digitalRead(DIGITAL_PIN)?0:1):0; }
 
 //Print
 #define PRINT_POTI(ID, NAME, SHORT_NAME, A_PIN, VMIN, VMAX, PRINTID) { if (ID == PRINTID) {pr(" "); pr(#SHORT_NAME); pr("="); pr(Pot##_##NAME); }}
@@ -59,12 +59,15 @@ void read_pin_in(byte pin, byte &value) {
 
 //---------------------------------------------------------------
 void sliders_setup() {
-  if (!SLIDERS_ENABLED)  {
-    prln("[Sliders disabled]");
-    return;
+  if (!SLIDERS_ENABLED_1)  {
+    prln("[Sliders 1 disabled]");
   }
-  
-  prln("[Sliders enabled]");
+  if (!SLIDERS_ENABLED_2)  {
+    prln("[Sliders 2 disabled]");
+  }
+  if (!SLIDERS_ENABLED_3)  {
+    prln("[Sliders 3 disabled]");
+  }  
   pr("   Power pin sliders: 5V -> D"); pr(pin_Sliders_5V); pr(", Gnd -> D"); prln(pin_Sliders_Gnd);
   //set up power pins
   pinMode(pin_Sliders_5V, OUTPUT);

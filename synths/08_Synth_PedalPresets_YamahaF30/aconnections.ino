@@ -44,7 +44,7 @@ const byte pin_Sliders_Gnd = 12;  //Gnd for sliders
   FUN##_PIN(1, Timbre5, 5, 17, PRINTID); \
   FUN##_PIN(1, Timbre6, 6, 16, PRINTID); \
                                                 \
-  FUN##_PIN(1, Arp, Arp, 8, PRINTID); \
+  FUN##_PIN(1, Arpegiator_Mode, Arp_Mode, 8, PRINTID); \
   FUN##_PIN(1, Latch_Left, LLeft, 9, PRINTID); \
   FUN##_PIN(1, Latch_Right, LRight, 10, PRINTID); \
                                                 \  

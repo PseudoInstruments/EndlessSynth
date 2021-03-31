@@ -62,6 +62,8 @@ void set_timbre(byte index) {
     if (index == 1) wave_table = wave_sine;
     if (index == 2) wave_table = wave_saw;
     if (index == 3) wave_table = wave_noised;
+    if (index == 4) wave_table = wave_noised; //TODO
+    if (index == 5) wave_table = wave_noised; //TODO
     old_timbre = index;
     if (debug) {
       pr("timbre "); prln(index);
@@ -69,23 +71,15 @@ void set_timbre(byte index) {
   }
 }
 
+
 //---------------------------------------------------------------
-void set_timbre_slider(int slider) {
-  //values from slider:
-  //5 433 926 1017
-  if (slider < 210) {
-    set_timbre(0);
-    return;
-  }
-  if (slider < 700) {
-    set_timbre(1);
-    return;
-  }
-  if (slider < 980) {
-    set_timbre(2);
-    return;
-  }
-  set_timbre(3);
+void timbre_loop() {
+  if (Pin_Timbre1) { set_timbre(0);  return; }
+  if (Pin_Timbre2) { set_timbre(1);  return; }
+  if (Pin_Timbre3) { set_timbre(2);  return; }
+  if (Pin_Timbre4) { set_timbre(3);  return; }
+  if (Pin_Timbre5) { set_timbre(4);  return; }
+  if (Pin_Timbre6) { set_timbre(5);  return; }
 }
 
 //---------------------------------------------------------------

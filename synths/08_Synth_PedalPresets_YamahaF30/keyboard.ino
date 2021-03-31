@@ -199,12 +199,22 @@ void keyboard_loop(unsigned long time) {
   //play
   if (was_changed) {
     //set keys with using base_note, which is depends on choosen octave
-    keyboard_change(time, 
+    if (Pin_Arpegiator_Mode) {    //in this mode is required key from left and right
+      keyboard_change(time, 
               string_keys[0] ? note_keys[0] : -1,
               string_keys[1] ? note_keys[1] : -1,
               string_keys[2] ? note_keys[2] : -1,
               -1, //string_keys[3] ? note_keys[3] : -1,
               base_note);
+    }
+    else {
+      keyboard_change(time,       //"normal" keyboard
+              note_keys[0], 
+              note_keys[1],
+              note_keys[2],
+              -1, //string_keys[3] ? note_keys[3] : -1,
+              base_note);
+    }
   }
 
   //demo play
