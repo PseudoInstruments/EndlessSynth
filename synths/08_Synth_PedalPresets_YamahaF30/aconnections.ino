@@ -12,11 +12,11 @@ const byte pin_audio_gnd = 3;
 
 //---------------------------------------------------------------
 //Keyboard
-const byte pins_Keyboard_readN = 7;   //number of pins
-const byte pins_Keyboard_blockN = 6;  //number of pins
+const byte pins_Keyboard_blockN = 7;   //number of keyboard block blocks 
+const byte pins_Keyboard_signalN = 6;  //number of keyboard read pins
 
-byte pins_Keyboard_read[pins_Keyboard_readN] = {52, 50, 48, 46, 44, 42, 40};
-byte pins_Keyboard_block[pins_Keyboard_blockN] = {32, 30, 28, 26, 24, 22};
+byte pins_Keyboard_block[pins_Keyboard_blockN] = {35, 33, 31, 29, 27, 25, 23};
+byte pins_Keyboard_signal[pins_Keyboard_signalN] = {32, 30, 28, 26, 24, 22};
 
 //---------------------------------------------------------------
 //Power for sliders

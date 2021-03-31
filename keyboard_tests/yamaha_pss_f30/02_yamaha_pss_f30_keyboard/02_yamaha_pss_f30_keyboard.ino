@@ -18,7 +18,7 @@
 
 const byte keyGndN = 7;
 const byte keyReadN = 6; 
-byte keyGnd[keyGndN] = {52, 50, 48, 46, 44, 42, 40};
+byte keyGnd[keyGndN] = {35, 33, 31, 29, 27, 25, 23};
 byte keyRead[keyReadN] = {32, 30, 28, 26, 24, 22};
 
 

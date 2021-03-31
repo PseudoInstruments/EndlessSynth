@@ -36,23 +36,23 @@ byte base_note = note_octave2;
 
 //---------------------------------------------------------------
 void keyboard_setup() {
-  pr("Keyboard Yamaha PSS F30 control pins: ");
-  for (int i = 0; i < pins_Keyboard_readN; i++) {
-    pr(pins_Keyboard_read[i]); pr(" ");
-  }
-  pr(",  signal pins: ");
+  pr("Keyboard Yamaha PSS F30 block pins: ");
   for (int i = 0; i < pins_Keyboard_blockN; i++) {
     pr(pins_Keyboard_block[i]); pr(" ");
+  }
+  pr(",  signal pins: ");
+  for (int i = 0; i < pins_Keyboard_signalN; i++) {
+    pr(pins_Keyboard_signal[i]); pr(" ");
   }
   prln();
 
   //Set pins
-  for (int i = 0; i < pins_Keyboard_readN; i++) {
-    pinMode(pins_Keyboard_read[i], OUTPUT);
-    digitalWrite(pins_Keyboard_read[i], HIGH);
-  }
   for (int i = 0; i < pins_Keyboard_blockN; i++) {
-    pinMode(pins_Keyboard_block[i], INPUT_PULLUP);
+    pinMode(pins_Keyboard_block[i], OUTPUT);
+    digitalWrite(pins_Keyboard_block[i], HIGH);
+  }
+  for (int i = 0; i < pins_Keyboard_signalN; i++) {
+    pinMode(pins_Keyboard_signal[i], INPUT_PULLUP);
   }
 
 }
@@ -162,17 +162,17 @@ void keyboard_loop(unsigned long time) {
   bool was_changed = false;  //was keyboard state changed
 
   //Scan keys
-  for (byte k = 0; k < pins_Keyboard_readN; k++) {
+  for (byte k = 0; k < pins_Keyboard_blockN; k++) {
     //enable control pin
-    digitalWrite(pins_Keyboard_read[k], LOW);
+    digitalWrite(pins_Keyboard_block[k], LOW);
     //delayMicroseconds(10);  //need wait 2 mcs, but let's wait for more...
 
     //Scan pins
     //TODO can use ports for reading faster, see 05_ArduinoMegaPortTest
 
-    for (byte i = 0; i < pins_Keyboard_blockN; i++) {
-      byte key = keys - 1 - (i + pins_Keyboard_blockN * k); //because of reverted
-      byte v = (digitalRead(pins_Keyboard_block[i]) == LOW) ? 1 : 0;
+    for (byte i = 0; i < pins_Keyboard_signalN; i++) {
+      byte key = keys - 1 - (i + pins_Keyboard_signalN * k); //because of reverted
+      byte v = (digitalRead(pins_Keyboard_signal[i]) == LOW) ? 1 : 0;
 
       byte &state = key_state[key];
       //key was pressed or released
@@ -193,7 +193,7 @@ void keyboard_loop(unsigned long time) {
 
     }
     //disable control pin
-    digitalWrite(pins_Keyboard_read[k], HIGH);
+    digitalWrite(pins_Keyboard_block[k], HIGH);
   }
 
   //play

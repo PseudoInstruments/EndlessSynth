@@ -14,13 +14,12 @@
 
 //Connection:
 //7 - control pins - choosing keys block, 
-//11 - signal pins  (some keys are doubled, so enough to use only six - 1,3,5,7,9,11,
-//but here we read all values)
+//11 - signal pins  (some keys are doubled, so it's enough to use only six - 1,3,5,7,9,11)
 
 const byte keyGndN = 7;
-const byte keyReadN = 11; 
-byte keyGnd[keyGndN] = {53, 51, 49, 47, 45, 43, 41};
-byte keyRead[keyReadN] = {42, 40, 38, 36, 34, 32, 30, 28, 26, 24, 22};
+const byte keyReadN = 6; 
+byte keyGnd[keyGndN] = {35, 33, 31, 29, 27, 25, 23};
+byte keyRead[keyReadN] = {32, 30, 28, 26, 24, 22};
 
 
 const byte keys = 37;  //number of keys

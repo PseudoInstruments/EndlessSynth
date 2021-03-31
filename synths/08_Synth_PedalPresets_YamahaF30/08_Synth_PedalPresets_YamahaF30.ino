@@ -92,8 +92,8 @@
 
 //This parameter enables/disables using sliders
 //So if you want check synth without connecting sliders, set it to 0:
-const int SLIDERS_ENABLED = 1;
-  //0;
+const int SLIDERS_ENABLED = //1;
+  0;
 
 
 byte debug = 0;       //enabled by '1'  from Serial
