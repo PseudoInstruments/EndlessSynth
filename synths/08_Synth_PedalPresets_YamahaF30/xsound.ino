@@ -38,7 +38,7 @@ inline void set_audio_sample_rate(int rate) {
     Timer3.attachInterrupt(timer_interrupt);
     Timer3.start();
 
-    if (debug_now) {
+    if (debug && debug_now) {
       pr("new sample rate: "); prln(audio_sample_rate);
     }
   }

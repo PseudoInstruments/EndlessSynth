@@ -1,5 +1,5 @@
 //EndlessSynth, Yamaha PSS F30 Keyboard Pins Test
-//This sketch shows that keyboard is really polyphinoc, but it doesn't use half of read pins
+//This sketch shows that keyboard is really polyphonic, but it doesn't use half of read pins
 
 //Scheme: //http://sandsoftwaresound.net/wp-content/uploads/2019/12/Reface_key_schematic.jpg
 //(But I have only 11 signal outputs, not 12)

@@ -20,68 +20,71 @@ byte pins_Keyboard_signal[pins_Keyboard_signalN] = {32, 30, 28, 26, 24, 22};
 
 //---------------------------------------------------------------
 //Power for sliders
-const byte pin_Sliders_5V = 6;   //+5V for sliders
-const byte pin_Sliders_Gnd = 5;  //Gnd for sliders - it's PORTE 3
+const byte pin_Sliders_5V = 11;   //+5V for sliders
+const byte pin_Sliders_Gnd = 12;  //Gnd for sliders 
+
+//---------------------------------------------
+  const int Diffusion_shift = 7;  /*127 -> power*/ \
 
 //---------------------------------------------
 //Description of all pots, switches, keys: (I using linear pots 10 kOhm)
 //It's used in "asliders" file, FUN - function to apply
-#define INPUTS_APPLY(FUN) \
+#define INPUTS_APPLY(FUN, PRINTID) \
   /*  Block 1 - main settings: */\
-  FUN##_POTF(Tone, A2, -3, 3); \
-  FUN##_POTI(Pedal, A3, 0, 1023); \
-  FUN##_POTI(Diffusion, A4, 8, 256); \  
+                                               \  
+  FUN##_POTF(1, Tone, Ton, A2, -3, 3, PRINTID); \
+  FUN##_POTI(1, Pedal, Ped, A3, 0, 1023, PRINTID); \
+  FUN##_POTI(1, Diffusion, Dif, A4, 8, 256, PRINTID); \  
   /*decaying diffusion 0..256, 0 - no diffusion, 256 - keep all diffusion*/ \
-  const int Diffusion_shift = 7;  /*127 -> power*/ \
                                                 \
-  FUN##_PIN(Timbre1, 7); \
-  FUN##_PIN(Timbre2, 8); \
-  FUN##_PIN(Timbre3, 9); \
-  FUN##_PIN(Timbre4, 10); \
-  FUN##_PIN(Timbre5, 11); \
+  FUN##_PIN(1, Timbre1, Timb1, 21, PRINTID); \
+  FUN##_PIN(1, Timbre2, 2, 20, PRINTID); \
+  FUN##_PIN(1, Timbre3, 3, 19, PRINTID); \
+  FUN##_PIN(1, Timbre4, 4, 18, PRINTID); \
+  FUN##_PIN(1, Timbre5, 5, 17, PRINTID); \
+  FUN##_PIN(1, Timbre6, 6, 16, PRINTID); \
                                                 \
-  FUN##_PIN(Arp, 12); \
-  FUN##_PIN(Latch_Left, 13); \
-  FUN##_PIN(Latch_Right, 14); \
+  FUN##_PIN(1, Arp, Arp, 8, PRINTID); \
+  FUN##_PIN(1, Latch_Left, LLeft, 9, PRINTID); \
+  FUN##_PIN(1, Latch_Right, LRight, 10, PRINTID); \
                                                 \  
   /*  Block 2 - synth */    \
-  FUN##_POTI(Attack, A5, 0, 1023); \
-  FUN##_POTI(Decay, A6, 0, 1023); \
-  FUN##_POTI(Sustain, A7, 0, 1023); \
-  FUN##_POTI(Release, A8, 0, 1023); \
-                                                \  
-  FUN##_POTI(LFO_Range, A9, 0, 1023); \
-  FUN##_POTI(LFO_Rate, A10, 0, 1023); \
+  FUN##_POTI(2, Attack, Att, A5, 0, 1023, PRINTID); \
+  FUN##_POTI(2, Decay, Dec, A6, 0, 1023, PRINTID); \
+  FUN##_POTI(2, Sustain, Sust, A7, 0, 1023, PRINTID); \
+  FUN##_POTI(2, Release, Rels, A8, 0, 1023, PRINTID); \
+  FUN##_POTI(2, LFO_Range, LFORange, A9, 0, 1023, PRINTID); \
+  FUN##_POTI(2, LFO_Rate, Rate, A10, 0, 1023, PRINTID); \
                                                 \
-  FUN##_POTI(Digital_Volume, A11, 0, 127);   /*(sound effect 1)/* \
+  FUN##_POTI(2, Digital_Volume, DigiVol, A11, 0, 127, PRINTID);   /*(sound effect 1)/* \
   /*const int Digital_Volume_shift = 7; // << 7 instead "/audio_volume_max"*/ \
                                                 \
-  FUN##_POTI(Filter, A12, 0, 1023);           /*(sound effect 2)*/    \
-  FUN##_POTI(Sample_Rate, A13, 2000, 8000);      /*(sound effect 3)*/  \
+  FUN##_POTI(2, Filter, Flt, A12, 0, 1023, PRINTID);           /*(sound effect 2)*/    \
+  FUN##_POTI(2, Sample_Rate, SRate, A13, 2000, 8000, PRINTID);      /*(sound effect 3)*/  \
                                                 \
-  FUN##_PIN(ADSR, 15); \
+  FUN##_PIN(2, ADSR, ADSR, 34, PRINTID); \
                                                 \  
-  FUN##_PIN(LFO_Shape1, 17); \
-  FUN##_PIN(LFO_Shape2, 18); \
+  FUN##_PIN(2, LFO_Shape1, Shp1, 36, PRINTID); \
+  FUN##_PIN(2, LFO_Shape2, Shp2, 38, PRINTID); \
                                                   \
-  FUN##_PIN(Enable_Pedal1, 19); \
-  FUN##_PIN(Enable_Pedal2, 21); \
-  FUN##_PIN(Enable_Pedal3, 23); \
+  FUN##_PIN(2, Enable_Pedal1, Ped1, 40, PRINTID); \
+  FUN##_PIN(2, Enable_Pedal2, Ped2, 42, PRINTID); \
+  FUN##_PIN(2, Enable_Pedal3, Ped3, 44, PRINTID); \
                                                   \
-  FUN##_PIN(Enable_LFO1, 25); \
-  FUN##_PIN(Enable_LFO2, 27); \
-  FUN##_PIN(Enable_LFO3, 29); \
+  FUN##_PIN(2, Enable_LFO1, LFO1, 46, PRINTID); \
+  FUN##_PIN(2, Enable_LFO2, 2, 48, PRINTID); \
+  FUN##_PIN(2, Enable_LFO3, 3, 50, PRINTID); \
                                                   \
   /*  Block 3 - presets*/      \
-  FUN##_PIN(Presets, 31); \
-  FUN##_PIN(Preset1, 33); \
-  FUN##_PIN(Preset2, 35); \
-  FUN##_PIN(Preset3, 37); \
-  FUN##_PIN(Preset4, 39); \
-  FUN##_PIN(Preset5, 41); \
-  FUN##_PIN(Preset6, 43); \
-  FUN##_PIN(Preset7, 45); \
-  FUN##_PIN(Preset8, 47); 
+  FUN##_PIN(3, Presets, Presets, 37, PRINTID); \
+  FUN##_PIN(3, Preset1, P1, 39, PRINTID); \
+  FUN##_PIN(3, Preset2, P2, 41, PRINTID); \
+  FUN##_PIN(3, Preset3, P3, 43, PRINTID); \
+  FUN##_PIN(3, Preset4, P4, 45, PRINTID); \
+  FUN##_PIN(3, Preset5, P5, 47, PRINTID); \
+  FUN##_PIN(3, Preset6, P6, 49, PRINTID); \
+  FUN##_PIN(3, Preset7, P7, 51, PRINTID); \
+  FUN##_PIN(3, Preset8, P8, 53, PRINTID); 
 
 //---------------------------------------------------------------
 //

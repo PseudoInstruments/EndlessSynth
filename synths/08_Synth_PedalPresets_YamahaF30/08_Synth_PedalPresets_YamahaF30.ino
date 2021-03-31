@@ -92,16 +92,15 @@
 
 //This parameter enables/disables using sliders
 //So if you want check synth without connecting sliders, set it to 0:
-const int SLIDERS_ENABLED = //1;
-  0;
+const int SLIDERS_ENABLED = 1;
+  //0;
 
 
-byte debug = 0;       //enabled by '1'  from Serial
+byte debug = 0;       //common debug enabled by '4'  from Serial
 byte debug_now = 0;  //signal for debug
 long int last_debug_time = 0;
 
-byte sliders_debug = 0;     //debug mode for sliders - enabled by '2' from Serial
-byte adsr_debug = 0;    //debug for ASDR, enabled by '3' from Serial
+byte sliders_debug = 0;     //debug mode for sliders - 1,2,3 - blocks
 byte demo_play = 0;   //enabled by '0' from Serial
 
 const int FPS = 200;  //control FPS. note: really a much less because we use simple delay(1000/FPS) for FPS control.
@@ -134,16 +133,17 @@ void setup() {
 
   prln("----------------------------------------------------------------");
   prln("Synth is ready to play.");
-  prln("Send '1' to on/off debug print, '2' to debug sliders, '3' to debug ADSR, '0' to run demo play");
+  prln("Send '1','2','3' to debug controls, '4' to on/off common debug print, '0' to run demo play");
   prln("----------------------------------------------------------------");
 
 }
 
 //----------------------------------------------------------
 //universal function for switching values
-void toggle_debug(byte key, byte key_expected, const char *text, byte &value) {
+void toggle_debug(byte key, byte key_expected, const char *text, byte &value, byte check_val) {
   if (key == key_expected) {
-    value = 1 - value;
+    if (value == check_val) value = 0;
+    else value = check_val;
     pr(text); prln(value);
   }
 }
@@ -151,12 +151,15 @@ void toggle_debug(byte key, byte key_expected, const char *text, byte &value) {
 //----------------------------------------------------------
 void loop() {
   //Serial commands
-  if (Serial.available() > 0) { //we expect only "1" rare to on/off debugging
+  if (Serial.available() > 0) { //we expect only rare commands, so "if" instead "while" 
     int key = Serial.read();
-    toggle_debug(key, '1', "Debug ", debug);
-    toggle_debug(key, '2', "Sliders_debug ", sliders_debug);
-    toggle_debug(key, '3', "ASDR_debug ", adsr_debug);
-    toggle_debug(key, '0', "Demo_play ", demo_play);
+    if (key > 0) {
+      toggle_debug(key, '1', "Debug block 1 ", sliders_debug, 1);
+      toggle_debug(key, '2', "Debug block 2 ", sliders_debug, 2);
+      toggle_debug(key, '3', "Debug block 3 ", sliders_debug, 3);
+      toggle_debug(key, '4', "Debug ", debug, 1);
+      toggle_debug(key, '0', "Demo_play ", demo_play, 1);
+    }
   }
 
   //Control update at ~200 (really much less) fps - see FPS value
@@ -170,17 +173,14 @@ void loop() {
   delay(FPS_delay);  
 
   //compute signal for "rare" debug print
-  if (debug) {
-    if (time > last_debug_time + 200) {
-      debug_now = 1;
-      last_debug_time = time;
-    }
-    else {
-      debug_now = 0;
-    }
+  if (time > last_debug_time + 500) {
+    debug_now = 1;
+    last_debug_time = time;
   }
+  else {
+    debug_now = 0;
+  }
+ 
 }
-
-
 
 //---------------------------------------------------------------
