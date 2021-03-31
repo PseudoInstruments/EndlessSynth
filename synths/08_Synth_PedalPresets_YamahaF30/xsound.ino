@@ -117,15 +117,12 @@ void sound_update_speedup_values() {
 
 //---------------------------------------------------------------
 void sound_setup() {
-  pr("Audio output pin: "); prln(pin_audio_output);
+  pr("Audio output: Signal D"); pr(pin_audio_output_signal); pr(",  Gnd D"); prln(pin_audio_gnd);
   pr("Starting with audio sample rate: "); prln(audio_sample_rate);
 
-  //Set port/pin mode for Arduino Mega for buzzer
-  //Ports in Arduino https://www.arduino.cc/en/Reference/PortManipulation
-  //Pins in Arduino Mega https://www.arduino.cc/en/Hacking/PinMapping2560
-  //pin 2 is 4 bit of Port E (in scheme PE2)
-  //DDRE = B00010000;    //Can' do it because all other PORTE pins will be disabled, but we need enable for sliders power
-  pinMode(2,OUTPUT);
+  //Set port/pin mode for Arduino Mega for buzzer, see "aconnections" end for port mapping
+  pinMode(pin_audio_output_signal,OUTPUT);
+  pinMode(pin_audio_gnd,OUTPUT);
 
   //test_notes();
   //Start interrupt for sound generation
@@ -208,14 +205,12 @@ void timer_interrupt() {
   //we use ports here, so also disable all PORTE pins at once!
   
   if (sound_value >= thresh_sound) {
-    PORTE = B00010000; //buzzer ON   
-    //PORTE |= B00010000; //better, because doesn't affect other pins, but very slow
+    PORTE = B00010000; //buzzer ON   on pins pin_audio_output_signal, pin_audio_gnd
     sound_value -= audio_step;       //diffusion propagation
   }
   else {
     if (sound_value <= -thresh_sound) {
-      PORTE = B00000000; //buzzer OFF;
-      //PORTE &= B11101111; //better, because doesn't affect other pins, but very slow
+      PORTE = B00000000; //buzzer OFF  on pins pin_audio_output_signal, pin_audio_gnd
       sound_value += audio_step;       //diffusion propagation
     }
   }

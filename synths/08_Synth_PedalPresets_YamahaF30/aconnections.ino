@@ -7,7 +7,8 @@
 
 //---------------------------------------------------------------
 //Audio output
-const byte pin_audio_output = 2;
+const byte pin_audio_output_signal = 2;  //It's set to pins indirectly by PORTE in "xsound"
+const byte pin_audio_gnd = 3;
 
 //---------------------------------------------------------------
 //Keyboard
@@ -92,8 +93,8 @@ const byte pin_Sliders_Gnd = 5;  //Gnd for sliders - it's PORTE 3
 
   0   PORTE 0    PORTE!
   1   PORTE 1     PORTE!
-  2   PORTE 4     PORTE!  audio output
-  3   PORTE 5     PORTE!
+  2   PORTE 4     PORTE!  audio output Signal
+  3   PORTE 5     PORTE!  audio output Gnd
   4   PORTG 5             sliders 5V
   5   PORTE 3     PORTE!  sliders Gnd
   6   PORTH 3
