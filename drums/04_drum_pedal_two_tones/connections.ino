@@ -27,17 +27,17 @@ const byte Pots = 9;    //number of pots
 int Pot[Pots] = { -1000, -1000, -1000, -1000, -1000, -1000, -1000, -1000, -1000};
 byte Pot_changed[Pots]; //is pot changed
 
-int *Pot_Drum1_Duration = &Pot[0];
-int *Pot_Drum1_Timbre = &Pot[1];
-int *Pot_Drum1_Tone1 = &Pot[2];
-int *Pot_Drum1_Tone2 = &Pot[3];
+int *Pot_Drum1_Duration = &Pot[0];    byte *Pot_Drum1_Duration_Changed = &Pot_changed[0];
+int *Pot_Drum1_Timbre = &Pot[1];      byte *Pot_Drum1_Timbre_Changed = &Pot_changed[1];
+int *Pot_Drum1_Tone1 = &Pot[2];       byte *Pot_Drum1_Tone1_Changed = &Pot_changed[2];
+int *Pot_Drum1_Tone2 = &Pot[3];       byte *Pot_Drum1_Tone2_Changed = &Pot_changed[3];
 
-int *Pot_Sample_Rate = &Pot[4];
+int *Pot_Sample_Rate = &Pot[4];       byte *Pot_Sample_Rate_Changed = &Pot_changed[4];
 
-int *Pot_Drum2_Duration = &Pot[5];
-int *Pot_Drum2_Timbre = &Pot[6];
-int *Pot_Drum2_Tone1 = &Pot[7];
-int *Pot_Drum2_Tone2 = &Pot[8];
+int *Pot_Drum2_Duration = &Pot[5];    byte *Pot_Drum2_Duration_Changed = &Pot_changed[5];
+int *Pot_Drum2_Timbre = &Pot[6];      byte *Pot_Drum2_Timbre_Changed = &Pot_changed[6];
+int *Pot_Drum2_Tone1 = &Pot[7];       byte *Pot_Drum2_Tone1_Changed = &Pot_changed[7];
+int *Pot_Drum2_Tone2 = &Pot[8];       byte *Pot_Drum2_Tone2_Changed = &Pot_changed[8];
 
 const byte pot_apin[Pots] = {A8, A9, A10, A11, A7, A6, A5, A4, A3};
 
@@ -68,21 +68,21 @@ void sliders_setup() {
   //Serial.print("Audio sample rate: "); Serial.println(audio_sample_rate);
 
   //Audio output
-  pinMode(audio_pin, OUTPUT); 
+  pinMode(audio_pin, OUTPUT);
   pin_power(audio_gnd_pin, 0);
 
   //Led
-  pinMode(led_pin, OUTPUT); 
+  pinMode(led_pin, OUTPUT);
 
   //Pedal
-  pinMode(pedal_pin, INPUT_PULLUP); 
+  pinMode(pedal_pin, INPUT_PULLUP);
   pin_power(pedal_gnd_pin, 0);
 
   //Keys and switches
-  pinMode(key1_pin, INPUT_PULLUP); 
-  pinMode(key2_pin, INPUT_PULLUP); 
-  pinMode(switch1_pin, INPUT_PULLUP); 
-  pinMode(switch2_pin, INPUT_PULLUP); 
+  pinMode(key1_pin, INPUT_PULLUP);
+  pinMode(key2_pin, INPUT_PULLUP);
+  pinMode(switch1_pin, INPUT_PULLUP);
+  pinMode(switch2_pin, INPUT_PULLUP);
 
   //Read values, will be used for sound generator
   sliders_slow_control_step();
@@ -128,26 +128,26 @@ inline void sliders_fast_control_step() {
   pedal_ = digitalRead(pedal_pin) ? 0 : 1;
   if (pedal_ != last_pedal) {
     if (pedal_) {
-      on_pedal();     
+      on_pedal();
     }
     last_pedal = pedal_;
   }
-  
+
   //Keys
   static byte last_key1 = 0;
   static byte last_key2 = 0;
   Key1 = digitalRead(key1_pin) ? 0 : 1;
   Key2 = digitalRead(key2_pin) ? 0 : 1;
-  
+
   if (Key1 != last_key1) {
     if (Key1) {
-      sound_play(0);     
+      sound_play(0);
     }
     last_key1 = Key1;
   }
   if (Key2 != last_key2) {
     if (Key2) {
-      sound_play(1);     
+      sound_play(1);
     }
     last_key2 = Key2;
   }
@@ -160,16 +160,16 @@ inline void on_pedal() {
 
   static byte id = 0;
 
-  if (Switch[0] && Switch[1]) { 
+  if (Switch[0] && Switch[1]) {
     sound_play(id);
     id = 1 - id;    //Toggle drum
   }
   else {
     if (Switch[0]) {
-      sound_play(0);      
+      sound_play(0);
     }
     if (Switch[1]) {
-      sound_play(1);      
+      sound_play(1);
     }
   }
 }
@@ -179,7 +179,7 @@ inline void on_pedal() {
 void sliders_debug_print() {
   Serial.print("pedal="); Serial.print(pedal_);
   Serial.print(" Keys: "); Serial.print(Key1); Serial.print(" "); Serial.print(Key2); ;
-  Serial.print(" Switches: "); Serial.print(Switch[0]); Serial.print(" "); Serial.print(Switch[1]); 
+  Serial.print(" Switches: "); Serial.print(Switch[0]); Serial.print(" "); Serial.print(Switch[1]);
   Serial.print(" Pots: ");
   for (byte i = 0; i < Pots; i++) {
     Serial.print(Pot[i]);

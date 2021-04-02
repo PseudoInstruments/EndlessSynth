@@ -1,5 +1,11 @@
 /* Endless Drums Pedal generates two drum sounds by pressing physical pedal or keys.
 
+  ----------------------------------------
+  Features:
+  - Two drum tones, controlled from pedal and keys
+  - Note-scale sample rate
+  
+  ----------------------------------------
   Controller: Arduino Mega
   ----------------------------------------
   Connection
@@ -26,6 +32,9 @@ void setup() {
   Serial.begin(500000);
   Serial.println("Endless Drum Pedal Two Tones, v. 1.1 for Arduino Mega");
   Serial.println("Send '1' to enable debug print to console");
+
+  //Note: do this performance measure before sliders setup
+  sound_measure_performance();  
 
   sliders_setup();
   
