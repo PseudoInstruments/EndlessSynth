@@ -24,18 +24,19 @@ int skip_n_ = 5;    //fast / slow loops relation
 
 
 //--------------------------------------------------------------
-//Drum sample
-const int wave_n = 512;
-byte wave[wave_n];   //TODO store in bits
+//Drum samples
+const int wave_N = 3000;
+byte wave1[wave_N];   //TODO store in bits
+byte wave2[wave_N];
+int wave1_n = wave_N;
+int wave2_n = wave_N;
 
-//controllable
-const int wave_duration_min = 10;
-int wave_duration = wave_n; //0..wave_n
+byte *wave = wave1;
+int *wave_n = &wave1_n;
+
 
 //sample pos
 int pos_ = wave_n;
-
-
 
 //--------------------------------------------------------------
 //Measure performance of audio_loop
@@ -46,7 +47,7 @@ void sound_measure_performance() {
   //fake sound start
   sound_play(0);
   int n = 100;
-  for (int i=0; i<n; i++) {
+  for (int i = 0; i < n; i++) {
     sound_audio_step();
   }
 
@@ -54,20 +55,11 @@ void sound_measure_performance() {
 
   //Result
   audio_step_mcs_ = (micros() - time0) / n;
-  
-  Serial.print("[Performance measurement: audio step works "); 
+
+  Serial.print("[Performance measurement: audio step works ");
   Serial.print(audio_step_mcs_);
   Serial.println(" mcs]");
 
-}
-
-//--------------------------------------------------------------
-void init_wave() {
-  for (int i = 0; i < wave_n; i++) {
-    wave[i] = (random(100) < 50) ? 0 : 1;
-    //Serial.print(wave[i]);
-    //Serial.print(" ");
-  }
 }
 
 //--------------------------------------------------------------
@@ -78,9 +70,9 @@ void init_sample_rates() {
     sample_rates[i] = m_to_f_float(note);
   }
 
-  Serial.print("Sample rates: "); Serial.print(sample_rates[0]); 
-  Serial.print(" - "); Serial.println(sample_rates[sample_rates_n-1]);
-  
+  Serial.print("Sample rates: "); Serial.print(sample_rates[0]);
+  Serial.print(" - "); Serial.println(sample_rates[sample_rates_n - 1]);
+
   //for (int i=0; i<sample_rates_n; i++) {
   //  Serial.print(i); Serial.print(" "); Serial.println(sample_rates[i]);
   //}
@@ -89,19 +81,45 @@ void init_sample_rates() {
 //--------------------------------------------------------------
 void sound_setup() {
   init_sample_rates();
-  init_wave();
-  
+
+  init_drum1();
+  init_drum2();
 }
 
+//--------------------------------------------------------------
+void init_wave(byte *wave, int &wave_n, int duration_slider) {
+  int duration_ms = mapi_clamp(duration_slider, pot_min, pot_max, 10, 500);
+
+  int n_max = (long long)(sample_rate_) * duration_ms / 1000;
+  wave_n = min(n_max, wave_N);
+
+  for (int i = 0; i < wave_n; i++) {
+    wave[i] = (random(100) < 50) ? 0 : 1;
+  }
+
+  //Serial.println("Drum update");
+  //Serial.print("duration_ms "); Serial.println(duration_ms);
+  //Serial.print("wave_n "); Serial.println(wave_n);
+
+}
+
+//--------------------------------------------------------------
+void init_drum1() {
+  init_wave(wave1, wave1_n, *Pot_Drum1_Duration);
+}
+
+void init_drum2() {
+  init_wave(wave2, wave2_n, *Pot_Drum2_Duration);
+}
 
 //--------------------------------------------------------------
 inline void sound_control_step() {
   //Sample rate and number of loops
   if (&Pot_Sample_Rate_Changed) {
     float sample_note = mapf(*Pot_Sample_Rate, pot_min, pot_max, sample_rate_note0, sample_rate_note1);
-    sample_rate_ = sample_rates[mapi_clamp(*Pot_Sample_Rate, pot_min, pot_max, 0, sample_rates_n-1)];
+    sample_rate_ = sample_rates[mapi_clamp(*Pot_Sample_Rate, pot_min, pot_max, 0, sample_rates_n - 1)];
 
-    const int FPS_slow = 5;
+    const int FPS_slow = 10;
     const int FPS_fast = 100;
 
     loops_ = constrain(sample_rate_ / FPS_slow, 1, 10000);
@@ -114,13 +132,32 @@ inline void sound_control_step() {
     //audio_delay_mcs = mapi_clamp(*Pot_Sample_Rate, pot_min, pot_max, audio_delay_mcs0, audio_delay_mcs1);
   }
 
-  //Sound duration
-  wave_duration = mapi_clamp(*Pot_Drum1_Duration, pot_min, pot_max, wave_duration_min, wave_n);
-  
+  //Drum 1
+  if (*Pot_Sample_Rate_Changed
+      || *Pot_Drum1_Duration_Changed || *Pot_Drum1_Timbre_Changed
+      || *Pot_Drum1_Tone1_Changed || *Pot_Drum1_Tone2_Changed) {
+    init_drum1();
+  }
+
+  //Drum 2
+  if (*Pot_Sample_Rate_Changed
+      || *Pot_Drum2_Duration_Changed || *Pot_Drum2_Timbre_Changed
+      || *Pot_Drum2_Tone1_Changed || *Pot_Drum2_Tone2_Changed) {
+    init_drum2();
+  }
 }
 
 //--------------------------------------------------------------
 inline void sound_play(int id) {
+  if (id == 0) {
+    wave = wave1;
+    wave_n = &wave1_n;
+  }
+  else {
+    wave = wave2;
+    wave_n = &wave2_n;    
+  }
+  
   pos_ = 0;
 }
 
@@ -128,7 +165,7 @@ inline void sound_play(int id) {
 //one sound step
 inline void sound_audio_step() {
   //audio output
-  if (pos_ < wave_duration) {
+  if (pos_ < *wave_n) {
     if (wave[pos_]) {
       digitalWrite(audio_pin, HIGH);    //buzzer ON
     }
@@ -139,7 +176,7 @@ inline void sound_audio_step() {
     pos_++;
   }
   else {
-    pos_ = wave_n;                  //prevent continuation of sound play
+    pos_ = wave_N;                  //prevent continuation of sound play
     digitalWrite(audio_pin, LOW);    //buzzer OFF
   }
   //delay
@@ -163,13 +200,10 @@ inline void sound_audio_loop() {
 
 //--------------------------------------------------------------
 void sound_debug_print() {
-  
+
   Serial.print("  sample_rate="); Serial.print(sample_rate_);
   Serial.print("  audio_delay_mcs="); Serial.print(audio_delay_mcs);
   Serial.print(" loops="); Serial.print(loops_);
-  Serial.print("  wave_duration="); Serial.print(wave_duration);
-
-
 
 }
 //--------------------------------------------------------------

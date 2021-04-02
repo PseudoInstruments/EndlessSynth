@@ -35,11 +35,10 @@ void setup() {
 
   //Note: do this performance measure before sliders setup
   sound_measure_performance();  
+ 
+  sliders_setup();  
 
-  sliders_setup();
-  
-  sound_setup();
-
+  sound_setup();  //need to be after sliders to set up drum sounds
 
 }
 

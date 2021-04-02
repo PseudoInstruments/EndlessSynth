@@ -27,15 +27,15 @@ const byte Pots = 9;    //number of pots
 int Pot[Pots] = { -1000, -1000, -1000, -1000, -1000, -1000, -1000, -1000, -1000};
 byte Pot_changed[Pots]; //is pot changed
 
-int *Pot_Drum1_Duration = &Pot[0];    byte *Pot_Drum1_Duration_Changed = &Pot_changed[0];
-int *Pot_Drum1_Timbre = &Pot[1];      byte *Pot_Drum1_Timbre_Changed = &Pot_changed[1];
-int *Pot_Drum1_Tone1 = &Pot[2];       byte *Pot_Drum1_Tone1_Changed = &Pot_changed[2];
-int *Pot_Drum1_Tone2 = &Pot[3];       byte *Pot_Drum1_Tone2_Changed = &Pot_changed[3];
-
 int *Pot_Sample_Rate = &Pot[4];       byte *Pot_Sample_Rate_Changed = &Pot_changed[4];
 
-int *Pot_Drum2_Duration = &Pot[5];    byte *Pot_Drum2_Duration_Changed = &Pot_changed[5];
-int *Pot_Drum2_Timbre = &Pot[6];      byte *Pot_Drum2_Timbre_Changed = &Pot_changed[6];
+int *Pot_Drum1_Duration = &Pot[0];    byte *Pot_Drum1_Duration_Changed = &Pot_changed[0];
+int *Pot_Drum1_Timbre = &Pot[1];      byte *Pot_Drum1_Timbre_Changed = &Pot_changed[1];
+int *Pot_Drum1_Tone1 = &Pot[5];       byte *Pot_Drum1_Tone1_Changed = &Pot_changed[5];
+int *Pot_Drum1_Tone2 = &Pot[6];       byte *Pot_Drum1_Tone2_Changed = &Pot_changed[6];
+
+int *Pot_Drum2_Duration = &Pot[2];    byte *Pot_Drum2_Duration_Changed = &Pot_changed[2];
+int *Pot_Drum2_Timbre = &Pot[3];      byte *Pot_Drum2_Timbre_Changed = &Pot_changed[3];
 int *Pot_Drum2_Tone1 = &Pot[7];       byte *Pot_Drum2_Tone1_Changed = &Pot_changed[7];
 int *Pot_Drum2_Tone2 = &Pot[8];       byte *Pot_Drum2_Tone2_Changed = &Pot_changed[8];
 
