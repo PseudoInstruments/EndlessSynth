@@ -5,26 +5,16 @@
   Connection
   ----------------------------------------
   1) Audio output: Gns and D2
-  
-  2) Pedal Sustain - Gnd and D11 
+
+  2) Pedal Sustain - Gnd and D11
 
   3) Sliders - this sketch uses two sliders (I mean potentiometers 10kOhm) for controlling sound parameters.
   A4 - sample rate
-  A5 - diffusion
+  A5 - duration
   And for pots connect Gnd, 5V
-    
-  //Note: nonlinearity - slider slows start TODO linearize sliders values
 
-
+  //It's better to use linear pots.
   ----------------------------------------
-  Programming details
-  ----------------------------------------
-  By default Arduino ADC works on 8Khz - ok for us.
-  But can speedup:
-  https://www.instructables.com/Make-Your-Own-Spy-Bug-Arduino-Voice-Recorder/
-  Recorder:
-  https://github.com/TMRh20/TMRpcm
-  http://microsin.net/programming/avr/real-time-digital-audio-processing-using-arduino.html
 
 */
 
@@ -35,7 +25,7 @@ const byte pedal_pin = 11;  //Pedal pin
 
 //slider1 affects volume output directly, without arduino
 const byte slider2_analog_pin = A4;   //sample rate
-const byte slider3_analog_pin = A5;   //pwm
+const byte slider3_analog_pin = A5;   //duration
 
 const unsigned int analog_min = 20;     //it's appears minimal value is 20, not 0 in the current setup
 const unsigned int analog_max = 1023;
@@ -47,9 +37,9 @@ void setup() {
   Serial.begin(500000);
   Serial.println("Endless Drum Pedal, v. 1.1 for Arduino Uno, Nano");
   Serial.println("Audio output: pin D2, pedal: D11");
-  Serial.println("slider 1 - between pin2 and audio output, slider 2 - A4, slider 3 - A5");
+  Serial.println("Slider 'Volume': D2, audio output, Gnd, Slider 'Sample' Rate: 5V, A4, Gnd, Slider 'Duration': 5V, A5, Gnd");
   Serial.println("Send '1' to enable debug print to console");
-  
+
   //will be computed
   //Serial.print("Audio sample rate: "); Serial.println(audio_sample_rate);
 
@@ -60,7 +50,7 @@ void setup() {
   pinMode(pedal_pin, INPUT_PULLUP); //read pedal
 
   init_wave();
-  
+
   //ARef - set to 1.1V, for increasing sensitivity
   //analogReference(INTERNAL);
 }
@@ -80,41 +70,6 @@ int mapi_clamp(int i, int a, int b, int A, int B) {
 
 
 //--------------------------------------------------------------
-
-//Constants
-const int audio_delay_mcs0 = 0;
-const int audio_delay_mcs1 = 500;//400;
-const int audio_thresh_slider0 = 512;
-const int audio_thresh_slider1 = 512 + 40;
-const int audio_thresh_hyster = 2;
-
-//Sound parameters
-int audio_delay_mcs = 10;   //delay in sound loop
-
-//zero value range for adjusting trimming resistor - inside range the led is lighting
-const int audio_thresh_adj0 = 512 - 5;
-const int audio_thresh_adj1 = 512 + 5;
-
-
-int audio_thresh0 = 512;     //two thresholds for hysteresis (stability)
-int audio_thresh1 = audio_thresh0 + audio_thresh_hyster;
-
-int audio_diff_step = 90;  //127
-
-const int audio_diffusion0 = 0;
-const int audio_diffusion1 = 256;
-int audio_diff_keep = 16; //64; //decaying diffusion 0..256, 0 - no diffusion, 256 - keep all diffusion
-const int diff_keep_denom = 256;
-
-int thresh_sound = 20;
-
-int audio_input_ = 0;
-int sound_value = 0;
-
-
-int loops_ = 1000;
-
-//--------------------------------------------------------------
 //Pedal
 byte pedal_ = 0;
 
@@ -122,20 +77,31 @@ byte pedal_ = 0;
 const int wave_n = 512;
 byte wave[wave_n];   //TODO store in bits
 
+//controllable
+const int wave_duration_min = 10;
+int wave_duration = wave_n; //0..wave_n
+
 //sample pos
-int pos_ = 0;
+int pos_ = wave_n;
+
+//--------------------------------------------------------------
+//Sample rate
+const int audio_delay_mcs0 = 0;
+const int audio_delay_mcs1 = 4000;//400;   
+int audio_delay_mcs = 10;   //delay in sound loop, controls sample rate
+
+
+int loops_ = 300;
+
 
 //--------------------------------------------------------------
 void init_wave() {
-  for (int i=0; i<wave_n; i++) {
-    wave[i] = (random(100)<50)?0:1;
+  for (int i = 0; i < wave_n; i++) {
+    wave[i] = (random(100) < 50) ? 0 : 1;
     //Serial.print(wave[i]);
     //Serial.print(" ");
   }
-  //set last to zero to end sample with it
-  wave[wave_n-1] = 0;
-  
-  
+
 }
 
 //--------------------------------------------------------------
@@ -155,17 +121,14 @@ inline void control_step() {
   if (pedal_) digitalWrite(pin_led, HIGH);
   else digitalWrite(pin_led, LOW);
 
-  //TODO make each step at separate loop to minimize delay
   int slider2 = analogRead(slider2_analog_pin);  //0..1023
   int slider3 = analogRead(slider3_analog_pin);  //0..1023
 
   audio_delay_mcs = mapi_clamp(slider2, analog_min, analog_max, audio_delay_mcs0, audio_delay_mcs1);
-  //audio_thresh0 = mapi_clamp(slider3, analog_min, analog_max, audio_thresh_slider1, audio_thresh_slider0); //reverted range
-  //audio_thresh1 = audio_thresh0 + audio_thresh_hyster;
 
-  audio_diff_keep = mapi_clamp(slider3, analog_min, analog_max, audio_diffusion0, audio_diffusion1);
+  wave_duration = mapi_clamp(slider3, analog_min, analog_max, wave_duration_min, wave_n);
 
- 
+
 
   //debug print
   if (debug) {
@@ -175,8 +138,7 @@ inline void control_step() {
     Serial.print("  sliders "); Serial.print(slider2);
     Serial.print(","); Serial.print(slider3);
     Serial.print("  audio_delay_mcs "); Serial.print(audio_delay_mcs);
-    Serial.print("  audio_thresh "); Serial.print(audio_thresh0);
-    Serial.print("  audio_diff "); Serial.print(audio_diff_keep);
+    Serial.print("  wave_duration "); Serial.print(wave_duration);
 
     Serial.println();
   }
@@ -203,25 +165,29 @@ void loop() {
 
   unsigned long time0 = micros();
   static byte last_pedal = 0;
-  
+
   for (int i = 0; i < loops_; i++) {
-    //pedal 
-    pedal_ = digitalRead(pedal_pin)?0:1;
+    //pedal
+    pedal_ = digitalRead(pedal_pin) ? 0 : 1;
     if (pedal_ && !last_pedal) {
       pos_ = 0;     //play
     }
     last_pedal = pedal_;
-    
+
     //audio output
-    if (pos_ < wave_n) {
+    if (pos_ < wave_duration) {
       if (wave[pos_]) {
         digitalWrite(pin_buz, HIGH);    //buzzer ON
       }
       else {
-        digitalWrite(pin_buz, LOW);    //buzzer OFF        
+        digitalWrite(pin_buz, LOW);    //buzzer OFF
       }
 
       pos_++;
+    }
+    else {
+      pos_ = wave_n;                  //prevent continuation of sound play
+      digitalWrite(pin_buz, LOW);    //buzzer OFF
     }
     //delay
     delayMicroseconds(audio_delay_mcs);
