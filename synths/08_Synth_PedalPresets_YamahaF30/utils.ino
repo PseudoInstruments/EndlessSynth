@@ -7,6 +7,7 @@ int absi(int i) {
 }
 
 int clampi(int i, int a, int b) {
+  if (a > b) { int t = a; a = b; b = t; }
   if (i < a) return a;
   if (i > b) return b;
   return i;

@@ -46,7 +46,7 @@ inline void control_step() {
   }
 
   //Sliders
-  sliders_control_step();
+  sliders_slow_control_step();
 
   //Sound
   sound_control_step();
