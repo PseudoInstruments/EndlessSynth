@@ -13,6 +13,13 @@ int clampi(int i, int a, int b) {
   return i;
 }
 
+int clampf(float x, float a, float b) {
+  if (a > b) { float t = a; a = b; b = t; }
+  if (x < a) return a;
+  if (x > b) return b;
+  return x;
+}
+
 int mapi_clamp(int i, int a, int b, int A, int B) {
   return clampi(map(i, a, b, A, B), A, B);
 }
@@ -20,6 +27,11 @@ int mapi_clamp(int i, int a, int b, int A, int B) {
 float mapf(float x, float a, float b, float A, float B) {
   return (x-a)/(b-a)*(B-A) + A;
 }
+
+float mapf_clamp(float x, float a, float b, float A, float B) {
+  return clampf((x-a)/(b-a)*(B-A) + A, A, B);
+}
+
 //---------------------------------------------------------------
 //print routines - use their for shortening code
 void pr(const char *str) {

@@ -38,6 +38,11 @@ int *wave_n = &wave1_n;
 //sample pos
 int pos_ = wave_n;
 
+//timbre
+const float square_note0 = 34;   //34 -> 58 Hz
+const float square_note1 = 84;  //84 -> 1046,  72 -> 523 Hz
+
+
 //--------------------------------------------------------------
 //Measure performance of audio_loop
 //Note: do this performance measure before sliders setup
@@ -66,7 +71,7 @@ void sound_measure_performance() {
 //make table of sample rates
 void init_sample_rates() {
   for (int i = 0; i < sample_rates_n; i++) {
-    float note = mapf(i, 0, sample_rates_n, sample_rate_note0, sample_rate_note1);
+    float note = mapf(i, 0, sample_rates_n-1, sample_rate_note0, sample_rate_note1);
     sample_rates[i] = m_to_f_float(note);
   }
 
@@ -82,34 +87,64 @@ void init_sample_rates() {
 void sound_setup() {
   init_sample_rates();
 
+  Serial.print("Tone frequencies range: "); Serial.print(m_to_f_int(square_note0));
+  Serial.print(" - "); Serial.println(m_to_f_int(square_note1));
+
   init_drum1();
   init_drum2();
 }
 
 //--------------------------------------------------------------
-void init_wave(byte *wave, int &wave_n, int duration_slider) {
+void init_wave(byte *wave, int &wave_n, int duration_slider, int timbre_slider, int tone1_slider, int tone2_slider) {
   int duration_ms = mapi_clamp(duration_slider, pot_min, pot_max, 10, 500);
 
+  float note0 = mapf_clamp(tone1_slider, pot_min, pot_max, square_note0, square_note1); 
+  float note1 = mapf_clamp(tone2_slider, pot_min, pot_max, square_note0, square_note1); 
+   
   int n_max = (long long)(sample_rate_) * duration_ms / 1000;
   wave_n = min(n_max, wave_N);
 
+  //float phase = 0;
+  //float phase_adder;    //period 1 - <0.5->0, >=0.5->1
+  int phase = 0;
+  int phase_adder;    //period sample_rate_: 0..sample_rate/2 -> 0, else -> 1
+  int sample_rate2 = sample_rate_ / 2;
+  
   for (int i = 0; i < wave_n; i++) {
-    wave[i] = (random(100) < 50) ? 0 : 1;
+    float ton = mapf(i, 0, wave_n-1, note0, note1);
+    int freq = m_to_f_int(ton);
+    //phase_adder = float(freq) / sample_rate_;
+    phase_adder = freq;
+    wave[i] = (phase < sample_rate2) ? 1 : 0; //(random(100) < 50) ? 0 : 1;
+    phase += phase_adder;
+    phase %= sample_rate_; 
   }
 
-  //Serial.println("Drum update");
-  //Serial.print("duration_ms "); Serial.println(duration_ms);
-  //Serial.print("wave_n "); Serial.println(wave_n);
+  //Debug print
+  Serial.println("Drum update");
+  Serial.print("duration_ms "); Serial.println(duration_ms);
+  Serial.print("wave_n "); Serial.println(wave_n);
+  /*for (int i=0; i<wave_n; i++) {
+    Serial.print(wave[i]); Serial.print(" ");
+    if (i % 40 == 0 && i > 0) Serial.println(); 
+  }
+  Serial.println(); */
+  Serial.print("Freq "); Serial.print(m_to_f_int(note0)); Serial.print(" -- "); Serial.println(m_to_f_int(note1));
 
+
+  //Serial.println("MIDI to freq:");
+  //for (int i=0; i<127; i++) {
+  //  Serial.print(i); Serial.print(" ");Serial.println(m_to_f_int(i)); 
+  //}
 }
 
 //--------------------------------------------------------------
 void init_drum1() {
-  init_wave(wave1, wave1_n, *Pot_Drum1_Duration);
+  init_wave(wave1, wave1_n, *Pot_Drum1_Duration, *Pot_Drum1_Timbre, *Pot_Drum1_Tone1, *Pot_Drum1_Tone2);
 }
 
 void init_drum2() {
-  init_wave(wave2, wave2_n, *Pot_Drum2_Duration);
+  init_wave(wave2, wave2_n, *Pot_Drum2_Duration, *Pot_Drum2_Timbre, *Pot_Drum2_Tone1, *Pot_Drum2_Tone2);
 }
 
 //--------------------------------------------------------------
