@@ -109,13 +109,19 @@ void init_wave(byte *wave, int &wave_n, int duration_slider, int timbre_slider, 
   int phase = 0;
   int phase_adder;    //period sample_rate_: 0..sample_rate/2 -> 0, else -> 1
   int sample_rate2 = sample_rate_ / 2;
+
+  //timbre, 0 - tone, 127 - noise
+  int timbre_noise = mapi_clamp(timbre_slider, pot_min, pot_max, 0, 127); 
+  int timbre_tone = 127 - timbre_noise; 
   
   for (int i = 0; i < wave_n; i++) {
     float ton = mapf(i, 0, wave_n-1, note0, note1);
     int freq = m_to_f_int(ton);
     //phase_adder = float(freq) / sample_rate_;
     phase_adder = freq;
-    wave[i] = (phase < sample_rate2) ? 1 : 0; //(random(100) < 50) ? 0 : 1;
+
+    int sound = timbre_tone*((phase < sample_rate2) ? -1 : 1) + random(-timbre_noise,timbre_noise);
+    wave[i] =  (sound>0) ? 1 : 0;
     phase += phase_adder;
     phase %= sample_rate_; 
   }
@@ -130,7 +136,7 @@ void init_wave(byte *wave, int &wave_n, int duration_slider, int timbre_slider, 
   }
   Serial.println(); */
   Serial.print("Freq "); Serial.print(m_to_f_int(note0)); Serial.print(" -- "); Serial.println(m_to_f_int(note1));
-
+  Serial.print("Timbre noise "); Serial.println(timbre_noise);
 
   //Serial.println("MIDI to freq:");
   //for (int i=0; i<127; i++) {
