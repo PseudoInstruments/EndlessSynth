@@ -14,9 +14,16 @@
 
   2) Pedal Sustain - D11 (Sig) and D12 (Gnd)
 
-  3) Sliders - this sketch uses two sliders (I mean potentiometers 10kOhm) for controlling sound parameters.
-  A4 - sample rate
-  A5 - duration
+  3) Sliders (potentiometers 10kOhm) for controlling sound parameters:
+  - Sample rate pot (10 kOhm, and others pots too)
+  - Duration 1 pot
+  - Duration 2 pot
+  - Route Pedal to tone 1 switch
+  - Route Pedal to 2 switch
+  - Key for manual playing tone 1
+  - Key for manual playing tone 2
+  
+  
   And for pots connect Gnd, 5V
 
   //It's better to use linear pots.
