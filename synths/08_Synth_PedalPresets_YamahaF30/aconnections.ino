@@ -87,7 +87,39 @@ const byte pin_Sliders_Gnd = 12;  //Gnd for sliders
   FUN##_PIN(3, Preset8, P8, 53, PRINTID); 
 
 //---------------------------------------------------------------
-//
+//Print all analog and digital pins
+void test_print_pins() {
+  pr("Pins Digital:");
+  for (int i=0; i<53; i++) {
+    if (i % 10 == 0) { pr(" "); pr(i); pr(":"); }
+    pr(digitalRead(i)); pr(" ");
+  }
+  pr("Analog: ");
+  for (int i=0; i<16; i++) {
+    if (i % 4 == 0 && i > 0) { pr(","); }
+    int k = A0;
+    if (i == 0) k = A0;
+    if (i == 1) k = A1;
+    if (i == 2) k = A2;
+    if (i == 3) k = A3;
+    if (i == 4) k = A4;
+    if (i == 5) k = A5;
+    if (i == 6) k = A6;
+    if (i == 7) k = A7;
+    if (i == 8) k = A8;
+    if (i == 9) k = A9;
+    if (i == 10) k = A10;
+    if (i == 11) k = A11;
+    if (i == 12) k = A12;
+    if (i == 13) k = A13;
+    if (i == 14) k = A14;
+    if (i == 15) k = A15;
+    pr(analogRead(k));
+    pr(" ");
+  }
+  prln();
+}
+
 
 //---------------------------------------------------------------
 //Arduino Mega PORTS mapping   https://forum.arduino.cc/index.php?topic=52534.0

@@ -86,9 +86,15 @@ void sliders_loop() {
 
 
   //PRINT
-  if (sliders_debug > 0 && debug_now) {
-    INPUTS_APPLY(PRINT, sliders_debug);
-    prln();
+  if (sliders_debug > 0 && print_now) {
+    //1,2,3 - print blocks
+    if (sliders_debug == 1 || sliders_debug == 2 || sliders_debug == 3) {
+      INPUTS_APPLY(PRINT, sliders_debug);
+      prln();
+    }
+    if (sliders_debug == 4) {
+      test_print_pins();
+    }
   }
   /*
     //Debug print

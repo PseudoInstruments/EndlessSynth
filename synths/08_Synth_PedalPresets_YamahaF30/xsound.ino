@@ -18,7 +18,7 @@ const long audio_sample_rate_step = 20; //"big" difference when change frame rat
 //---------------------------------------------------------------
 inline void set_audio_sample_rate(int rate) {
   //change sample rate only if big difference
-  //if (debug_now) {
+  //if (print_now) {
   //  pr("--- sample rate: "); prln(rate);
   //}
 
@@ -38,7 +38,7 @@ inline void set_audio_sample_rate(int rate) {
     Timer3.attachInterrupt(timer_interrupt);
     Timer3.start();
 
-    if (debug && debug_now) {
+    if (debug && print_now) {
       pr("new sample rate: "); prln(audio_sample_rate);
     }
   }

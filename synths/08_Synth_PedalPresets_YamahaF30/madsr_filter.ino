@@ -76,7 +76,7 @@ void set_adsr_sliders(int Attack_slider, int Decay_slider, int Sustain_slider, i
     Release_ms = map(Release_slider, 0, 1023, 0, 500);
   */
 
-  //if (debug_now) {
+  //if (print_now) {
     //pr("Filter_LFO_Speed "); prln(Filter_LFO_Speed);
     //pr("ADSR "); pr(Attack_ms); pr(" "); pr(Decay_ms); pr(" "); pr(Sustain_vol); pr(" "); pr(Release_ms);
     //prln();
@@ -126,7 +126,7 @@ void ADSR_loop(unsigned long time) {
   //audio_volume = Sustain_vol;
   //audio_step = Filter_1; //audio_volume_max - Sustain_vol;// * 5;
 
-  //if (debug_now) {
+  //if (print_now) {
       //pr("phase "); prln(phase);  
       //pr("  audio_step "); prln(audio_step); 
       //pr("  delta "); prln(delta_ms);

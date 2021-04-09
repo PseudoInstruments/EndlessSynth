@@ -1,4 +1,3 @@
-
 // **08_Synth_PedalPresets_YamahaF30** - - synthesizer for Arduino Mega and keyboard YAMAHA PSS F30
 //New:
 //- Expression Pedal for foot-controlled sound
@@ -10,11 +9,10 @@
 //Features:
 //--------------------------------------------
 //- 37 keys - from YAMAHA PSS F30 
-//send '1' to debug, '2' to print sliders
+//  send '1','2','3' to debug blocks, 'q' to print all pins, 'd' to common debug print, '0' to demo play 
 //- You have an option to not connect sliders - set SLIDERS_ENABLED to 0 above
 //- arpeggiator mode ("note" and "string" keys)
-//- latch
-//- presets
+//(- latch)
 //- switch octaves
 //- ADSR-engine for sound 
 //- three sound effects (digital volume, filter, sample rate), controlled manually, by LFO and from expression pedal 
@@ -52,8 +50,6 @@
 //13,14,15 - Enable Pedal switches (for sound effects 1,2,3)
 //16,17,18 - Enable LFO switches (for sound effects 1,2,3)
 //Block 3 - presets
-//1 - Presets switch (Enabled presets)
-//2,3,4,5,6,7,8,9 - Choose Preset keys (8 presets, double pressing stores preset to memory)
 
 //Note: If you have no sliders, set SLIDERS_ENABLED=0 below
 
@@ -61,18 +57,15 @@
 //How to play:
 //--------------------------------------------
 //Notes:
-//   hold 1,2 or 3 notes by left hand and hit any of white rightest \"string\" keys.
+//   Arp mode: hold 1,2 or 3 notes by left hand and hit any of white rightest \"string\" keys.
 //   Combination of note key and string key plays a note, just liko on the guitar.
 //Octave switch:
 //   use thee right black keys
-//Sample rate switch:
-//   use right F and G (not works while mic mode enabled)
-//Press mic button so hear sound from mic.
 
 //--------------------------------------------
 //Board & Monitor port speed:
 //--------------------------------------------
-//  Arduino Mega (Note: Not Uno!)
+//  Arduino Mega
 //  Baud must be set to 500000!
 //--------------------------------------------
 //Aditional libraries:
@@ -99,11 +92,11 @@ const int SLIDERS_ENABLED_3 = 0;
  
 
 
-byte debug = 0;       //common debug enabled by '4'  from Serial
-byte debug_now = 0;  //signal for debug
-long int last_debug_time = 0;
+byte debug = 0;       //common debug enabled by 'd'  from Serial
+byte print_now = 0;  //signal for debug
+long int last_print_time = 0;
 
-byte sliders_debug = 0;     //debug mode for sliders - 1,2,3 - blocks
+byte sliders_debug = 0;     //debug mode for sliders - 1,2,3 - blocks, 4 - print all pins
 byte demo_play = 0;   //enabled by '0' from Serial
 
 const int FPS = 200;  //control FPS. note: really a much less because we use simple delay(1000/FPS) for FPS control.
@@ -112,7 +105,7 @@ const int FPS_delay = 1000 / FPS;
 //---------------------------------------------------------------
 //number of notes to play simultaneously, 1..4
 #define POLYPHONY (3)
-//#define POLYPHONY (4) //For some reason 4 halts the system :)
+//#define POLYPHONY (4) //4 is too much for Arduino Mega with my programming approach... :)
 
 
 //---------------------------------------------------------------
@@ -136,7 +129,7 @@ void setup() {
 
   prln("----------------------------------------------------------------");
   prln("Synth is ready to play.");
-  prln("Send '1','2','3' to debug controls, '4' to on/off common debug print, '0' to run demo play");
+  prln("Send '1','2','3' to debug controls, 'q' - print pins, 'd' to on/off common debug print, '0' to run demo play");
   prln("----------------------------------------------------------------");
 
 }
@@ -160,7 +153,8 @@ void loop() {
       toggle_debug(key, '1', "Debug block 1 ", sliders_debug, 1);
       toggle_debug(key, '2', "Debug block 2 ", sliders_debug, 2);
       toggle_debug(key, '3', "Debug block 3 ", sliders_debug, 3);
-      toggle_debug(key, '4', "Debug ", debug, 1);
+      toggle_debug(key, 'q', "Print pins ", sliders_debug, 4);
+      toggle_debug(key, 'd', "Debug ", debug, 1);
       toggle_debug(key, '0', "Demo_play ", demo_play, 1);
     }
   }
@@ -177,12 +171,12 @@ void loop() {
   delay(FPS_delay);  
 
   //compute signal for "rare" debug print
-  if (time > last_debug_time + 500) {
-    debug_now = 1;
-    last_debug_time = time;
+  if (time > last_print_time + 500) {
+    print_now = 1;
+    last_print_time = time;
   }
   else {
-    debug_now = 0;
+    print_now = 0;
   }
  
 }
