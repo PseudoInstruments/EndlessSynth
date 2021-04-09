@@ -41,7 +41,7 @@ int pos_ = wave_n;
 //timbre
 const float square_note0 = 34;   //34 -> 58 Hz
 const float square_note1 = 84;  //84 -> 1046,  72 -> 523 Hz
-
+const float square_delta = square_note1 - square_note0;
 
 //--------------------------------------------------------------
 //Measure performance of audio_loop
@@ -99,7 +99,7 @@ void init_wave(byte *wave, int &wave_n, int duration_slider, int timbre_slider, 
   int duration_ms = mapi_clamp(duration_slider, pot_min, pot_max, 10, 500);
 
   float note0 = mapf_clamp(tone1_slider, pot_min, pot_max, square_note0, square_note1); 
-  float note1 = mapf_clamp(tone2_slider, pot_min, pot_max, square_note0, square_note1); 
+  float note1 = clampf(note0 + mapf(tone2_slider, pot_min, pot_max, -square_delta, +square_delta), square_note0, square_note1); 
    
   int n_max = (long long)(sample_rate_) * duration_ms / 1000;
   wave_n = min(n_max, wave_N);
@@ -127,16 +127,17 @@ void init_wave(byte *wave, int &wave_n, int duration_slider, int timbre_slider, 
   }
 
   //Debug print
-  Serial.println("Drum update");
-  Serial.print("duration_ms "); Serial.println(duration_ms);
-  Serial.print("wave_n "); Serial.println(wave_n);
+  //Serial.println("Drum update");
+  //Serial.print("duration_ms "); Serial.println(duration_ms);
+  //Serial.print("wave_n "); Serial.println(wave_n);
+  //Serial.print("Freq "); Serial.print(m_to_f_int(note0)); Serial.print(" -- "); Serial.println(m_to_f_int(note1));
+  //Serial.print("Timbre noise "); Serial.println(timbre_noise);
+
   /*for (int i=0; i<wave_n; i++) {
     Serial.print(wave[i]); Serial.print(" ");
     if (i % 40 == 0 && i > 0) Serial.println(); 
   }
   Serial.println(); */
-  Serial.print("Freq "); Serial.print(m_to_f_int(note0)); Serial.print(" -- "); Serial.println(m_to_f_int(note1));
-  Serial.print("Timbre noise "); Serial.println(timbre_noise);
 
   //Serial.println("MIDI to freq:");
   //for (int i=0; i<127; i++) {

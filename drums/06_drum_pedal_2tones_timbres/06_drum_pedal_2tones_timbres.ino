@@ -23,14 +23,14 @@
   - Key for manual playing tone 1
   - Noise/Square 1 pot 
   - Start Square freq 1 pot
-  - End Square freq 1 pot
+  - End Square freq change pot
   
   - Duration 2 pot
   - Route Pedal to tone 2 switch
   - Key for manual playing tone 2
   - Noise/Square 2 pot 
   - Start Square freq 2 pot
-  - End Square freq 2 pot
+  - End Square freq change pot
   
   
   
