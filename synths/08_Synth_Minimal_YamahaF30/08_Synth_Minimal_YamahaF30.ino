@@ -1,31 +1,25 @@
-// **08_Synth_PedalPresets_YamahaF30** - - synthesizer for Arduino Mega and keyboard YAMAHA PSS F30
-//New:
-//- Expression Pedal for foot-controlled sound
-//- Presets
-//- Routing to LFO/Predal
-//- Discrete timbre switch
+// **08_Synth_Minimal_YamahaF30** - - synthesizer for Arduino Mega and keyboard YAMAHA PSS F30
+//This is stable synth with minimalistic controls. 
+//It's preparation step for synth with ADSR, Lfo and expression pedal, but here we use only 1st control block.
 
 //--------------------------------------------
 //Features:
 //--------------------------------------------
+//Main features: 3 polyphony, timbres, voice/noise regulator, arp mode on/off
 //- 37 keys - from YAMAHA PSS F30 
 //  send '1','2','3' to debug blocks, 'q' to print all pins, 'd' to common debug print, '0' to demo play 
 //- You have an option to not connect sliders - set SLIDERS_ENABLED to 0 above
 //- arpeggiator mode ("note" and "string" keys)
-//(- latch)
 //- switch octaves
-//- ADSR-engine for sound 
-//- three sound effects (digital volume, filter, sample rate), controlled manually, by LFO and from expression pedal 
-//- optimized sound engine computations (removed "/" in wave_table[...] computation, so higher audio rate
-
 
 //--------------------------------------------
 //Communication:
 //--------------------------------------------
+
 //Audio output goes through pin 2 to volume pot and to Jack connector.
 
 //Pots, switches, keys: (I using linear pots 10 kOhm, see "sliders" file for the pins map)
-//  Block 1 - main settings:
+//  Block 1 - main settings:  (USED)
 //1 - Volume pot (directly to sound out, without Arduino)
 //2 - Tone pot
 //3 - Pedal pot (range -max..max - value of effect on other parameters)
@@ -34,7 +28,7 @@
 //6 - Latch Left switch (enables latch of the left part of keyboard, that is stores last presses)
 //7 - Latch Right switch (enabled latch fo the right part of keyboard)
 //8 - Diffusion pot ("Original"/"Square" sound)
-//  Block 2 - synth
+//  Block 2 - synth   (NOTE: NOT USED)
 //1 - ADSR switch (enables ADSR envelope)
 //2 - Decay pot
 //3 - Sustain pot
@@ -49,7 +43,7 @@
 //12 - Sample Rate pot (sound effect 3)
 //13,14,15 - Enable Pedal switches (for sound effects 1,2,3)
 //16,17,18 - Enable LFO switches (for sound effects 1,2,3)
-//Block 3 - presets
+//Block 3 - presets (NOTE: NOT USED)
 
 //Note: If you have no sliders, set SLIDERS_ENABLED=0 below
 
@@ -113,10 +107,10 @@ void setup() {
   Serial.begin(500000);
   prln();
   prln("----------------------------------------------------------------");
-  prln("EndlessSynth 08_Synth_PedalPresets_YamahaF30, v. 1.1 for Arduino Mega and Yamaha PSSF30 keyboard");
+  prln("EndlessSynth 08_Synth_Minimal_YamahaF30, v. 1.1 for Arduino Mega and Yamaha PSSF30 keyboard");
   prln("Features:");
-  prln("3 polyphony, ADSR envelope, timbres, expression pedal, presets");
-  prln("How to play:  hold up to three notes by left hand and press 3 hit white \"string\" keys.");
+  prln("3 polyphony, timbres, voice/noise regulator, arp mode on/off");
+  prln("Arp mode: hold up to three notes by left hand and press 3 hit white \"string\" keys.");
   prln("Combination of note key and string key plays a note");
   prln("To switch octave use three right black keys");
   prln("----------------------------------------------------------------");
