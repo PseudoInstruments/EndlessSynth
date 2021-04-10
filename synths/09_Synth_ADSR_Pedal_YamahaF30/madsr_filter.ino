@@ -94,7 +94,7 @@ inline void LFO_loop(unsigned long time) {
   }
 
   //TODO make table for speedup
-  LFO_Rate = clampf(m_to_f_float(Pot_LFO_Rate)-LFO_Rate_0, 0, 10000); //Note to Hz //mapf(Pot_LFO_Rate, 0, 1023, lfo_speed_min, lfo_speed_max);
+  LFO_Rate = clampf(m_to_f_float(Pot_LFO_Rate) - LFO_Rate_0, 0, 10000); //Note to Hz //mapf(Pot_LFO_Rate, 0, 1023, lfo_speed_min, lfo_speed_max);
   static unsigned long time_prev = 0;
   unsigned long delta_ms = time - time_prev;
   lfo_phase_ += delta_ms * LFO_Rate;
@@ -152,22 +152,30 @@ inline void sample_rate_loop() {
 //---------------------------------------------------------------
 void volume_loop() {
   int vol = Pot_Digital_Volume;
+
+  //if LFO route enabled - then pedal applied to LFO range
   if (Pin_Enable_LFO1 == 1) {
     int add = ((long)(LFO_Value_) * Digital_Volume_Max / LFO_Range_Max);
     //applying pedal on LFO range
     if (Pin_Enable_Pedal1 == 1) {
       add = long(add) * Pot_Pedal_Inp / Pedal_Input_Max;
     }
-    
+
     vol += add;
     //prln(add);
   }
-  
+  else {
+    //Else - using pedal as value
+    if (Pin_Enable_Pedal1 == 1) {
+      vol = ((long)vol) * Pot_Pedal_Inp / Pedal_Input_Max;
+    }
+  }
+
   /*if (Pin_Enable_Pedal1 == 1) {
     int add = ((long)(Pedal_) * Digital_Volume_Max / Pedal_Sens_Max);
     vol += add;
     //prln(add);
-  }*/
+    }*/
 
   vol = clampi(vol, Digital_Volume_Min, Digital_Volume_Max);
   audio_step = vol;
