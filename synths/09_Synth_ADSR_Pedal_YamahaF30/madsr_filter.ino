@@ -43,7 +43,6 @@ extern char wave_noised[];
 
 char *LFO_wave = wave_sine;
 
-
 const float lfo_speed_min = 0;
 const float lfo_speed_max = wave_n * 10 * .001f; //10*1000;  //Hz*1000
 
@@ -56,6 +55,10 @@ int LFO_Shape = 0; //sine, sawtooth
 float lfo_phase_ = 0;
 int LFO_Value_ = 0;   //current LFO value
 
+//Pedal 
+const int Pedal_Input_Max = 19;   //Note: my pedal outputs 0..19 because has range 1kOhm..20 kOhm
+//const int Pedal_Max = 127;    - commented, because hardcoded in Pot_Pedal_Sens
+byte Pedal_ = 0;      //Pedal value 
 
 //---------------------------------------------------------------
 //event: key pressed or released
@@ -105,6 +108,7 @@ inline void LFO_loop(unsigned long time) {
   
 //  audio_step = map(wave_sine[phase], -timbre_range, timbre_range, Filter_1, Filter_2);
 
+  //Debug print
   if (sliders_debug == DEBUG_LFO && print_now) {
     pr("LFO "); pr(LFO_Range); pr("  spd "); pr(LFO_Rate); pr(" value "); prln(LFO_Value_);
     //pr(time);
@@ -120,9 +124,24 @@ inline void LFO_loop(unsigned long time) {
     //pr("  delta "); prln(delta_ms);
     //}
   }
-
-
 }
+
+//---------------------------------------------------------------
+void sample_rate_loop() {
+  
+}
+
+
+//---------------------------------------------------------------
+inline void pedal_loop() {
+  Pedal_ = mapi_clamp(Pot_Pedal_Inp, 0, Pedal_Input_Max, 0, Pot_Pedal_Sens);  \
+
+  //Debug print
+  if (sliders_debug == DEBUG_LFO && print_now) {
+    pr("Pedal "); prln(Pedal_); 
+  }
+}
+
 //---------------------------------------------------------------
 //update event
 void synth_loop(unsigned long time) {
@@ -131,6 +150,9 @@ void synth_loop(unsigned long time) {
   SLIDERS_ENABLED_2 = Pin_Synth_Mode;
   //  pr("Synth: "); prln(SLIDERS_ENABLED_2);
   //}
+
+  //Pedal
+  pedal_loop();
 
   //LFO
   LFO_loop(time);

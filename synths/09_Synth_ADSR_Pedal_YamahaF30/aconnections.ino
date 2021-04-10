@@ -37,7 +37,7 @@ const int Diffusion_shift = 7;  /*127 -> power*/ \
 //POTS:
 //const byte pot_Pedal = A3;
 //const int Pedal_Min = 0;
-//const int Pedal_Max = 1023;
+//const int Pedal_Max = 127;
 //int Pot_Pedal;
 //KEYS:
 //byte Pin_Synth_Mode = 0;
@@ -48,7 +48,7 @@ const int Diffusion_shift = 7;  /*127 -> power*/ \
   /*  Block 1 - main settings: */\
   \
   FUN##_POTF(1, Tone, Ton, A2, -3, 3, PRINTID); \
-  FUN##_POTI(1, Pedal_Sens, Ped_Sens, A3, 0, 1023, PRINTID); \
+  FUN##_POTI(1, Pedal_Sens, Ped_Sens, A3, 0, 127, PRINTID); \
   FUN##_POTI(1, Diffusion, Dif, A4, 8, 256, PRINTID); \
   /*decaying diffusion 0..256, 0 - no diffusion, 256 - keep all diffusion*/ \
   \
@@ -64,7 +64,7 @@ const int Diffusion_shift = 7;  /*127 -> power*/ \
   FUN##_PIN(1, Latch, Latch, 10, PRINTID); \
   \
   /*  Block 2 - synth */    \
-  FUN##_POTI(2, Pedal_Inp, PED, A1, 0, 1023, PRINTID); /*Note: my pedal outputs 0..19 because has range 1kOhm..20 kOhm*/ \    
+  FUN##_POTI(2, Pedal_Inp, PED, A1, 0, 1023, PRINTID); /*Note: my pedal outputs 0..19 because has range 1kOhm..20 kOhm, see Pedal_Input_Max*/ \    
   \
   FUN##_POTI(2, Attack, Att, A12, 0, 1023, PRINTID); \
   FUN##_POTI(2, Decay, Dec, A10, 0, 1023, PRINTID); \
