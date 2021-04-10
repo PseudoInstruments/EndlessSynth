@@ -58,6 +58,12 @@ void read_pin_in(byte pin, byte &value) {
 }
 
 //---------------------------------------------------------------
+void pinModePower(byte pin, byte value) {
+  pinMode(pin, OUTPUT);
+  digitalWrite(pin, (value)?HIGH:LOW);  
+}
+
+//---------------------------------------------------------------
 void sliders_setup() {
   if (!SLIDERS_ENABLED_1)  {
     prln("[Sliders 1 disabled]");
@@ -69,11 +75,12 @@ void sliders_setup() {
     prln("[Sliders 3 disabled]");
   }  
   pr("   Power pin sliders: 5V -> D"); pr(pin_Sliders_5V); pr(", Gnd -> D"); prln(pin_Sliders_Gnd);
+  pr("   Power pin pedal: 5V -> D"); pr(pin_Pedal_5V); pr(", Gnd -> D"); prln(pin_Pedal_Gnd);
   //set up power pins
-  pinMode(pin_Sliders_5V, OUTPUT);
-  pinMode(pin_Sliders_Gnd, OUTPUT);
-  digitalWrite(pin_Sliders_5V, HIGH);
-  digitalWrite(pin_Sliders_Gnd, LOW);
+  pinModePower(pin_Sliders_5V, 1);
+  pinModePower(pin_Sliders_Gnd, 0);
+  pinModePower(pin_Pedal_5V, 1);
+  pinModePower(pin_Pedal_Gnd, 0);
 
   //Set up pins for switches and keys
   INPUTS_APPLY(SETUP, 0)
@@ -92,8 +99,11 @@ void sliders_loop() {
       INPUTS_APPLY(PRINT, sliders_debug);
       prln();
     }
-    if (sliders_debug == 4) {
-      test_print_pins();
+    if (sliders_debug == 4) { //print digital pins
+      test_print_pins(1, 0);
+    }
+    if (sliders_debug == 5) { //print analog pins
+      test_print_pins(0, 1);
     }
   }
   /*

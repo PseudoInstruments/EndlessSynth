@@ -12,7 +12,7 @@ const byte pin_audio_gnd = 3;
 
 //---------------------------------------------------------------
 //Keyboard
-const byte pins_Keyboard_blockN = 7;   //number of keyboard block blocks 
+const byte pins_Keyboard_blockN = 7;   //number of keyboard block blocks
 const byte pins_Keyboard_signalN = 6;  //number of keyboard read pins
 
 byte pins_Keyboard_block[pins_Keyboard_blockN] = {35, 33, 31, 29, 27, 25, 23};
@@ -21,61 +21,68 @@ byte pins_Keyboard_signal[pins_Keyboard_signalN] = {32, 30, 28, 26, 24, 22};
 //---------------------------------------------------------------
 //Power for sliders
 const byte pin_Sliders_5V = 11;   //+5V for sliders
-const byte pin_Sliders_Gnd = 12;  //Gnd for sliders 
+const byte pin_Sliders_Gnd = 12;  //Gnd for sliders
+
+const byte pin_Pedal_5V = 7;   //+5V for pedal
+const byte pin_Pedal_Gnd = 6;  //Gnd for pedal
+
 
 //---------------------------------------------
-  const int Diffusion_shift = 7;  /*127 -> power*/ \
+const int Diffusion_shift = 7;  /*127 -> power*/ \
 
 //---------------------------------------------
 //Description of all pots, switches, keys: (I using linear pots 10 kOhm)
 //It's used in "asliders" file, FUN - function to apply
 #define INPUTS_APPLY(FUN, PRINTID) \
   /*  Block 1 - main settings: */\
-                                               \  
+  \
   FUN##_POTF(1, Tone, Ton, A2, -3, 3, PRINTID); \
-  FUN##_POTI(1, Pedal, Ped, A3, 0, 1023, PRINTID); \
-  FUN##_POTI(1, Diffusion, Dif, A4, 8, 256, PRINTID); \  
+  FUN##_POTI(1, Pedal_Sens, Ped_Sens, A3, 0, 1023, PRINTID); \
+  FUN##_POTI(1, Diffusion, Dif, A4, 8, 256, PRINTID); \
   /*decaying diffusion 0..256, 0 - no diffusion, 256 - keep all diffusion*/ \
-                                                \
+  \
   FUN##_PIN(1, Timbre1, Timb1, 21, PRINTID); \
   FUN##_PIN(1, Timbre2, 2, 20, PRINTID); \
   FUN##_PIN(1, Timbre3, 3, 19, PRINTID); \
   FUN##_PIN(1, Timbre4, 4, 18, PRINTID); \
   FUN##_PIN(1, Timbre5, 5, 17, PRINTID); \
   FUN##_PIN(1, Timbre6, 6, 16, PRINTID); \
-                                                \
+  \
   FUN##_PIN(1, Arpegiator_Mode, Arp_Mode, 8, PRINTID); \
-  FUN##_PIN(1, Latch_Left, LLeft, 9, PRINTID); \
+  FUN##_PIN(1, Synth_Mode, LLeft, 9, PRINTID); \
   FUN##_PIN(1, Latch_Right, LRight, 10, PRINTID); \
-                                                \  
+  \
   /*  Block 2 - synth */    \
+  FUN##_POTI(2, Pedal_Inp, PED, A1, 0, 1023, PRINTID); /*Note: my pedal outputs 0..19 because has range 1kOhm..20 kOhm*/ \    
+  \
   FUN##_POTI(2, Attack, Att, A5, 0, 1023, PRINTID); \
-  FUN##_POTI(2, Decay, Dec, A6, 0, 1023, PRINTID); \
+  FUN##_POTI(2, Decay, Dec, A10, 0, 1023, PRINTID); \
   FUN##_POTI(2, Sustain, Sust, A7, 0, 1023, PRINTID); \
   FUN##_POTI(2, Release, Rels, A8, 0, 1023, PRINTID); \
   FUN##_POTI(2, LFO_Range, LFORange, A9, 0, 1023, PRINTID); \
   FUN##_POTI(2, LFO_Rate, Rate, A10, 0, 1023, PRINTID); \
-                                                \
+  \
   FUN##_POTI(2, Digital_Volume, DigiVol, A11, 0, 127, PRINTID);   /*(sound effect 1)/* \
   /*const int Digital_Volume_shift = 7; // << 7 instead "/audio_volume_max"*/ \
-                                                \
+  \
   FUN##_POTI(2, Filter, Flt, A12, 0, 1023, PRINTID);           /*(sound effect 2)*/    \
   FUN##_POTI(2, Sample_Rate, SRate, A13, 2000, 8000, PRINTID);      /*(sound effect 3)*/  \
-                                                \
+  \
   FUN##_PIN(2, ADSR, ADSR, 34, PRINTID); \
-                                                \  
+  \
   FUN##_PIN(2, LFO_Shape1, Shp1, 36, PRINTID); \
   FUN##_PIN(2, LFO_Shape2, Shp2, 38, PRINTID); \
-                                                  \
+  \
   FUN##_PIN(2, Enable_Pedal1, Ped1, 40, PRINTID); \
   FUN##_PIN(2, Enable_Pedal2, Ped2, 42, PRINTID); \
   FUN##_PIN(2, Enable_Pedal3, Ped3, 44, PRINTID); \
-                                                  \
+  \
   FUN##_PIN(2, Enable_LFO1, LFO1, 46, PRINTID); \
   FUN##_PIN(2, Enable_LFO2, 2, 48, PRINTID); \
-  FUN##_PIN(2, Enable_LFO3, 3, 50, PRINTID); \
-                                                  \
-  /*  Block 3 - presets*/      \
+  FUN##_PIN(2, Enable_LFO3, 3, 50, PRINTID);
+
+
+/*  Block 3 - presets  (NOTE: CURRENTLY NOT USED)    \
   FUN##_PIN(3, Presets, Presets, 37, PRINTID); \
   FUN##_PIN(3, Preset1, P1, 39, PRINTID); \
   FUN##_PIN(3, Preset2, P2, 41, PRINTID); \
@@ -84,40 +91,51 @@ const byte pin_Sliders_Gnd = 12;  //Gnd for sliders
   FUN##_PIN(3, Preset5, P5, 47, PRINTID); \
   FUN##_PIN(3, Preset6, P6, 49, PRINTID); \
   FUN##_PIN(3, Preset7, P7, 51, PRINTID); \
-  FUN##_PIN(3, Preset8, P8, 53, PRINTID); 
-
+  FUN##_PIN(3, Preset8, P8, 53, PRINTID);
+*/
 //---------------------------------------------------------------
 //Print all analog and digital pins
-void test_print_pins() {
-  pr("Pins Digital:");
-  for (int i=0; i<53; i++) {
-    if (i % 10 == 0) { pr(" "); pr(i); pr(":"); }
-    pr(digitalRead(i)); pr(" ");
+void test_print_pins(byte digital, byte analog) {
+  if (digital) {
+    pr("Pins Digital:");
+    for (int i = 0; i < 53; i++) {
+      if (i % 10 == 0) {
+        pr("[");
+        pr(i);
+        pr("] ");
+      }
+      pr(digitalRead(i)?".":"X"); pr(" ");
+    }
+    prln();
   }
-  pr("Analog: ");
-  for (int i=0; i<16; i++) {
-    if (i % 4 == 0 && i > 0) { pr(","); }
-    int k = A0;
-    if (i == 0) k = A0;
-    if (i == 1) k = A1;
-    if (i == 2) k = A2;
-    if (i == 3) k = A3;
-    if (i == 4) k = A4;
-    if (i == 5) k = A5;
-    if (i == 6) k = A6;
-    if (i == 7) k = A7;
-    if (i == 8) k = A8;
-    if (i == 9) k = A9;
-    if (i == 10) k = A10;
-    if (i == 11) k = A11;
-    if (i == 12) k = A12;
-    if (i == 13) k = A13;
-    if (i == 14) k = A14;
-    if (i == 15) k = A15;
-    pr(analogRead(k));
-    pr(" ");
+  if (analog) {
+    pr("Analog:  ");
+    for (int i = 0; i < 16; i++) {
+      if (i % 8 == 0 && i > 0) {
+        pr("   ");
+      }
+      int k = A0;
+      if (i == 0) k = A0;
+      if (i == 1) k = A1;
+      if (i == 2) k = A2;
+      if (i == 3) k = A3;
+      if (i == 4) k = A4;
+      if (i == 5) k = A5;
+      if (i == 6) k = A6;
+      if (i == 7) k = A7;
+      if (i == 8) k = A8;
+      if (i == 9) k = A9;
+      if (i == 10) k = A10;
+      if (i == 11) k = A11;
+      if (i == 12) k = A12;
+      if (i == 13) k = A13;
+      if (i == 14) k = A14;
+      if (i == 15) k = A15;
+      pr(analogRead(k));
+      pr(" ");
+    }
+    prln();
   }
-  prln();
 }
 
 
@@ -130,10 +148,10 @@ void test_print_pins() {
   1   PORTE 1     PORTE!
   2   PORTE 4     PORTE!  audio output Signal
   3   PORTE 5     PORTE!  audio output Gnd
-  4   PORTG 5             sliders 5V
-  5   PORTE 3     PORTE!  sliders Gnd
-  6   PORTH 3
-  7   PORTH 4
+  4   PORTG 5             
+  5   PORTE 3     PORTE!  
+  6   PORTH 3             pedal Gnd
+  7   PORTH 4             pedal 5V
 
   8   PORTH 5
   9   PORTH 6

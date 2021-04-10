@@ -1,15 +1,15 @@
 // **08_Synth_PedalPresets_YamahaF30** - - synthesizer for Arduino Mega and keyboard YAMAHA PSS F30
 //New:
-//- Expression Pedal for foot-controlled sound
+//- Expression Pedal for foot-controlled sound (note: currently I using pedal which output 0..19 from A2)
 //- Presets
-//- Routing to LFO/Predal
+//- Routing to LFO/Pedal
 //- Discrete timbre switch
 
 //--------------------------------------------
 //Features:
 //--------------------------------------------
 //- 37 keys - from YAMAHA PSS F30 
-//  send '1','2','3' to debug blocks, 'q' to print all pins, 'd' to common debug print, '0' to demo play 
+//  send '1','2','3' to debug blocks, 'q','w' to print digital/analog pins, 'd' to common debug print, '0' to demo play 
 //- You have an option to not connect sliders - set SLIDERS_ENABLED to 0 above
 //- arpeggiator mode ("note" and "string" keys)
 //(- latch)
@@ -49,7 +49,8 @@
 //12 - Sample Rate pot (sound effect 3)
 //13,14,15 - Enable Pedal switches (for sound effects 1,2,3)
 //16,17,18 - Enable LFO switches (for sound effects 1,2,3)
-//Block 3 - presets
+
+//Block 3 - presets (NOTE: NOT USED)
 
 //Note: If you have no sliders, set SLIDERS_ENABLED=0 below
 
@@ -87,7 +88,7 @@
 //Three blocks of sliders
 //So if you want check synth without connecting sliders, set it to 0:
 const int SLIDERS_ENABLED_1 = 1;
-const int SLIDERS_ENABLED_2 = 0;
+const int SLIDERS_ENABLED_2 = 1;
 const int SLIDERS_ENABLED_3 = 0;
  
 
@@ -96,7 +97,7 @@ byte debug = 0;       //common debug enabled by 'd'  from Serial
 byte print_now = 0;  //signal for debug
 long int last_print_time = 0;
 
-byte sliders_debug = 0;     //debug mode for sliders - 1,2,3 - blocks, 4 - print all pins
+byte sliders_debug = 0;     //debug mode for sliders - 1,2,3 - blocks, 4,5 - print dig/analog pins
 byte demo_play = 0;   //enabled by '0' from Serial
 
 const int FPS = 200;  //control FPS. note: really a much less because we use simple delay(1000/FPS) for FPS control.
@@ -129,7 +130,7 @@ void setup() {
 
   prln("----------------------------------------------------------------");
   prln("Synth is ready to play.");
-  prln("Send '1','2','3' to debug controls, 'q' - print pins, 'd' to on/off common debug print, '0' to run demo play");
+  prln("Send '1','2','3' to debug controls, 'q'/'w' - print dig/analog pins, 'd' to on/off common debug print, '0' to run demo play");
   prln("----------------------------------------------------------------");
 
 }
@@ -153,7 +154,8 @@ void loop() {
       toggle_debug(key, '1', "Debug block 1 ", sliders_debug, 1);
       toggle_debug(key, '2', "Debug block 2 ", sliders_debug, 2);
       toggle_debug(key, '3', "Debug block 3 ", sliders_debug, 3);
-      toggle_debug(key, 'q', "Print pins ", sliders_debug, 4);
+      toggle_debug(key, 'q', "Print digital pins ", sliders_debug, 4);
+      toggle_debug(key, 'w', "Print analog pins ", sliders_debug, 5);
       toggle_debug(key, 'd', "Debug ", debug, 1);
       toggle_debug(key, '0', "Demo_play ", demo_play, 1);
     }
