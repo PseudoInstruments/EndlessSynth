@@ -91,6 +91,8 @@ void sliders_loop() {
   //Read all controls
   INPUTS_APPLY(READ, 0)
 
+  //Enable/Disable synth controls
+
 
   //PRINT
   if (sliders_debug > 0 && print_now) {

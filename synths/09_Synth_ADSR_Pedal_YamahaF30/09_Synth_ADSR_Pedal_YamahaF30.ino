@@ -87,9 +87,9 @@
 //This parameter enables/disables using sliders
 //Three blocks of sliders
 //So if you want check synth without connecting sliders, set it to 0:
-const int SLIDERS_ENABLED_1 = 1;
-const int SLIDERS_ENABLED_2 = 1;
-const int SLIDERS_ENABLED_3 = 0;
+const byte SLIDERS_ENABLED_1 = 1;
+byte SLIDERS_ENABLED_2 = 1;         //Can be switches by "Synth" key
+const byte SLIDERS_ENABLED_3 = 0;
  
 
 

@@ -55,18 +55,18 @@ const int Diffusion_shift = 7;  /*127 -> power*/ \
   /*  Block 2 - synth */    \
   FUN##_POTI(2, Pedal_Inp, PED, A1, 0, 1023, PRINTID); /*Note: my pedal outputs 0..19 because has range 1kOhm..20 kOhm*/ \    
   \
-  FUN##_POTI(2, Attack, Att, A5, 0, 1023, PRINTID); \
+  FUN##_POTI(2, Attack, Att, A12, 0, 1023, PRINTID); \
   FUN##_POTI(2, Decay, Dec, A10, 0, 1023, PRINTID); \
-  FUN##_POTI(2, Sustain, Sust, A7, 0, 1023, PRINTID); \
-  FUN##_POTI(2, Release, Rels, A8, 0, 1023, PRINTID); \
-  FUN##_POTI(2, LFO_Range, LFORange, A9, 0, 1023, PRINTID); \
-  FUN##_POTI(2, LFO_Rate, Rate, A10, 0, 1023, PRINTID); \
+  FUN##_POTI(2, Sustain, Sust, A11, 0, 1023, PRINTID); \
+  FUN##_POTI(2, Release, Rels, A13, 0, 1023, PRINTID); \
+  FUN##_POTI(2, LFO_Range, LFORange, A14, 0, 1023, PRINTID); \
+  FUN##_POTI(2, LFO_Rate, Rate, A8, 0, 1023, PRINTID); \
   \
-  FUN##_POTI(2, Digital_Volume, DigiVol, A11, 0, 127, PRINTID);   /*(sound effect 1)/* \
+  FUN##_POTI(2, Digital_Volume, DigiVol, A9, 0, 127, PRINTID);   /*(sound effect 1)/* \
   /*const int Digital_Volume_shift = 7; // << 7 instead "/audio_volume_max"*/ \
   \
-  FUN##_POTI(2, Filter, Flt, A12, 0, 1023, PRINTID);           /*(sound effect 2)*/    \
-  FUN##_POTI(2, Sample_Rate, SRate, A13, 2000, 8000, PRINTID);      /*(sound effect 3)*/  \
+  FUN##_POTI(2, Filter, Flt, A7, 0, 1023, PRINTID);           /*(sound effect 2)*/    \
+  FUN##_POTI(2, Sample_Rate, SRate, A6, 2000, 8000, PRINTID);      /*(sound effect 3)*/  \
   \
   FUN##_PIN(2, ADSR, ADSR, 34, PRINTID); \
   \
