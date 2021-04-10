@@ -48,7 +48,7 @@ const int Diffusion_shift = 7;  /*127 -> power*/ \
   /*  Block 1 - main settings: */\
   \
   FUN##_POTF(1, Tone, Ton, A2, -3, 3, PRINTID); \
-  FUN##_POTI(1, Pedal_Sens, Ped_Sens, A3, 0, 127, PRINTID); \
+  FUN##_POTI(1, Pedal_Sens, Ped_Sens, A3, -127, 127, PRINTID); \
   FUN##_POTI(1, Diffusion, Dif, A4, 8, 256, PRINTID); \
   /*decaying diffusion 0..256, 0 - no diffusion, 256 - keep all diffusion*/ \
   \
@@ -77,7 +77,7 @@ const int Diffusion_shift = 7;  /*127 -> power*/ \
   /*const int Digital_Volume_shift = 7; // << 7 instead "/audio_volume_max"*/ \
   \
   FUN##_POTI(2, Filter, Flt, A7, 0, 1023, PRINTID);           /*(sound effect 2)*/    \
-  FUN##_POTI(2, Sample_Rate, SRate, A6, 2000, 8000, PRINTID);      /*(sound effect 3)*/  \
+  FUN##_POTI(2, Sample_Rate, SRate, A6, 0, 8000, PRINTID);      /*Sample rate*/  \
   \
   FUN##_PIN(2, ADSR, ADSR, 36, PRINTID); \
   \

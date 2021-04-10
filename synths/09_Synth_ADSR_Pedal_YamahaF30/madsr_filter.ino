@@ -58,7 +58,7 @@ int LFO_Value_ = 0;   //current LFO value
 //Pedal 
 const int Pedal_Input_Max = 19;   //Note: my pedal outputs 0..19 because has range 1kOhm..20 kOhm
 //const int Pedal_Max = 127;    - commented, because hardcoded in Pot_Pedal_Sens
-byte Pedal_ = 0;      //Pedal value 
+int Pedal_ = 0;      //Pedal value 
 
 //---------------------------------------------------------------
 //event: key pressed or released
@@ -77,9 +77,7 @@ void ADSR_key_event(unsigned int time, byte pressed) {
     }
     //compute timing
     // adsr_time_
-
   }
-
 }
 
 //---------------------------------------------------------------
@@ -134,7 +132,7 @@ void sample_rate_loop() {
 
 //---------------------------------------------------------------
 inline void pedal_loop() {
-  Pedal_ = mapi_clamp(Pot_Pedal_Inp, 0, Pedal_Input_Max, 0, Pot_Pedal_Sens);  \
+  Pedal_ = mapi_clamp(Pot_Pedal_Inp, 0, Pedal_Input_Max, 0, Pot_Pedal_Sens);  
 
   //Debug print
   if (sliders_debug == DEBUG_LFO && print_now) {
@@ -156,6 +154,32 @@ void synth_loop(unsigned long time) {
 
   //LFO
   LFO_loop(time);
+
+  //Sample Rate
+  //TODO make nonlinear
+  int sample_rate = Pot_Sample_Rate;
+
+  //TODO now disabled LFO and Pedal control for sample rate, because works strange
+  /*if (Pin_Enable_Pedal3 == 1) {
+    int add = ((long long)(Pedal_)*Sample_Rate_Max / Pedal_Sens_Max);
+    sample_rate += add;
+    //prln(add); 
+  }
+  if (Pin_Enable_LFO3 == 1) {
+    int add = ((long long)(LFO_Value_)*Sample_Rate_Max / LFO_Range);
+    sample_rate += add;
+    //prln(add); 
+  }*/
+
+  sample_rate = clampi(sample_rate, 0, Sample_Rate_Max);
+  set_audio_sample_rate(sample_rate);
+
+  //prln(sample_rate);
+
+  if (sliders_debug == DEBUG_LFO && print_now) {
+    pr("Sample rate "); prln(sample_rate);
+  }
+  
 }
 
 //---------------------------------------------------------------
