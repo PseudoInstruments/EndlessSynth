@@ -68,14 +68,14 @@ const int Diffusion_shift = 7;  /*127 -> power*/ \
   FUN##_POTI(2, Filter, Flt, A7, 0, 1023, PRINTID);           /*(sound effect 2)*/    \
   FUN##_POTI(2, Sample_Rate, SRate, A6, 2000, 8000, PRINTID);      /*(sound effect 3)*/  \
   \
-  FUN##_PIN(2, ADSR, ADSR, 34, PRINTID); \
+  FUN##_PIN(2, ADSR, ADSR, 36, PRINTID); \
   \
-  FUN##_PIN(2, LFO_Shape1, Shp1, 36, PRINTID); \
-  FUN##_PIN(2, LFO_Shape2, Shp2, 38, PRINTID); \
+  FUN##_PIN(2, LFO_Shape1, Shp1, 44, PRINTID); \
+  FUN##_PIN(2, LFO_Shape2, Shp2, 52, PRINTID); \
   \
-  FUN##_PIN(2, Enable_Pedal1, Ped1, 40, PRINTID); \
-  FUN##_PIN(2, Enable_Pedal2, Ped2, 42, PRINTID); \
-  FUN##_PIN(2, Enable_Pedal3, Ped3, 44, PRINTID); \
+  FUN##_PIN(2, Enable_Pedal1, Ped1, 38, PRINTID); \
+  FUN##_PIN(2, Enable_Pedal2, Ped2, 40, PRINTID); \
+  FUN##_PIN(2, Enable_Pedal3, Ped3, 42, PRINTID); \
   \
   FUN##_PIN(2, Enable_LFO1, LFO1, 46, PRINTID); \
   FUN##_PIN(2, Enable_LFO2, 2, 48, PRINTID); \
