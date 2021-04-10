@@ -70,8 +70,8 @@ const int Diffusion_shift = 7;  /*127 -> power*/ \
   FUN##_POTI(2, Decay, Dec, A10, 0, 1023, PRINTID); \
   FUN##_POTI(2, Sustain, Sust, A11, 0, 1023, PRINTID); \
   FUN##_POTI(2, Release, Rels, A13, 0, 1023, PRINTID); \
-  FUN##_POTI(2, LFO_Range, LFORange, A14, 0, 1023, PRINTID); \
-  FUN##_POTI(2, LFO_Rate, Rate, A8, 0, 1023, PRINTID); \
+  FUN##_POTI(2, LFO_Range, LFORange, A14, 0, 127, PRINTID); \
+  FUN##_POTI(2, LFO_Rate, Rate, A8, 1, 10, PRINTID); /*Notes -> frequencies*/\
   \
   FUN##_POTI(2, Digital_Volume, DigiVol, A9, 0, 127, PRINTID);   /*(sound effect 1)/* \
   /*const int Digital_Volume_shift = 7; // << 7 instead "/audio_volume_max"*/ \

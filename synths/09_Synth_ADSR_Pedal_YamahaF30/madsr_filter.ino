@@ -30,7 +30,6 @@ void synth_setup() {
 
 //---------------------------------------------------------------
 //LFO
-const int lfo_max = 127;
 
 //get timbres for lfo shape
 extern const unsigned int wave_n;
@@ -55,10 +54,10 @@ int LFO_Shape = 0; //sine, sawtooth
 float lfo_phase_ = 0;
 int LFO_Value_ = 0;   //current LFO value
 
-//Pedal 
+//Pedal
 const int Pedal_Input_Max = 19;   //Note: my pedal outputs 0..19 because has range 1kOhm..20 kOhm
 //const int Pedal_Max = 127;    - commented, because hardcoded in Pot_Pedal_Sens
-int Pedal_ = 0;      //Pedal value 
+int Pedal_ = 0;      //Pedal value
 
 //---------------------------------------------------------------
 //event: key pressed or released
@@ -81,63 +80,102 @@ void ADSR_key_event(unsigned int time, byte pressed) {
 }
 
 //---------------------------------------------------------------
+const float LFO_Rate_0 = m_to_f_float(1);
+
+//---------------------------------------------------------------
 inline void LFO_loop(unsigned long time) {
   if (Pin_LFO_Shape1_Changed || Pin_LFO_Shape2_Changed) {
-    byte shape = Pin_LFO_Shape1*2 + Pin_LFO_Shape2;
+    byte shape = Pin_LFO_Shape1 * 2 + Pin_LFO_Shape2;
     pr("LFO Shape "); prln(shape);
     if (shape == 0)  LFO_wave = wave_sine;
     if (shape == 1)  LFO_wave = wave_tri;
     if (shape == 2)  LFO_wave = wave_saw;
     if (shape == 3)  LFO_wave = wave_noised;
   }
-  
-  LFO_Range = map(Pot_LFO_Range, 0, 1023, 0, lfo_max);
 
-  LFO_Rate = mapf(Pot_LFO_Rate, 0, 1023, lfo_speed_min, lfo_speed_max);
+  //TODO make table for speedup
+  LFO_Rate = clampf(m_to_f_float(Pot_LFO_Rate)-LFO_Rate_0, 0, 10000); //Note to Hz //mapf(Pot_LFO_Rate, 0, 1023, lfo_speed_min, lfo_speed_max);
   static unsigned long time_prev = 0;
   unsigned long delta_ms = time - time_prev;
   lfo_phase_ += delta_ms * LFO_Rate;
   time_prev = time;
 
   long int phase = int(lfo_phase_) % wave_n;
-  
-  LFO_Value_ = map(LFO_wave[phase], -timbre_range, timbre_range, -LFO_Range, LFO_Range);
 
-  
-//  audio_step = map(wave_sine[phase], -timbre_range, timbre_range, Filter_1, Filter_2);
+  LFO_Value_ = map(LFO_wave[phase], -timbre_range, timbre_range, -Pot_LFO_Range, Pot_LFO_Range);
 
   //Debug print
   if (sliders_debug == DEBUG_LFO && print_now) {
-    pr("LFO "); pr(LFO_Range); pr("  spd "); pr(LFO_Rate); pr(" value "); prln(LFO_Value_);
-    //pr(time);
-    //audio_volume = int(clampi(audio_volume_max * (sin(time*0.001)*0.5 + 0.5),0,127));
-    //prln(audio_volume);
-
-    //audio_volume = Sustain_vol;
-    //audio_step = Filter_1; //audio_volume_max - Sustain_vol;// * 5;
-
-    //if (print_now) {
-    //pr("phase "); prln(phase);
-    //pr("  audio_step "); prln(audio_step);
-    //pr("  delta "); prln(delta_ms);
-    //}
+    pr("LFO range "); pr(Pot_LFO_Range); pr("  rate "); pr(LFO_Rate); pr(" value "); prln(LFO_Value_);
   }
-}
-
-//---------------------------------------------------------------
-void sample_rate_loop() {
-  
 }
 
 
 //---------------------------------------------------------------
 inline void pedal_loop() {
-  Pedal_ = mapi_clamp(Pot_Pedal_Inp, 0, Pedal_Input_Max, 0, Pot_Pedal_Sens);  
+  Pedal_ = mapi_clamp(Pot_Pedal_Inp, 0, Pedal_Input_Max, 0, Pot_Pedal_Sens);
 
   //Debug print
   if (sliders_debug == DEBUG_LFO && print_now) {
-    pr("Pedal "); prln(Pedal_); 
+    pr("Pedal "); prln(Pedal_);
   }
+}
+
+//---------------------------------------------------------------
+inline void sample_rate_loop() {
+  //TODO make nonlinear
+  int sample_rate = Pot_Sample_Rate;
+
+  //TODO now disabled LFO and Pedal control for sample rate, because works strange
+  /*if (Pin_Enable_Pedal3 == 1) {
+    int add = ((long long)(Pedal_)*Sample_Rate_Max / Pedal_Sens_Max);
+    sample_rate += add;
+    //prln(add);
+    }
+    if (Pin_Enable_LFO3 == 1) {
+    int add = ((long long)(LFO_Value_)*Sample_Rate_Max / LFO_Range);
+    sample_rate += add;
+    //prln(add);
+    }*/
+
+  sample_rate = clampi(sample_rate, 0, Sample_Rate_Max);
+  set_audio_sample_rate(sample_rate);
+
+  //prln(sample_rate);
+
+  if (sliders_debug == DEBUG_LFO && print_now) {
+    pr("Sample rate "); prln(sample_rate);
+  }
+
+}
+
+//---------------------------------------------------------------
+void volume_loop() {
+  int vol = Pot_Digital_Volume;
+  if (Pin_Enable_LFO1 == 1) {
+    int add = ((long)(LFO_Value_) * Digital_Volume_Max / LFO_Range_Max);
+    //applying pedal on LFO range
+    if (Pin_Enable_Pedal1 == 1) {
+      add = long(add) * Pot_Pedal_Inp / Pedal_Input_Max;
+    }
+    
+    vol += add;
+    //prln(add);
+  }
+  
+  /*if (Pin_Enable_Pedal1 == 1) {
+    int add = ((long)(Pedal_) * Digital_Volume_Max / Pedal_Sens_Max);
+    vol += add;
+    //prln(add);
+  }*/
+
+  vol = clampi(vol, Digital_Volume_Min, Digital_Volume_Max);
+  audio_step = vol;
+
+  if (sliders_debug == DEBUG_LFO && print_now) {
+    pr("Digital Volume "); prln(vol);
+  }
+
 }
 
 //---------------------------------------------------------------
@@ -156,30 +194,11 @@ void synth_loop(unsigned long time) {
   LFO_loop(time);
 
   //Sample Rate
-  //TODO make nonlinear
-  int sample_rate = Pot_Sample_Rate;
+  sample_rate_loop();
 
-  //TODO now disabled LFO and Pedal control for sample rate, because works strange
-  /*if (Pin_Enable_Pedal3 == 1) {
-    int add = ((long long)(Pedal_)*Sample_Rate_Max / Pedal_Sens_Max);
-    sample_rate += add;
-    //prln(add); 
-  }
-  if (Pin_Enable_LFO3 == 1) {
-    int add = ((long long)(LFO_Value_)*Sample_Rate_Max / LFO_Range);
-    sample_rate += add;
-    //prln(add); 
-  }*/
+  //Digital volume
+  volume_loop();
 
-  sample_rate = clampi(sample_rate, 0, Sample_Rate_Max);
-  set_audio_sample_rate(sample_rate);
-
-  //prln(sample_rate);
-
-  if (sliders_debug == DEBUG_LFO && print_now) {
-    pr("Sample rate "); prln(sample_rate);
-  }
-  
 }
 
 //---------------------------------------------------------------

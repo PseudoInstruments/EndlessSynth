@@ -13,6 +13,13 @@ int clampi(int i, int a, int b) {
   return i;
 }
 
+inline float clampf(float i, float a, float b) {
+  if (a > b) { float t = a; a = b; b = t; }
+  if (i < a) return a;
+  if (i > b) return b;
+  return i;
+}
+
 int mapi_clamp(int i, int a, int b, int A, int B) {
   return clampi(map(i, a, b, A, B), A, B);
 }
