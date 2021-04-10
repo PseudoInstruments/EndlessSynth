@@ -22,6 +22,16 @@ extern long int sound_value;    //we change it to 0 when sound off to prevent fr
 
 extern int audio_step;  //- Filter value, we will control it here
 
+//---------------------------------------------------------------
+void synth_setup() {
+  audio_volume = 0;
+}
+
+
+//---------------------------------------------------------------
+//LFO
+const int lfo_max = 127;
+
 //get timbres for lfo shape
 extern const unsigned int wave_n;
 extern const int timbre_range;
@@ -31,57 +41,20 @@ extern char wave_tri[];
 extern char wave_saw[];
 extern char wave_noised[];
 
-//---------------------------------------------------------------
-void ADSR_setup() {
-  audio_volume = 0;
-}
+char *LFO_wave = wave_sine;
 
-
-//---------------------------------------------------------------
-//Sliders event
-//int Attack_ms = 0;
-//int Decay_ms = 0;
-//int Sustain_vol = 0;
-//int Release_ms = 0;
-
-//Filter params
-const int filter_min = 1;
-const int filter_max = timbre_range*127/100;
 
 const float lfo_speed_min = 0;
 const float lfo_speed_max = wave_n * 10 * .001f; //10*1000;  //Hz*1000
 
 
-//Filter current state
-int Filter_1 = 127;
-int Filter_2 = 127;
-float Filter_LFO_Speed = 0;
-int Filter_LFO_Shape = 0; //sine, sawtooth
+//LFO current state
+int LFO_Range = 0;
+float LFO_Rate = 0;
+int LFO_Shape = 0; //sine, sawtooth
 
 float lfo_phase_ = 0;
-
-
-
-//-------------------------------------------------------------------------
-void set_adsr_sliders(int Attack_slider, int Decay_slider, int Sustain_slider, int Release_slider) {
-
-
-  Filter_1 = map(Attack_slider, 0, 1023, filter_max, filter_min);
-  Filter_2 = map(Decay_slider, 0, 1023, filter_max, filter_min);
-
-  Filter_LFO_Speed = mapf(Sustain_slider, 0, 1023, lfo_speed_min, lfo_speed_max);
-  /*
-    const int min_vol = 1; //64;   //NOTE: LOWER - will beep
-    Sustain_vol = map(Sustain_slider, 0, 1023, min_vol, audio_volume_max);
-    Release_ms = map(Release_slider, 0, 1023, 0, 500);
-  */
-
-  //if (print_now) {
-    //pr("Filter_LFO_Speed "); prln(Filter_LFO_Speed);
-    //pr("ADSR "); pr(Attack_ms); pr(" "); pr(Decay_ms); pr(" "); pr(Sustain_vol); pr(" "); pr(Release_ms);
-    //prln();
-  //}
-}
+int LFO_Value_ = 0;   //current LFO value
 
 
 //---------------------------------------------------------------
@@ -107,38 +80,60 @@ void ADSR_key_event(unsigned int time, byte pressed) {
 }
 
 //---------------------------------------------------------------
-//update event
-void ADSR_loop(unsigned long time) {
-  //Enable/Disable synth controls
-  if (Pin_Synth_Mode_Changed) {
-    SLIDERS_ENABLED_2 = Pin_Synth_Mode;
-    pr("Synth: "); prln(SLIDERS_ENABLED_2);
+inline void LFO_loop(unsigned long time) {
+  if (Pin_LFO_Shape1_Changed || Pin_LFO_Shape2_Changed) {
+    byte shape = Pin_LFO_Shape1*2 + Pin_LFO_Shape2;
+    pr("LFO Shape "); prln(shape);
+    if (shape == 0)  LFO_wave = wave_sine;
+    if (shape == 1)  LFO_wave = wave_tri;
+    if (shape == 2)  LFO_wave = wave_saw;
+    if (shape == 3)  LFO_wave = wave_noised;
   }
-
   
+  LFO_Range = map(Pot_LFO_Range, 0, 1023, 0, lfo_max);
+
+  LFO_Rate = mapf(Pot_LFO_Rate, 0, 1023, lfo_speed_min, lfo_speed_max);
   static unsigned long time_prev = 0;
-  //LFO
   unsigned long delta_ms = time - time_prev;
-  lfo_phase_ += delta_ms * Filter_LFO_Speed;
+  lfo_phase_ += delta_ms * LFO_Rate;
   time_prev = time;
 
   long int phase = int(lfo_phase_) % wave_n;
-
-  audio_step = map(wave_sine[phase],-timbre_range,timbre_range,Filter_1,Filter_2);
   
-  //pr(time);
-  //audio_volume = int(clampi(audio_volume_max * (sin(time*0.001)*0.5 + 0.5),0,127));
-  //prln(audio_volume);
+  LFO_Value_ = map(LFO_wave[phase], -timbre_range, timbre_range, -LFO_Range, LFO_Range);
 
-  //audio_volume = Sustain_vol;
-  //audio_step = Filter_1; //audio_volume_max - Sustain_vol;// * 5;
+  
+//  audio_step = map(wave_sine[phase], -timbre_range, timbre_range, Filter_1, Filter_2);
 
-  //if (print_now) {
-      //pr("phase "); prln(phase);  
-      //pr("  audio_step "); prln(audio_step); 
-      //pr("  delta "); prln(delta_ms);
+  if (sliders_debug == DEBUG_LFO && print_now) {
+    pr("LFO "); pr(LFO_Range); pr("  spd "); pr(LFO_Rate); pr(" value "); prln(LFO_Value_);
+    //pr(time);
+    //audio_volume = int(clampi(audio_volume_max * (sin(time*0.001)*0.5 + 0.5),0,127));
+    //prln(audio_volume);
+
+    //audio_volume = Sustain_vol;
+    //audio_step = Filter_1; //audio_volume_max - Sustain_vol;// * 5;
+
+    //if (print_now) {
+    //pr("phase "); prln(phase);
+    //pr("  audio_step "); prln(audio_step);
+    //pr("  delta "); prln(delta_ms);
+    //}
+  }
+
+
+}
+//---------------------------------------------------------------
+//update event
+void synth_loop(unsigned long time) {
+  //Enable/Disable synth controls
+  //if (Pin_Synth_Mode_Changed) {
+  SLIDERS_ENABLED_2 = Pin_Synth_Mode;
+  //  pr("Synth: "); prln(SLIDERS_ENABLED_2);
   //}
 
+  //LFO
+  LFO_loop(time);
 }
 
 //---------------------------------------------------------------

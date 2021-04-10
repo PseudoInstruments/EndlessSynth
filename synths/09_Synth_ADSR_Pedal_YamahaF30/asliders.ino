@@ -33,7 +33,7 @@
 //Macros for defining input pin:
 #define DEF_PIN(ID, NAME, SHORT_NAME, DIGITAL_PIN, PRINTID) \
   const byte pin##_##NAME = DIGITAL_PIN; \
-  byte Pin##_##NAME = 0; \
+  byte Pin##_##NAME = 2; \
   byte Pin##_##NAME##_Changed = 0;
 
 
@@ -77,9 +77,9 @@ void sliders_setup() {
   if (!SLIDERS_ENABLED_1)  {
     prln("[Sliders 1 disabled]");
   }
-  if (!SLIDERS_ENABLED_2)  {
-    prln("[Sliders 2 disabled]");
-  }
+  //if (!SLIDERS_ENABLED_2)  {    //can be switched by Synth_Mode key
+  //  prln("[Sliders 2 disabled]");
+  //}
   if (!SLIDERS_ENABLED_3)  {
     prln("[Sliders 3 disabled]");
   }  

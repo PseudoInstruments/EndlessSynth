@@ -88,7 +88,7 @@
 //Three blocks of sliders
 //So if you want check synth without connecting sliders, set it to 0:
 const byte SLIDERS_ENABLED_1 = 1;
-byte SLIDERS_ENABLED_2 = 1;         //Can be switches by "Synth" key
+byte SLIDERS_ENABLED_2 = 0;         //Can be switches by "Synth" key
 const byte SLIDERS_ENABLED_3 = 0;
  
 
@@ -97,7 +97,10 @@ byte debug = 0;       //common debug enabled by 'd'  from Serial
 byte print_now = 0;  //signal for debug
 long int last_print_time = 0;
 
-byte sliders_debug = 0;     //debug mode for sliders - 1,2,3 - blocks, 4,5 - print dig/analog pins
+byte sliders_debug = 0;     //debug mode for sliders - 1,2,3 - blocks, 4,5 - print dig/analog pins, 6 - lfo
+const byte DEBUG_LFO = 6;
+
+
 byte demo_play = 0;   //enabled by '0' from Serial
 
 const int FPS = 200;  //control FPS. note: really a much less because we use simple delay(1000/FPS) for FPS control.
@@ -125,12 +128,12 @@ void setup() {
   keyboard_setup();
   timbres_setup();
   sliders_setup();
-  ADSR_setup();
+  synth_setup();
   sound_setup();
 
   prln("----------------------------------------------------------------");
   prln("Synth is ready to play.");
-  prln("Send '1','2','3' to debug controls, 'q'/'w' - print dig/analog pins, 'd' to on/off common debug print, '0' to run demo play");
+  prln("Send '1','2','3' to debug controls, 'q'/'w'/'e'- print dig/analog pins/lfo, 'd' to on/off common debug print, '0' to run demo play");
   prln("----------------------------------------------------------------");
 
 }
@@ -156,6 +159,7 @@ void loop() {
       toggle_debug(key, '3', "Debug block 3 ", sliders_debug, 3);
       toggle_debug(key, 'q', "Print digital pins ", sliders_debug, 4);
       toggle_debug(key, 'w', "Print analog pins ", sliders_debug, 5);
+      toggle_debug(key, 'e', "Print LFO ", sliders_debug, DEBUG_LFO);
       toggle_debug(key, 'd', "Debug ", debug, 1);
       toggle_debug(key, '0', "Demo_play ", demo_play, 1);
     }
@@ -163,9 +167,9 @@ void loop() {
 
   //Control update at ~200 (really much less) fps - see FPS value
   unsigned long time = millis();
-  ADSR_loop(time);
   sliders_loop();
   keyboard_loop(time);
+  synth_loop(time);
   sound_loop();
   timbre_loop();
 
