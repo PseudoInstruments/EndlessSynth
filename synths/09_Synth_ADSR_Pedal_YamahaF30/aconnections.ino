@@ -33,6 +33,17 @@ const int Diffusion_shift = 7;  /*127 -> power*/ \
 //---------------------------------------------
 //Description of all pots, switches, keys: (I using linear pots 10 kOhm)
 //It's used in "asliders" file, FUN - function to apply
+
+//POTS:
+//const byte pot_Pedal = A3;
+//const int Pedal_Min = 0;
+//const int Pedal_Max = 1023;
+//int Pot_Pedal;
+//KEYS:
+//byte Pin_Synth_Mode = 0;
+//byte Pin_Synth_Mode_Changed = 0;
+
+
 #define INPUTS_APPLY(FUN, PRINTID) \
   /*  Block 1 - main settings: */\
   \
@@ -49,8 +60,8 @@ const int Diffusion_shift = 7;  /*127 -> power*/ \
   FUN##_PIN(1, Timbre6, 6, 16, PRINTID); \
   \
   FUN##_PIN(1, Arpegiator_Mode, Arp_Mode, 8, PRINTID); \
-  FUN##_PIN(1, Synth_Mode, LLeft, 9, PRINTID); \
-  FUN##_PIN(1, Latch_Right, LRight, 10, PRINTID); \
+  FUN##_PIN(1, Synth_Mode, Synth_Mod, 9, PRINTID); \
+  FUN##_PIN(1, Latch, Latch, 10, PRINTID); \
   \
   /*  Block 2 - synth */    \
   FUN##_POTI(2, Pedal_Inp, PED, A1, 0, 1023, PRINTID); /*Note: my pedal outputs 0..19 because has range 1kOhm..20 kOhm*/ \    

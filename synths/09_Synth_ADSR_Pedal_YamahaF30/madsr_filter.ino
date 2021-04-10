@@ -109,6 +109,13 @@ void ADSR_key_event(unsigned int time, byte pressed) {
 //---------------------------------------------------------------
 //update event
 void ADSR_loop(unsigned long time) {
+  //Enable/Disable synth controls
+  if (Pin_Synth_Mode_Changed) {
+    SLIDERS_ENABLED_2 = Pin_Synth_Mode;
+    pr("Synth: "); prln(SLIDERS_ENABLED_2);
+  }
+
+  
   static unsigned long time_prev = 0;
   //LFO
   unsigned long delta_ms = time - time_prev;

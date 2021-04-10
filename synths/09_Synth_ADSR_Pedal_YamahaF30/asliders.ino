@@ -7,11 +7,15 @@
 //Macroses
 //---------------------------------------------
 
-//Macros for defining integer pot:
+//Macroses for defining pots and keys:
+//POTS:
 //const byte pot_Pedal = A3;
 //const int Pedal_Min = 0;
 //const int Pedal_Max = 1023;
 //int Pot_Pedal;
+//KEYS:
+//byte Pin_Synth_Mode = 0;
+//byte Pin_Synth_Mode_Changed = 0;
 
 #define DEF_POTI(ID, NAME, SHORT_NAME, A_PIN, VMIN, VMAX, PRINTID) \
   const byte pot##_##NAME = A_PIN; \
@@ -29,7 +33,8 @@
 //Macros for defining input pin:
 #define DEF_PIN(ID, NAME, SHORT_NAME, DIGITAL_PIN, PRINTID) \
   const byte pin##_##NAME = DIGITAL_PIN; \
-  byte Pin##_##NAME;
+  byte Pin##_##NAME = 0; \
+  byte Pin##_##NAME##_Changed = 0;
 
 
 //Setup
@@ -40,7 +45,11 @@
 //Read
 #define READ_POTI(ID, NAME, SHORT_NAME, A_PIN, VMIN, VMAX, PRINTID) { Pot##_##NAME = map(SLIDERS_ENABLED_##ID?(analogRead(A_PIN)):512, 0, 1023, VMIN, VMAX); }
 #define READ_POTF(ID, NAME, SHORT_NAME, A_PIN, VMIN, VMAX, PRINTID) { Pot##_##NAME = mapf(SLIDERS_ENABLED_##ID?(analogRead(A_PIN)):512, 0, 1023, VMIN, VMAX); }
-#define READ_PIN(ID, NAME, SHORT_NAME, DIGITAL_PIN, PRINTID) { Pin##_##NAME = SLIDERS_ENABLED_##ID?(digitalRead(DIGITAL_PIN)?0:1):0; }
+#define READ_PIN(ID, NAME, SHORT_NAME, DIGITAL_PIN, PRINTID) { \
+  byte v = SLIDERS_ENABLED_##ID?(digitalRead(DIGITAL_PIN)?0:1):0; \
+  Pin##_##NAME##_Changed = (v != Pin##_##NAME); \
+  Pin##_##NAME = v; \
+}
 
 //Print
 #define PRINT_POTI(ID, NAME, SHORT_NAME, A_PIN, VMIN, VMAX, PRINTID) { if (ID == PRINTID) {pr(" "); pr(#SHORT_NAME); pr("="); pr(Pot##_##NAME); }}
@@ -90,9 +99,6 @@ void sliders_setup() {
 void sliders_loop() {
   //Read all controls
   INPUTS_APPLY(READ, 0)
-
-  //Enable/Disable synth controls
-
 
   //PRINT
   if (sliders_debug > 0 && print_now) {
