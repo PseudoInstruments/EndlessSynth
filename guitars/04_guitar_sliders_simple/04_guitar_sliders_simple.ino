@@ -3,10 +3,12 @@
   Program gets sound from A0 and immediately outputs it to audio output (pin 2) using thresholding, without diffusion.
   Controller: Arduino Uno or Nano
 
-  Special features: This scheme not using trimmer resistors.
+  This sketch and electric scheme is a simplification comparing previous one: 
+  here we not using trimmer resistors, and just crop negative input voltage values.
 
   -------------------------------------------
-  I use 3th bass string in guitar.
+  I use 2th bass string in guitar.
+  
   -------------------------------------------
   Potentiometers:
   1 - controls volume - connected directly to DAC and Arduino audio output.

@@ -17,7 +17,7 @@ Play tricks
 -------------------------------------------
 Now it's possible to play guitar very delicately touching strings.
 Also I found it's ok to loosen the string. 
-I use 3th bass string in guitar.
+I use 2nd bass string in guitar.
 -------------------------------------------
 Sliders:
 1 - controls volume - connected directly to DAC and Arduino audio output.
