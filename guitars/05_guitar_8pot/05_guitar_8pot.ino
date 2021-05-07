@@ -1,19 +1,22 @@
-/* Endless Guitar is a 1-string 1-bit guitar with controllable volume, sample rate and sensitivity.
+/* Endless Guitar 05_guitar_8pot.
 
-  Program gets sound from A0 and immediately outputs it to audio output (pin 2) using thresholding, without diffusion.
-  Controller: Arduino Uno or Nano
-
-  This sketch and electric scheme is a simplification comparing previous one: 
-  here we not using trimmer resistors, and just crop negative input voltage values.
+  This guitar features 1 volume and 7 control pots.
+  
+  Controller: Nano
 
   -------------------------------------------
-  I use 2th bass string in guitar.
+  I use 4th bass string in guitar.
   
   -------------------------------------------
   Potentiometers:
   1 - controls volume - connected directly to DAC and Arduino audio output.
-  2 - controls sample rate.
-  3 - controls sensitivity.
+  2 - 
+  3 - 
+  4 - 
+  5 -
+  6 - 
+  7 - 
+  8 -
 
   ----------------------------------------
   Connection
@@ -29,17 +32,16 @@
   then connect mini-jack (buzzer) slider's output and Gnd.
 
   4) Sliders - in this sketch are used two sliders (I mean potentiometers 10kOhm) for controlling sound parameters.
-  From Arduino we will use output power: pin 5 (Gnd) and pin 6 (5V).
+  A1
+  A2
+  A3
+  A4
+  A5
+  A6
+  A7
 
-  The final goal is to connect:
-  A4 - sample rate
-  A5 - sensitivity
 
-  Connect both sliders inputs to pin 5 (Gnd) and pin 6 (5V).
-  Finally, connect sliders outputs to A4 and A5.
-
-  So after start sketch, send to Monitor Port "1" to start debug print,
-  and check that signal from guitar pickup and sliders 2 and 3 goes properly.
+  So after start sketch, send to Monitor Port "1" to start debug print.
 
   ----------------------------------------
   Programming details
@@ -56,12 +58,11 @@
 const byte pin_buz = 2; //Audio output
 const byte pin_led = 13;  //Built-in led pin
 
-const byte sliders_gnd_pin = 5;
-const byte sliders_5v_pin = 6;
+const byte N = 7;   //number of control pots
+int Pot[N] = {0,0,0,0,0,0,0};
+int &Pot_SRate = Pot[0];
+int &Pot_Sens = Pot[1];
 
-//slider1 affects volume output directly, without arduino
-const byte slider2_analog_pin = A4;   //sample rate
-const byte slider3_analog_pin = A5;   //pwm
 
 const unsigned int analog_min = 20;     //it's appears minimal value is 20, not 0 in the current setup
 const unsigned int analog_max = 1023;
@@ -72,9 +73,9 @@ int debug = 0;    //control from keyboard to begin debugging
 //--------------------------------------------------------------
 void setup() {
   Serial.begin(500000);
-  Serial.println("EndlessSynth Guitar, version 04_guitar_sliders_simple for Arduino Uno, Nano");
-  Serial.println("Guitar pickup: A0, Audio output: D2");
-  Serial.println("Volume Pot: between D2 and audio output. Pot 2: A4, Pot 3: A5.");
+  Serial.println("EndlessSynth Guitar, version 05_guitar_8pot_aref for Arduino Nano");
+  Serial.println("Guitar pickup: A0, Pots: A1,...,A7, Audio output: D2");
+  Serial.println("Volume Pot: between D2 and audio output.");
   Serial.println("Send '1' to on/off debug print");
 
   //will be computed
@@ -84,12 +85,6 @@ void setup() {
 
   pinMode(pin_led, OUTPUT); //activate led
 
-
-  //sliders
-  pinMode(sliders_gnd_pin, OUTPUT);
-  pinMode(sliders_5v_pin, OUTPUT);
-  digitalWrite(sliders_gnd_pin, LOW);
-  digitalWrite(sliders_5v_pin, HIGH);
 
 }
 
@@ -126,6 +121,7 @@ int mapi_clamp(int i, int a, int b, int A, int B) {
 }
 
 //--------------------------------------------------------------
+
 inline void control_step() {
   if (Serial.available() > 0) { //we expect only "1" rare to on/off debugging
     int key = Serial.read();
@@ -136,12 +132,18 @@ inline void control_step() {
   }
 
   //Read pots
-  int slider2 = analogRead(slider2_analog_pin);  //0..1023
-  int slider3 = analogRead(slider3_analog_pin);  //0..1023
+  //TODO separate on steps
+  Pot[0] = analogRead(A1);
+  Pot[1] = analogRead(A2);
+  Pot[2] = analogRead(A3);
+  Pot[3] = analogRead(A4);
+  Pot[4] = analogRead(A5);
+  Pot[5] = analogRead(A6);
+  Pot[6] = analogRead(A7);
 
   //Set pots to sound params
-  audio_delay_mcs = mapi_clamp(slider2, analog_min, analog_max, audio_delay_mcs0, audio_delay_mcs1);
-  audio_thresh = mapi_clamp(slider3, analog_min, analog_max, audio_thresh_slider1, audio_thresh_slider0); //reverted range
+  audio_delay_mcs = mapi_clamp(Pot_SRate, analog_min, analog_max, audio_delay_mcs0, audio_delay_mcs1);
+  audio_thresh = mapi_clamp(Pot_Sens, analog_min, analog_max, audio_thresh_slider1, audio_thresh_slider0); //reverted range
 
   //lighting LED if audio input works - to check guitar pickup
   if (audio_input_ > audio_thresh) {
@@ -155,8 +157,10 @@ inline void control_step() {
   if (debug) {
     //use audio input for setting up trimmer resistor so it print 512
     Serial.print("Audio input: "); Serial.print(audio_input_);
-    Serial.print("  Pots: "); Serial.print(slider2);
-    Serial.print(","); Serial.print(slider3);
+    Serial.print("  Pots: "); 
+    for (int i=0; i<N; i++) {
+      Serial.print(Pot[i]); Serial.print(" ");
+    }
     Serial.print("  audio_delay_mcs: "); Serial.print(audio_delay_mcs);
     Serial.print("  audio_thresh: "); Serial.print(audio_thresh);
     Serial.print("  audio loops: "); Serial.print(loops_);
@@ -178,7 +182,7 @@ void loop() {
   unsigned long time0 = micros();
   for (int i = 0; i < loops_; i++) {
     //audio input
-    audio_input_ = analogRead(A0);          //TODO: after control_step() we always hear "click" - why? May be skip first measurement
+    audio_input_ = analogRead(A0);
     //audio output
     if (audio_input_ > audio_thresh) {
       digitalWrite(pin_buz, HIGH);
