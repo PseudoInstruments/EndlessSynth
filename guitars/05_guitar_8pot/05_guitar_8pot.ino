@@ -27,7 +27,7 @@
 
   Audio output
   2) Audio output to mini-jack (or buzzer). If you have no pot for volume control,
-  connect audio output directly to pin 2 and Gnd.
+  connect audio output directly to pin D2 (signal) and D4 (Gnd).
   If you have slider for volume control (I use potentiometer 10 kOhm), connect Gnd and pin 2 to slider's inputs,
   then connect mini-jack (buzzer) slider's output and Gnd.
 
@@ -55,7 +55,10 @@
 
 */
 
-const byte pin_buz = 2; //Audio output
+const byte pin_audio_out = 2; //Audio output
+const byte pin_audio_out_gnd = 4; //Audio output Gnd
+
+
 const byte pin_led = 13;  //Built-in led pin
 
 const byte N = 7;   //number of control pots
@@ -71,20 +74,26 @@ const unsigned int analog_max = 1023;
 int debug = 0;    //control from keyboard to begin debugging
 
 //--------------------------------------------------------------
+void pinModePower(byte pin, byte value) {
+  pinMode(pin, OUTPUT);
+  digitalWrite(pin, value);
+}
+
+//--------------------------------------------------------------
 void setup() {
   Serial.begin(500000);
   Serial.println("EndlessSynth Guitar, version 05_guitar_8pot_aref for Arduino Nano");
   Serial.println("Guitar pickup: A0, Pots: A1,...,A7, Audio output: D2");
-  Serial.println("Volume Pot: between D2 and audio output.");
+  Serial.println("Volume Pot: signal D2 and audio output, D4 - audio Gnd.");
   Serial.println("Send '1' to on/off debug print");
 
   //will be computed
   //Serial.print("Audio sample rate: "); Serial.println(audio_sample_rate);
 
-  pinMode(pin_buz, OUTPUT); //activate buzzer
+  pinModePower(pin_audio_out, LOW); //activate audio output
+  pinModePower(pin_audio_out_gnd, LOW); //activate audio output Gnd
 
-  pinMode(pin_led, OUTPUT); //activate led
-
+  pinModePower(pin_led, LOW); //activate led
 
 }
 
@@ -185,10 +194,10 @@ void loop() {
     audio_input_ = analogRead(A0);
     //audio output
     if (audio_input_ > audio_thresh) {
-      digitalWrite(pin_buz, HIGH);
+      digitalWrite(pin_audio_out, HIGH);
     }
     else {
-      digitalWrite(pin_buz, LOW);
+      digitalWrite(pin_audio_out, LOW);
     }
 
     //delay
