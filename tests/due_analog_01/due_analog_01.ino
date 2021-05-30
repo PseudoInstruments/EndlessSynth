@@ -1,8 +1,10 @@
 //Testing Arduino Due sound output to DAC0 and DAC1 with resolution 12 bit
 //It generates sine wave tone and pause, again and again.
 //Note: I use oscilloscope for measurement, and also buzzer,
-//but for some reason DAC0 - was broken.
-//May be need to use 500 Ohm resistors to protect DAC0,1!
+//and I found DAC0 - was broken, may be because of buzzer connection.
+//So, use 500 Ohm resistors to protect DAC0,1:
+//    DAC0,1 -> Resistor 500 Ohm -> Buzzer or Jack Signal. 
+//    Gnd -> Buzzer of Jack Gnd
 
 void setup() {
   pinMode(LED_BUILTIN, OUTPUT);
