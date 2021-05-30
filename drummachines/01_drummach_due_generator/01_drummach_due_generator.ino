@@ -1,4 +1,5 @@
 //01_drummach_due_generator - drummachine sound test for Arduino Due.
+//Use resistors 500 Ohm to prevent burning DAC0,1! - see details below.
 
 //--------------------------------------------
 //Notes:
@@ -21,6 +22,8 @@
 //Connect Jack output to Due:
 //- Due Gnd -> Jack Gnd
 //- Due DAC0 -> Resistor on 500 Ohm -> Jack Signal (if mono, if stereo - to both signals).
+//Use resistors to prevent burning DAC0,1 !
+
 //--------------------------------------------
 
 //Links on sound generating with Due:
