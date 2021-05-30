@@ -1,4 +1,4 @@
-/* Endless Drums Pedal 05_drum_pedal_2tones_timbres generates two drum sounds by pressing physical pedal or keys.
+/* Endless Drums Pedal 06_drum_pedal_2tones_timbres generates two drum sounds by pressing physical pedal or keys.
 
   ----------------------------------------
   Features:
@@ -47,7 +47,7 @@ int debug = 0;    //control from keyboard to begin debugging
 //--------------------------------------------------------------
 void setup() {
   Serial.begin(500000);
-  Serial.println("Endless Drum Pedal 05_drum_pedal_2tones_timbres, 2 Tones with Timbres, v. 1.1 for Arduino Mega");
+  Serial.println("Endless Drum Pedal 06_drum_pedal_2tones_timbres, 2 Tones with Timbres, v. 1.1 for Arduino Mega");
   Serial.println("Send '1' to enable debug print to console");
 
   //Note: do this performance measure before sliders setup
