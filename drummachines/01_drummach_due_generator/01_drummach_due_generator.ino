@@ -32,6 +32,21 @@
 //https://github.com/Gaetino/Groovuino
 
 //--------------------------------------------
+//Types
+typedef unsigned char uint8;
+typedef char int8;
+typedef short int16;
+typedef unsigned short uint16;
+typedef unsigned int uint32;
+typedef int int32;
+
+const int max_u16 = 65535;
+const int u16_n = 65536;
+
+typedef long long int int64;
+typedef unsigned long long int uint64;
+
+//--------------------------------------------
 #include <DueTimer.h>
 
 const int FPS = 100;          //Control rate
@@ -53,6 +68,7 @@ void setup() {
   //Timer0.attachInterrupt(loop1).setFrequency(44100).start();
   Timer8.attachInterrupt(control_loop).setFrequency(FPS).start();
 
+  seq_setup();
 }
 
 //-----------------------------------------------------------------------
@@ -60,12 +76,13 @@ void setup() {
 int time_ = 0;
 
 void control_loop() {
+  seq_update();
   //start sound each second
-  if (time_ == 0) {
-    prln("play");
-  }
-  time_++;
-  time_ %= 100;
+  //if (time_ == 0) {
+  //  prln("play");
+  //}
+  //time_++;
+  //time_ %= 100;
 }
 
 //-----------------------------------------------------------------------
