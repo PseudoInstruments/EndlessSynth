@@ -46,6 +46,24 @@ const int u16_n = 65536;
 typedef long long int int64;
 typedef unsigned long long int uint64;
 
+
+//Stereo sample for playing
+const uint16 max_audio = 4095;
+struct AudioSample {
+  uint16 left;
+  uint16 right;
+  uint16 pause_mcs;
+};
+
+struct DrumSound {
+  float vol=0.5;
+  float pan=0.5;
+  float tmb = 0;  //timbre  tone/noise
+  float frq_note = 69;  //freq in MIDI-notes
+  float frq_delta=0;
+  float vol_delta=0;
+};
+
 //--------------------------------------------
 #include <DueTimer.h>
 
@@ -88,21 +106,14 @@ void control_loop() {
 //-----------------------------------------------------------------------
 //Main loop - used for audio
 void loop() {
-  static long int t = 0;
-  t++;
+  //static long int t = 0;
+  //t++;
   //prln(t);
 
-  //long int mcs = micros();
-  //prln(mcs);
-  // digitalWrite(LED_BUILTIN, HIGH);
-  //float val = sin(t*0.05);
-  //val = val * 0.5 + 0.5;
-  //int v = int(val * 4095);
-  for (int v=0; v<2; v++) {
-    analogWrite(DAC0, v*1000);       //Output sound, no need set "OUTPUT" mode
-    analogWrite(DAC1, v*1000);
-    delayMicroseconds(10);
-  }
+  AudioSample out = synth_audio_out();
+  analogWrite(DAC0, out.left);       //Output sound, no need set "OUTPUT" mode
+  analogWrite(DAC1, out.right);
+  delayMicroseconds(out.pause_mcs);
 }
 
 //-----------------------------------------------------------------------
