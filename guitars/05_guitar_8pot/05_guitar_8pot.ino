@@ -55,8 +55,27 @@
 
 */
 
+//--------------------------------------------
+//Types
+typedef unsigned char uint8;
+typedef char int8;
+typedef short int16;
+typedef unsigned short uint16;
+typedef unsigned int uint32;
+typedef int int32;
+
+const int max_u16 = 65535;
+const int u16_n = 65536;
+
+typedef long long int int64;
+typedef unsigned long long int uint64;
+//--------------------------------------------
+
 const byte pin_audio_out = 2; //Audio output
-const byte pin_audio_out_gnd = 4; //Audio output Gnd
+const byte pin_audio_out_gnd = 3; //Audio output Gnd
+
+const byte pin_pot_gnd = 4;
+const byte pin_pot_5v = 5;
 
 
 const byte pin_led = 13;  //Built-in led pin
@@ -73,16 +92,12 @@ const unsigned int analog_max = 1023;
 
 int debug = 0;    //control from keyboard to begin debugging
 
-//--------------------------------------------------------------
-void pinModePower(byte pin, byte value) {
-  pinMode(pin, OUTPUT);
-  digitalWrite(pin, value);
-}
+
 
 //--------------------------------------------------------------
 void setup() {
   Serial.begin(500000);
-  Serial.println("EndlessSynth Guitar, version 05_guitar_8pot_aref for Arduino Nano");
+  Serial.println("EndlessSynth Guitar, version 05_guitar_8pot for Arduino Nano");
   Serial.println("Guitar pickup: A0, Pots: A1,...,A7, Audio output: D2");
   Serial.println("Volume Pot: signal D2 and audio output, D4 - audio Gnd.");
   Serial.println("Send '1' to on/off debug print");
@@ -91,7 +106,11 @@ void setup() {
   //Serial.print("Audio sample rate: "); Serial.println(audio_sample_rate);
 
   pinModePower(pin_audio_out, LOW); //activate audio output
-  pinModePower(pin_audio_out_gnd, LOW); //activate audio output Gnd
+  pinModePower(pin_audio_out_gnd, LOW); //audio output Gnd
+
+  
+  pinModePower(pin_pot_gnd, LOW); //activate Gnd for pots
+  pinModePower(pin_pot_5v, HIGH); //activate 5V for pots
 
   pinModePower(pin_led, LOW); //activate led
 
@@ -113,22 +132,6 @@ int audio_thresh = 5; //threshold for sound processing
 int audio_input_ = 0;
 
 int loops_ = 1000;
-
-
-//--------------------------------------------------------------
-//Utils
-
-int clampi(int i, int a, int b) {
-  if (a > b) { int t = a; a = b; b = t; }
-  if (i < a) return a;
-  if (i > b) return b;
-  return i;
-}
-
-int mapi_clamp(int i, int a, int b, int A, int B) {
-  return clampi(map(i, a, b, A, B), A, B);
-}
-
 //--------------------------------------------------------------
 
 inline void control_step() {

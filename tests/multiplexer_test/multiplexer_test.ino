@@ -1,4 +1,4 @@
-//02_drummach_multiplex_test - testing drummachine pots and keys with multiplexers on Arduino Due.
+//multiplexer_test - single multiplexer on Arduino Due.
 
 //Tutorial on multiplexer:
 //http://adam-meyer.com/arduino/CD74HC4067
@@ -6,11 +6,10 @@
 //--------------------------------------------
 //Notes:
 //--------------------------------------------
-//This sketch connects to 9 16-channel multiplexors and gets it output to A1.
-//For reading keys, we enable additional 10kOhm resistor.
+//This sketch connects 16-channel multiplexer with 16 connected pots and gets it output to A1.
 
 //--------------------------------------------
-//Controller: Arduino Due
+//Controller: Arduino Due / Mega
 
 //Connections:
 //Using 250000 Baud for Serial, because Due can't work properly with 500000 which I would prefer...
@@ -36,11 +35,10 @@ typedef unsigned long long int uint64;
 //gnd, 3.3v, пропуск, 4 синих - адресные, 23,25,27,29, желтый - A1, зеленый - 49.
 //Правый шлейф включения мультиплексоров - 31,33,35,37,39,41,43,45,47.
 
-const byte MULTI_N = 9; //number of multiplexers
 const byte MULTI_CH = 16;       //number of multiplexer channels
 const byte MULTI_ADDRESSES = 4; //number of multiplexer addreses
 
-byte PIN_MULTI_ENABLE[MULTI_N] = {31, 33, 35, 37, 39, 41, 43, 47};
+byte PIN_MULTI_ENABLE = 31;
 byte PIN_ADDR[MULTI_ADDRESSES] = {23, 25, 27, 29};
 byte PIN_ANALOG = A1;
 byte PIN_RESISTOR = 49;
@@ -58,19 +56,15 @@ void setup() {
     pinModePower(PIN_ADDR[i], 0);
   }
 
-  for (byte i=0; i<MULTI_N; i++) {
-    pinModePower(PIN_MULTI_ENABLE[i], 1); //1 - disables mux
-  }
-  //Resistor...
+  //enable mux - by sending "LOW" to its EN pin
+  pinModePower(PIN_MULTI_ENABLE, 0); 
   
   
 
 }
 //-----------------------------------------------------------------------
-void read_mux(int q) {
-  pr("Read mux "); pr(q); pr(":   ");
-  //enable mux - by sending "LOW" to its EN pin
-  digitalWrite(PIN_MULTI_ENABLE[q], LOW);
+void read_mux() {
+  pr("Read mux:   "); 
   
   for (byte i=0; i<MULTI_CH; i++) {
     //decode address
@@ -85,17 +79,11 @@ void read_mux(int q) {
   }
   prln();
 
-  //disable MUX
-  digitalWrite(PIN_MULTI_ENABLE[q], HIGH);
-
 }
 
 //-----------------------------------------------------------------------
-//Main loop - used for audio
 void loop() {
-  for (byte i=0; i<MULTI_N; i++) {
-    read_mux(i);
-  }
+  read_mux();
   prln("-----------------------------");  
   
   delay(1000);
