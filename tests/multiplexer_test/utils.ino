@@ -6,25 +6,34 @@
 //---------------------------------------------------------------
 //Set pin to output and write initial power there
 void pinModePower(byte pin, byte value) {
-   pinMode(pin, OUTPUT);
-   pinMode(pin, (value)?HIGH:LOW);
+  pr("pin "); pr(pin); pr(" set to "); prln((value) ? "HIGH" : "LOW");
+  pinMode(pin, OUTPUT);
+  digitalWrite(pin, (value) ? HIGH : LOW);
 }
 
 //---------------------------------------------------------------
 //abs function, Arduino's abs works not correct for me in some cases
 int absi(int i) {
-  return  (i >= 0)?i:-i;
+  return  (i >= 0) ? i : -i;
 }
 
 int clampi(int i, int a, int b) {
-  if (a > b) { int t = a; a = b; b = t; }
+  if (a > b) {
+    int t = a;
+    a = b;
+    b = t;
+  }
   if (i < a) return a;
   if (i > b) return b;
   return i;
 }
 
 inline float clampf(float i, float a, float b) {
-  if (a > b) { float t = a; a = b; b = t; }
+  if (a > b) {
+    float t = a;
+    a = b;
+    b = t;
+  }
   if (i < a) return a;
   if (i > b) return b;
   return i;
@@ -35,7 +44,7 @@ int mapi_clamp(int i, int a, int b, int A, int B) {
 }
 
 float mapf(float x, float a, float b, float A, float B) {
-  return (x-a)/(b-a)*(B-A) + A;
+  return (x - a) / (b - a) * (B - A) + A;
 }
 //---------------------------------------------------------------
 //print routines - use their for shortening code

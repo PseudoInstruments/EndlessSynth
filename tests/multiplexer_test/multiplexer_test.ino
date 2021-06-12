@@ -1,4 +1,4 @@
-//multiplexer_test - single multiplexer on Arduino Due.
+//multiplexer_test - single multiplexer on Arduino Uno/Mega/Due.
 
 //Tutorial on multiplexer:
 //http://adam-meyer.com/arduino/CD74HC4067
@@ -9,7 +9,7 @@
 //This sketch connects 16-channel multiplexer with 16 connected pots and gets it output to A1.
 
 //--------------------------------------------
-//Controller: Arduino Due / Mega
+//Controller: Arduino Uno/Mega/Due
 
 //Connections:
 //Using 250000 Baud for Serial, because Due can't work properly with 500000 which I would prefer...
@@ -25,7 +25,7 @@ typedef unsigned int uint32;
 typedef int int32;
 
 const int max_u16 = 65535;
-const int u16_n = 65536;
+const long int u16_n = 65536;
 
 typedef long long int int64;
 typedef unsigned long long int uint64;
@@ -38,17 +38,20 @@ typedef unsigned long long int uint64;
 const byte MULTI_CH = 16;       //number of multiplexer channels
 const byte MULTI_ADDRESSES = 4; //number of multiplexer addreses
 
-byte PIN_MULTI_ENABLE = 31;
-byte PIN_ADDR[MULTI_ADDRESSES] = {23, 25, 27, 29};
-byte PIN_ANALOG = A1;
-byte PIN_RESISTOR = 49;
+//byte PIN_MULTI_ENABLE = 31; //not used, connect to Gnd
+byte PIN_ADDR[MULTI_ADDRESSES] = {2, 3, 4, 5};  //Address pins
+byte PIN_ANALOG = A0;   //signal input from multiplexer
+
+//Test values sent to multiplexer - connect to multiplexer channels
+const byte test_pins=3;
+byte test_pin[test_pins] = {8, 9, 10};
 
 //-----------------------------------------------------------------------
 void setup() {
   Serial.begin(250000);
   prln();
   prln("----------------------------------------------------------------");
-  prln("Endless Drummachine 02_drummach_multiplex_test - test pots, keys, multiplexors, v. 1.1");
+  prln("Multiplexer_test");
   prln("----------------------------------------------------------------");
 
   //Multiplexors pins setup
@@ -57,25 +60,64 @@ void setup() {
   }
 
   //enable mux - by sending "LOW" to its EN pin
-  pinModePower(PIN_MULTI_ENABLE, 0); 
-  
+  //pinModePower(PIN_MULTI_ENABLE, 0); 
+
+  pinModePower(test_pin[0],1);
+  pinModePower(test_pin[1],0);
+  pinModePower(test_pin[2],1);
   
 
+  //Test
+  set_addr(1);
+
 }
+
 //-----------------------------------------------------------------------
-void read_mux() {
-  pr("Read mux:   "); 
+void dig_write(int pin, int v) {
+  byte val = v?HIGH:LOW;
+  //pr("dig write "); pr(pin); pr(" "); prln(val);
+  digitalWrite(pin, val);
   
-  for (byte i=0; i<MULTI_CH; i++) {
-    //decode address
+}
+
+//-----------------------------------------------------------------------
+void set_addr(int i) {
+    //set address
+    //pr("set addr ");
+    //pr(i); //pr("   ");
+    //prln();
+    
     byte addr = i;
     for (byte k=0; k<MULTI_ADDRESSES; k++) {
       byte v = addr%2;
-      digitalWrite(PIN_ADDR[k], v?HIGH:LOW);
+      //pr(v);
+      dig_write(PIN_ADDR[k], v);
       addr /= 2;
     }
+  
+}
+
+//-----------------------------------------------------------------------
+int read_val() {
+    delay(1); //not required, but for test
     int input = analogRead(PIN_ANALOG);
-    pr(" "); pr(input);
+    //pr("value "); pr(input);
+    //prln();
+    return input;
+}
+
+//-----------------------------------------------------------------------
+void read_mux() {
+  prln("Read mux:   "); 
+  
+  for (byte i=0; i<MULTI_CH; i++) {
+    pr(" "); pr(i);
+    //set address
+    set_addr(i);
+    //Read value
+    int input = read_val();
+    pr("\t"); pr(input);
+    prln();
   }
   prln();
 
@@ -83,10 +125,13 @@ void read_mux() {
 
 //-----------------------------------------------------------------------
 void loop() {
-  read_mux();
-  prln("-----------------------------");  
+  //read_val();
+  //set_addr(1);
   
-  delay(1000);
+  read_mux();
+  //prln("-----------------------------");  
+  
+  delay(300);
 }
 
 //-----------------------------------------------------------------------
