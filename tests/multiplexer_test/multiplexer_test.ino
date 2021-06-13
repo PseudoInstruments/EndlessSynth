@@ -40,7 +40,8 @@ const byte MULTI_ADDRESSES = 4; //number of multiplexer addreses
 
 //byte PIN_MULTI_ENABLE = 31; //not used, connect to Gnd
 byte PIN_ADDR[MULTI_ADDRESSES] = {2, 3, 4, 5};  //Address pins
-byte PIN_ANALOG = A0;   //signal input from multiplexer
+byte PIN_ANALOG = A0;   //signal input from multiplexer for pots
+byte PIN_BUTTON = 7;   //signal input from multiplexer for buttons (Arduino will pullup it at start)
 
 //Test values sent to multiplexer - connect to multiplexer channels
 const byte test_pins=3;
@@ -51,7 +52,7 @@ void setup() {
   Serial.begin(250000);
   prln();
   prln("----------------------------------------------------------------");
-  prln("Multiplexer_test");
+  prln("Multiplexer_test, A0 - check pots, D7 - check buttons");
   prln("----------------------------------------------------------------");
 
   //Multiplexors pins setup
@@ -65,7 +66,9 @@ void setup() {
   pinModePower(test_pin[0],1);
   pinModePower(test_pin[1],0);
   pinModePower(test_pin[2],1);
-  
+
+  //button pullup
+  pinMode(PIN_BUTTON, INPUT_PULLUP);
 
   //Test
   set_addr(1);
@@ -98,25 +101,37 @@ void set_addr(int i) {
 }
 
 //-----------------------------------------------------------------------
-int read_val() {
-    delay(1); //not required, but for test
+int read_analog() {
+    //delay(1); //not required, but for test
     int input = analogRead(PIN_ANALOG);
-    //pr("value "); pr(input);
+    //pr("analog "); pr(input);
     //prln();
     return input;
 }
+
+//-----------------------------------------------------------------------
+int read_button() {
+    //delay(1); //not required, but for test
+    int input = 1-digitalRead(PIN_BUTTON);
+    //pr("button "); pr(input);
+    //prln();
+    return input;
+}
+
 
 //-----------------------------------------------------------------------
 void read_mux() {
   prln("Read mux:   "); 
   
   for (byte i=0; i<MULTI_CH; i++) {
-    pr(" "); pr(i);
+    pr(" "); pr(i+1);
     //set address
     set_addr(i);
-    //Read value
-    int input = read_val();
-    pr("\t"); pr(input);
+    //Read values, both for pots and buttons
+    
+    int button = read_button();
+    int analog = read_analog();
+    pr("\t"); pr(button); pr("  "); pr(analog);
     prln();
   }
   prln();
