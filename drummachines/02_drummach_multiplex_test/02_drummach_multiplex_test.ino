@@ -41,7 +41,7 @@ const byte MULTI_CH = 16;       //number of multiplexer channels
 const byte MULTI_ADDRESSES = 4; //number of multiplexer addreses
 
 byte PIN_MULTI_ENABLE[MULTI_N] = {31, 33, 35, 37, 39, 41, 43, 47};
-byte PIN_ADDR[MULTI_ADDRESSES] = {23, 25, 27, 29};
+byte PIN_ADDR[MULTI_ADDRESSES] = {29, 27, 25, 23}; //{23, 25, 27, 29};
 byte PIN_ANALOG = A1;
 byte PIN_RESISTOR = 49;
 
@@ -94,19 +94,19 @@ int read_analog() {
 
 //-----------------------------------------------------------------------
 void read_mux(int q) {
-  pr("Read mux "); pr(q); prln(":   ");
+  pr("mux "); pr(q); pr(":   ");
   //enable mux - by sending "LOW" to its EN pin
   digitalWrite(PIN_MULTI_ENABLE[q], LOW);
   
   for (byte i=0; i<MULTI_CH; i++) {
-    pr(" "); pr(i+1);
+    //pr(" "); pr(i+1);
     //set address
     set_addr(i);
     //Read values, both for pots and buttons
     
     int analog = read_analog();
     pr("\t"); pr(analog);
-    prln();
+    //prln();
   }
   prln();
   
@@ -118,10 +118,10 @@ void read_mux(int q) {
 //-----------------------------------------------------------------------
 //Main loop - used for audio
 void loop() {
-  read_mux(0);
-  //for (byte i=0; i<MULTI_N; i++) {
-  //  read_mux(i);
-  //}
+  //read_mux(0);
+  for (byte i=0; i<MULTI_N; i++) {
+    read_mux(i);
+  }
   prln("-----------------------------");  
   
   delay(300);
