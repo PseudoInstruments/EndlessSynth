@@ -26,7 +26,7 @@ typedef unsigned int uint32;
 typedef int int32;
 
 const int max_u16 = 65535;
-const int u16_n = 65536;
+const long int u16_n = 65536;
 
 typedef long long int int64;
 typedef unsigned long long int uint64;
@@ -41,7 +41,7 @@ const byte MULTI_CH = 16;       //number of multiplexer channels
 const byte MULTI_ADDRESSES = 4; //number of multiplexer addreses
 
 byte PIN_MULTI_ENABLE[MULTI_N] = {31, 33, 35, 37, 39, 41, 43, 47};
-byte PIN_ADDR[MULTI_ADDRESSES] = {23, 25, 27, 29};
+byte PIN_ADDR[MULTI_ADDRESSES] = {29, 27, 25, 23}; //{23, 25, 27, 29};
 byte PIN_ANALOG = A1;
 byte PIN_RESISTOR = 49;
 
@@ -61,30 +61,55 @@ void setup() {
   for (byte i=0; i<MULTI_N; i++) {
     pinModePower(PIN_MULTI_ENABLE[i], 1); //1 - disables mux
   }
-  //Resistor...
-  
-  
+  //Resistor... 
 
 }
+
+
+//-----------------------------------------------------------------------
+void set_addr(int i) {
+    //set address
+    //pr("set addr ");
+    //pr(i); //pr("   ");
+    //prln();
+    
+    byte addr = i;
+    for (byte k=0; k<MULTI_ADDRESSES; k++) {
+      byte v = addr%2;
+      //pr(v);
+      digitalWrite(PIN_ADDR[k], v);
+      addr /= 2;
+    }
+  
+}
+
+//-----------------------------------------------------------------------
+int read_analog() {
+    //delay(1); //not required, but for test
+    int input = analogRead(PIN_ANALOG);
+    //pr("analog "); pr(input);
+    //prln();
+    return input;
+}
+
 //-----------------------------------------------------------------------
 void read_mux(int q) {
-  pr("Read mux "); pr(q); pr(":   ");
+  pr("mux "); pr(q); pr(":   ");
   //enable mux - by sending "LOW" to its EN pin
   digitalWrite(PIN_MULTI_ENABLE[q], LOW);
   
   for (byte i=0; i<MULTI_CH; i++) {
-    //decode address
-    byte addr = i;
-    for (byte k=0; k<MULTI_ADDRESSES; k++) {
-      byte v = addr%2;
-      digitalWrite(PIN_ADDR[k], v?HIGH:LOW);
-      addr /= 2;
-    }
-    int input = analogRead(PIN_ANALOG);
-    pr(" "); pr(input);
+    //pr(" "); pr(i+1);
+    //set address
+    set_addr(i);
+    //Read values, both for pots and buttons
+    
+    int analog = read_analog();
+    pr("\t"); pr(analog);
+    //prln();
   }
   prln();
-
+  
   //disable MUX
   digitalWrite(PIN_MULTI_ENABLE[q], HIGH);
 
@@ -93,12 +118,13 @@ void read_mux(int q) {
 //-----------------------------------------------------------------------
 //Main loop - used for audio
 void loop() {
+  //read_mux(0);
   for (byte i=0; i<MULTI_N; i++) {
     read_mux(i);
   }
   prln("-----------------------------");  
   
-  delay(1000);
+  delay(300);
 }
 
 //-----------------------------------------------------------------------
