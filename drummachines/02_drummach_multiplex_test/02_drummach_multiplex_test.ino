@@ -94,7 +94,7 @@ int read_analog() {
 
 //-----------------------------------------------------------------------
 void read_mux(int q) {
-  pr("mux "); pr(q); pr(":   ");
+  pr("mux "); pr(q+1); pr(":   ");
   //enable mux - by sending "LOW" to its EN pin
   digitalWrite(PIN_MULTI_ENABLE[q], LOW);
   
@@ -105,7 +105,8 @@ void read_mux(int q) {
     //Read values, both for pots and buttons
     
     int analog = read_analog();
-    pr("\t"); pr(analog);
+    if (i % 4 == 0) pr(" | ");
+    else pr(" "); pr(analog);
     //prln();
   }
   prln();
@@ -118,11 +119,11 @@ void read_mux(int q) {
 //-----------------------------------------------------------------------
 //Main loop - used for audio
 void loop() {
+  prln("------------");  //Separator - used in processing
   //read_mux(0);
   for (byte i=0; i<MULTI_N; i++) {
     read_mux(i);
   }
-  prln("-----------------------------");  
   
   delay(300);
 }

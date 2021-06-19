@@ -1,61 +1,66 @@
-//Данный скетч для Processing считывает значения A0,A1,A2 
-//и рисует их в виде графиков
+//Reading Arduino text and drawing it in Processing
 
-//подключение библиотеки для работы с серийным портом
 import processing.serial.*;  
 
-//объявляем объект для работы с серийным портом
 Serial serial; 
 
-//значения, считанные с ардуино
-int v0 = 0;
-int v1 = 1;
-int v2 = 2;
 
-//положение рисования графика
-int x = 0;
+int K = 0;  //number of line
+String[] Lines;
+int maxLines = 20;
+
+PFont f;   //Font
 
 
 void setup()
 {
-  size(1280,720);  //размер экрана рисования
-  frameRate(60);  //число кадров в секунду
-  String port = Serial.list()[0]; //получаем название первого порта
-  serial = new Serial(this, port, 9600); //подключаемся к нему
-  
-  //фон - ставим тут, чтобы не стирал на каждом кадре картинку
-  background(200,200,200);
+  size(1920, 1080);
+  frameRate(60); 
+  String port = Serial.list()[0]; 
+  int baud = 250000;
+  serial = new Serial(this, port, baud); 
+
+  Lines = new String[maxLines];
+
+
+  f = createFont("Arial", 16, true); //Create Font
 }
 
 void draw() {
-  if (serial.available()>0) { //пока есть данные
-    String input = serial.readStringUntil('\n'); //считываем строку
-    if (input!=null) { //бывают строки null, их не обрабатываем
-      
-      //разбиваем строку на набор отдельных строк по пробелу (и символам перевода строки)
-      String[] list = splitTokens(input);
-      
-      //если пришли все три числа - то их ставим в v0,v1,v2
-      if (list.length >= 3) {  
-          v0 = int(list[0]);  //используем int(...) чтобы конвертировать строку в число
-          v1 = int(list[1]);
-          v2 = int(list[2]);
-          
-          //печать в консоль для отладки - раскомментировать, чтобы посмотреть данные c Arduino
-          //println(v0, v1, v2);  
-      }      
+  //Read
+  if (serial.available()>0) { 
+    String input = serial.readStringUntil('\n'); //read line
+    if (input!=null) { //null strings - ignore
+      //print(input);
+
+      if (input.charAt(0) == '-') { //"------------")) {
+        K = 0;  //start new reading
+      }
+
+      if (K < maxLines) {
+        Lines[K] = input;
+      }
+      K++;
     }
   }
+
+  //Draw
+  background(255);
+
+  //stroke(0,0,0);  
+  textFont(f, 16);                  //font to be used
+  fill(0);                         //font color
+  for (int i=0; i<maxLines; i++) {
+    if (Lines[i] != null) {
+      //split by spaces and new lines
+      String[] list = splitTokens(Lines[i]);
+      if (list.length >= 10) {   //NOTE: ignoring short lines 
+        for (int j=0; j<list.length; j++) {
+          text(list[j], 30 + j*70, 50 + 30 * i);
+        }
+      }
+    }
   
-  //рисуем данные
-  //background(200,200,200);
+  }
   
-  stroke(0,0,0);    //цвет контура
-  
-  //рисуем три вертикальные линии - для каждого пина
-  line(x, 150, x, 150-v0*0.2);
-  line(x, 300, x, 300-v1*0.2);
-  line(x, 450, x, 450-v2*0.2);
-  
-  x = x + 1;  //передвигаем позицию рисования
 }
