@@ -85,7 +85,7 @@ byte prev_k2 = 0;
 void set_led_value(int v) {
   //v in 0..values_range-1
 
-  float t = float(v)/(values_range-1) * led_n;  //[0..led_n]
+  float t = float(v)/(values_range-1) * (led_n-1);  //[0..led_n-1]
   byte k1 = min(int(t), led_n-1);             //first led
   byte k2 = min(k1+1, led_n-1); //second led - edge case for last led
 
