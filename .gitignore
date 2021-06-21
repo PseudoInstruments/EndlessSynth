@@ -2,3 +2,14 @@
 /drums/03_fastloop_machine_openFrameworks/bin/*.exp
 /drums/03_fastloop_machine_openFrameworks/bin/*.lib
 /drums/03_fastloop_machine_openFrameworks/bin/*.dll
+/drummachines/EndlessDrumMachine01_of/.vs/EndlessDrumMachine01_of/v15/*.db
+/drummachines/EndlessDrumMachine01_of/.vs/EndlessDrumMachine01_of/v15/*.opendb
+/drummachines/EndlessDrumMachine01_of/.vs/EndlessDrumMachine01_of/v15/*.db-shm
+/drummachines/EndlessDrumMachine01_of/.vs/EndlessDrumMachine01_of/v15/*.db-wal
+/drummachines/EndlessDrumMachine01_of/.vs/EndlessDrumMachine01_of/v15/ipch/AutoPCH/5039beeab9461b87/*.ipch
+/drummachines/EndlessDrumMachine01_of/*.sln
+/drummachines/EndlessDrumMachine01_of/*.vcxproj
+/drummachines/EndlessDrumMachine01_of/*.filters
+/drummachines/EndlessDrumMachine01_of/*.user
+/drummachines/EndlessDrumMachine01_of/bin/data/*.gitkeep
+/drummachines/EndlessDrumMachine01_of/*.rc
