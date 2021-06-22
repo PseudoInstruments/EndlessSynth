@@ -1,7 +1,15 @@
 #include "ofApp.h"
+#include "Sound.h"
+#include "Gui.h"
+
+//TODO separate sound/gui in separate apps,
+//Sound - no window, OSC-controlled, 100 FPS (or more)
+//Gui - window, electronics control, OSC sends to sound.
 
 //--------------------------------------------------------------
 void ofApp::setup(){
+	GUI.setup();
+	SOUND.setup();
 
 }
 
