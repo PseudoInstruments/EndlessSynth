@@ -2,9 +2,8 @@
 #include "Sound.h"
 #include "Gui.h"
 
-//TODO separate sound/gui in separate apps,
-//Sound - no window, OSC-controlled, 100 FPS (or more)
-//Gui - window, electronics control, OSC sends to sound.
+//Sound works in a separate thread, makes sound generation and electronics control
+//Gui - window
 
 //--------------------------------------------------------------
 void ofApp::setup(){
@@ -15,17 +14,19 @@ void ofApp::setup(){
 
 //--------------------------------------------------------------
 void ofApp::update(){
+	GUI.update();
+	SOUND.update();
 
 }
 
 //--------------------------------------------------------------
 void ofApp::draw(){
-
+	GUI.draw();
 }
 
 //--------------------------------------------------------------
 void ofApp::keyPressed(int key){
-
+	GUI.keyPressed(key);
 }
 
 //--------------------------------------------------------------
@@ -40,17 +41,17 @@ void ofApp::mouseMoved(int x, int y ){
 
 //--------------------------------------------------------------
 void ofApp::mouseDragged(int x, int y, int button){
-
+	GUI.mouseDragged(x, y, button);
 }
 
 //--------------------------------------------------------------
 void ofApp::mousePressed(int x, int y, int button){
-
+	GUI.mousePressed(x, y, button);
 }
 
 //--------------------------------------------------------------
 void ofApp::mouseReleased(int x, int y, int button){
-
+	GUI.mouseReleased(x, y, button);
 }
 
 //--------------------------------------------------------------

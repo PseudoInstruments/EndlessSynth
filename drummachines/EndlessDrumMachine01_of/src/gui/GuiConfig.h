@@ -7,9 +7,9 @@
 
 const string GUI_APP_TITLE = "EndlessDrumMachine Gui 1.0";
 
-const int SCR_W = 1280;
-const int SCR_H = 720;
-const int SCR_FPS = 30;
+const int GUI_APP_W = 1280;
+const int GUI_APP_H = 720;
+const int GUI_APP_FPS = 60;
 
 //TODO separate sound/gui in separate apps,
 //Sound - no window, OSC-controlled, 100 FPS (or more)

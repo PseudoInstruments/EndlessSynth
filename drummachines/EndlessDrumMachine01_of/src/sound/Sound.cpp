@@ -16,7 +16,13 @@ void Sound::update() {
 }
 
 //--------------------------------------------------------------
-void Sound::draw() {
+//Sending/receiving messages between GUI and Sound (in separate programs will be using shared memory or OSC)
+void Sound::send_to_gui(const string &msg, int value) {
+
+}
+
+//--------------------------------------------------------------
+void Sound::received_from_gui(const string &msg, int value) {
 
 }
 

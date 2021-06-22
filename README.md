@@ -53,10 +53,10 @@ Code and assembly insructions: synths folder.
 
 ## Contents
 
-* **boomboxes** - Endless Boombox codes and instructions.
 * **doc** - Some images.
 * **guitars** - Endless Guitar codes and instructions.
 * **keyboard_tests** - tests of connecting toy keyboards.
+* **mic** - Endless Boombox codes and instructions.
 * **mic_tests** - tests of using microphone with Arduino.
 * **synthesis_tests** - tests of synthesizing sound in Arduino.
 * **synths** - Endless Wynth codes and instructions.
