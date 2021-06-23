@@ -13,6 +13,24 @@ void Gui::setup() {
 }
 
 //--------------------------------------------------------------
+GuiItemKnob* Gui::add_knob(int2 pos) {
+	auto *item = new GuiItemKnob();
+	item->setup(pos);
+	items_.push_back(item);
+	return item;
+}
+
+//--------------------------------------------------------------
+void Gui::add_button(int2 pos) {
+	ofSystemAlertDialog("Gui::add_button not implemented");
+}
+
+//--------------------------------------------------------------
+void Gui::add_led(int2 pos) {
+	ofSystemAlertDialog("Gui::add_led not implemented");
+}
+
+//--------------------------------------------------------------
 void Gui::keyPressed(int key) {
 
 }
@@ -67,6 +85,7 @@ void Gui::update() {
 
 //--------------------------------------------------------------
 void Gui::draw() {
+	ofBackground(230);
 	for (auto it : items_) {
 		it->draw();
 	}
