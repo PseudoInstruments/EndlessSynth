@@ -2,8 +2,8 @@
 
 
 //--------------------------------------------------------------
-void GuiItemButton::setup() {
-
+void GuiItemButton::setup(int2 pos) {
+	GuiItem::setup(pos);
 }
 
 //--------------------------------------------------------------
@@ -33,6 +33,9 @@ void GuiItemButton::update() {
 
 //--------------------------------------------------------------
 void GuiItemButton::draw() {
+	ofSetColor(0);
+	ofNoFill();
+	ofDrawCircle(pos_.x, pos_.y, GUI_BUTTON_RAD);
 
 }
 

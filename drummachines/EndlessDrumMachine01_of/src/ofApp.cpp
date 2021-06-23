@@ -10,11 +10,15 @@ void ofApp::setup(){
 	GUI.setup();
 	SOUND.setup();
 
+	instr_gui_.setup();
+
 }
 
 //--------------------------------------------------------------
 void ofApp::update(){
 	GUI.update();
+	instr_gui_.update();
+
 	SOUND.update();
 
 }

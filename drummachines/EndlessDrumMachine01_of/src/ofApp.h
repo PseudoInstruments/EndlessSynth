@@ -6,6 +6,7 @@ EndlessDrumMachine - deum machine for Raspberry Pi, written in openFrameworks
 */
 
 #include "ofMain.h"
+#include "InstrGui.h"
 
 class ofApp : public ofBaseApp {
 
@@ -25,5 +26,7 @@ public:
 	void windowResized(int w, int h);
 	void dragEvent(ofDragInfo dragInfo);
 	void gotMessage(ofMessage msg);
+
+	InstrGui instr_gui_;
 
 };

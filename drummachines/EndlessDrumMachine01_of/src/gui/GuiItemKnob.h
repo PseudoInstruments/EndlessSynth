@@ -8,7 +8,7 @@
 
 class GuiItemKnob: public GuiItem {
 public:
-	void setup();
+	void setup(int2 pos);
 	void update();
 	void draw();
 
@@ -17,5 +17,7 @@ public:
 	void mousePressed(int x, int y, int button);
 	void mouseDragged(int x, int y, int button);
 	void mouseReleased(int x, int y, int button);
+protected:
+
 };
 

@@ -2,8 +2,8 @@
 
 
 //--------------------------------------------------------------
-void GuiItemKnob::setup() {
-
+void GuiItemKnob::setup(int2 pos) {
+	GuiItem::setup(pos);
 }
 
 //--------------------------------------------------------------
@@ -33,7 +33,9 @@ void GuiItemKnob::update() {
 
 //--------------------------------------------------------------
 void GuiItemKnob::draw() {
-
+	ofSetColor(0);
+	ofNoFill();
+	ofDrawCircle(pos_.x, pos_.y, GUI_KNOB_RAD);
 }
 
 //--------------------------------------------------------------

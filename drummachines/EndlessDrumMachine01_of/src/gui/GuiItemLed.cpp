@@ -2,8 +2,8 @@
 
 
 //--------------------------------------------------------------
-void GuiItemLed::setup() {
-
+void GuiItemLed::setup(int2 pos) {
+	GuiItem::setup(pos);
 }
 
 //--------------------------------------------------------------
@@ -33,6 +33,9 @@ void GuiItemLed::update() {
 
 //--------------------------------------------------------------
 void GuiItemLed::draw() {
+	ofSetColor(0);
+	ofNoFill();
+	ofDrawCircle(pos_.x, pos_.y, GUI_LED_RAD);
 
 }
 
