@@ -18,8 +18,8 @@ public:
 
 	// Content
 	GuiItemKnob* add_knob(int2 pos);
-	void add_button(int2 pos);
-	void add_led(int2 pos);
+	GuiItemButton* add_button(int2 pos);
+	GuiItemLed* add_led(int2 pos);
 
 	// Events
 	void keyPressed(int key);
@@ -35,6 +35,7 @@ public:
 
 protected:
 	vector<GuiItem *> items_;	//Note: it not releases memory for items automatically
+	void add_item(GuiItem *item, int2 pos);
 
 };
 

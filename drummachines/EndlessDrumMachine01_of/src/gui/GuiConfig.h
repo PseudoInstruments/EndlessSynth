@@ -5,16 +5,24 @@
 
 #include "ofMain.h"
 
-const string GUI_APP_TITLE = "EndlessDrumMachine Gui 1.0";
+const string GUI_APP_TITLE = "EndlessDrumMachine 1.0";
 
 const int GUI_APP_FPS = 60;
 
 const int GUI_APP_W = 1280;
 const int GUI_APP_H = 720;
 
-const int GUI_KNOB_RAD = 20;
-const int GUI_LED_RAD = 30;
-const int GUI_BUTTON_RAD = 30;
+// Knob
+const int GUI_KNOB_RAD = 25;
+const int GUI_KNOB_ANGLE0 = 270 - 30;
+const int GUI_KNOB_ANGLE1 = -90 + 30;
+
+// Button
+const int GUI_BUTTON_RAD = 16;
+
+// Led
+const int GUI_LED_RAD = 16;
+
 
 
 

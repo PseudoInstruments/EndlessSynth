@@ -7,3 +7,4 @@
 
 const string SOUND_APP_TITLE = "EndlessDrumMachine Sound 1.0";
 
+const int KNOB_RANGE = 256;

@@ -11,6 +11,9 @@ const int DRUMS_CONTROLS_N = 6;
 const int INSTR_W = DRUMS_N;
 const int INSTR_H = 9;
 
+
+
+
 //TODO separate sound/gui in separate apps,
 //Sound - no window, OSC-controlled, 100 FPS (or more)
 //Gui - window, electronics control, OSC sends to sound.

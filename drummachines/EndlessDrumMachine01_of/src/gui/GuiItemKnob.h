@@ -18,6 +18,8 @@ public:
 	void mouseDragged(int x, int y, int button);
 	void mouseReleased(int x, int y, int button);
 protected:
+	int value_ = 0;	 //0..KNOB_RANGE
+
 
 };
 

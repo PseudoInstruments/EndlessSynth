@@ -13,21 +13,30 @@ void Gui::setup() {
 }
 
 //--------------------------------------------------------------
-GuiItemKnob* Gui::add_knob(int2 pos) {
-	auto *item = new GuiItemKnob();
+void Gui::add_item(GuiItem *item, int2 pos) {
 	item->setup(pos);
 	items_.push_back(item);
+}
+
+//--------------------------------------------------------------
+GuiItemKnob* Gui::add_knob(int2 pos) {
+	auto *item = new GuiItemKnob();
+	add_item(item, pos);
 	return item;
 }
 
 //--------------------------------------------------------------
-void Gui::add_button(int2 pos) {
-	ofSystemAlertDialog("Gui::add_button not implemented");
+GuiItemButton* Gui::add_button(int2 pos) {
+	auto *item = new GuiItemButton();
+	add_item(item, pos);
+	return item;
 }
 
 //--------------------------------------------------------------
-void Gui::add_led(int2 pos) {
-	ofSystemAlertDialog("Gui::add_led not implemented");
+GuiItemLed* Gui::add_led(int2 pos) {
+	auto *item = new GuiItemLed();
+	add_item(item, pos);
+	return item;
 }
 
 //--------------------------------------------------------------
