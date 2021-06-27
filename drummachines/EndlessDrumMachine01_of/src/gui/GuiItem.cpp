@@ -7,6 +7,11 @@ void GuiItem::setup(int2 pos) {
 }
 
 //--------------------------------------------------------------
+bool GuiItem::mouseOver(int x, int y) {
+	return false;
+}
+
+//--------------------------------------------------------------
 void GuiItem::mouseMoved(int x, int y, int button) {
 
 }
@@ -23,6 +28,11 @@ void GuiItem::mouseDragged(int x, int y, int button) {
 
 //--------------------------------------------------------------
 void GuiItem::mouseReleased(int x, int y, int button) {
+
+}
+
+//--------------------------------------------------------------
+void GuiItem::mouseReleased() {
 
 }
 

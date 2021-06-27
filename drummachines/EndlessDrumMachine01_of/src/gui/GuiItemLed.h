@@ -12,11 +12,13 @@ public:
 	void update();
 	void draw();
 
+	virtual bool mouseOver(int x, int y);
+	virtual void mouseMoved(int x, int y, int button);
+	virtual void mousePressed(int x, int y, int button);
+	virtual void mouseDragged(int x, int y, int button);
+	virtual void mouseReleased(int x, int y, int button);
+	virtual void mouseReleased();
 
-	void mouseMoved(int x, int y, int button);
-	void mousePressed(int x, int y, int button);
-	void mouseDragged(int x, int y, int button);
-	void mouseReleased(int x, int y, int button);
 protected:
 
 };

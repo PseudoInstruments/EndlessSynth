@@ -24,6 +24,11 @@ void GuiItemKnob::setup(int2 pos) {
 }
 
 //--------------------------------------------------------------
+bool GuiItemKnob::mouseOver(int x, int y) {
+	return (abs(x - pos_.x) <= GUI_KNOB_RAD && abs(y - pos_.y) <= GUI_KNOB_RAD);
+}
+
+//--------------------------------------------------------------
 void GuiItemKnob::mouseMoved(int x, int y, int button) {
 
 }
@@ -40,6 +45,11 @@ void GuiItemKnob::mouseDragged(int x, int y, int button) {
 
 //--------------------------------------------------------------
 void GuiItemKnob::mouseReleased(int x, int y, int button) {
+
+}
+
+//--------------------------------------------------------------
+void GuiItemKnob::mouseReleased() {
 
 }
 

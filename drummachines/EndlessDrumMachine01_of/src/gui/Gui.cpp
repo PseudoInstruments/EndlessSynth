@@ -46,6 +46,7 @@ void Gui::keyPressed(int key) {
 
 //--------------------------------------------------------------
 void Gui::mouseMoved(int x, int y, int button) {
+    if (moused_) return;
 	for (auto it : items_) {
 		it->mouseMoved(x, y, button);
 	}
@@ -53,23 +54,34 @@ void Gui::mouseMoved(int x, int y, int button) {
 
 //--------------------------------------------------------------
 void Gui::mousePressed(int x, int y, int button) {
-	for (auto it : items_) {
-		it->mousePressed(x, y, button);
+    if (moused_) {
+        moused_->mouseReleased();
+        moused_ = 0;
+    }
+    for (auto it : items_) {
+		if (it->mouseOver(x, y)) {
+			cout << "mouse pressed" << endl;
+			it->mousePressed(x, y, button);
+            moused_ = it;
+            return;
+        }
 	}
 }
 
 //--------------------------------------------------------------
 void Gui::mouseDragged(int x, int y, int button) {
-	for (auto it : items_) {
-		it->mouseDragged(x, y, button);
-	}
+    if (moused_) {
+        moused_->mouseDragged(x, y, button);
+    }
 }
 
 //--------------------------------------------------------------
-void Gui::mouseReleased(int x, int y, int button) {
-	for (auto it : items_) {
-		it->mouseReleased(x, y, button);
-	}
+void Gui::mouseReleased(int x, int y, int button) {	
+    if (moused_) {
+        moused_->mouseReleased(x, y, button);
+        moused_ = 0;
+    }
+ 
 }
 
 

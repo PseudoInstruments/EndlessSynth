@@ -36,6 +36,8 @@ public:
 protected:
 	vector<GuiItem *> items_;	//Note: it not releases memory for items automatically
 	void add_item(GuiItem *item, int2 pos);
+    
+    GuiItem *moused_ = 0;
 
 };
 

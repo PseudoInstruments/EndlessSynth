@@ -7,6 +7,11 @@ void GuiItemLed::setup(int2 pos) {
 }
 
 //--------------------------------------------------------------
+bool GuiItemLed::mouseOver(int x, int y) {
+	return false;
+}
+
+//--------------------------------------------------------------
 void GuiItemLed::mouseMoved(int x, int y, int button) {
 
 }
@@ -23,6 +28,11 @@ void GuiItemLed::mouseDragged(int x, int y, int button) {
 
 //--------------------------------------------------------------
 void GuiItemLed::mouseReleased(int x, int y, int button) {
+
+}
+
+//--------------------------------------------------------------
+void GuiItemLed::mouseReleased() {
 
 }
 
