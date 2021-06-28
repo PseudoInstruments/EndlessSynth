@@ -1,4 +1,5 @@
 #include "Sound.h"
+#include "GuiAssert.h"
 
 Sound SOUND;
 
@@ -13,6 +14,16 @@ void Sound::setup() {
 //--------------------------------------------------------------
 void Sound::update() {
 
+}
+
+//--------------------------------------------------------------
+void Sound::audio_out(vector<float> &buffer, int frames, int channels) {
+	gui_assert(channels == AUDIO_CHANNELS, "Sound::audio_out - expected " + ofToString(AUDIO_CHANNELS) + " channels");
+	int k = 0;
+	for (int i = 0; i < frames; i++) {
+		buffer[k++] = 0;
+		buffer[k++] = 0;
+	}
 }
 
 //--------------------------------------------------------------

@@ -1,7 +1,7 @@
 #pragma once
 
 /*
-EndlessDrumMachine - deum machine for Raspberry Pi, written in openFrameworks
+EndlessDrumMachine - drum machine for Raspberry Pi, written in openFrameworks
 
 */
 
@@ -14,6 +14,9 @@ public:
 	void setup();
 	void update();
 	void draw();
+	void save();
+	void load();
+	void exit();
 
 	void keyPressed(int key);
 	void keyReleased(int key);
@@ -26,6 +29,10 @@ public:
 	void windowResized(int w, int h);
 	void dragEvent(ofDragInfo dragInfo);
 	void gotMessage(ofMessage msg);
+
+	void start_audio();
+	void audioOut(ofSoundBuffer& buffer);
+	ofSoundStream soundStream_;
 
 	InstrGui instr_gui_;
 

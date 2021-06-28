@@ -11,6 +11,7 @@ void InstrGui::setup() {
 	}
 
 	//Drums
+	//volume, volume bend, tone, tone bend, noise flt, noise flt bend
 	for (int x = 0; x < DRUMS_N; x++) {
 		//knobs
 		for (int y = 0; y < DRUMS_CONTROLS_N; y++) {

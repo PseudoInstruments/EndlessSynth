@@ -10,6 +10,8 @@ class Sound {
 public:
 	void setup();
 	void update();
+
+	void audio_out(vector<float> &buffer, int frames, int channels);
 	//void draw();
 
 	//Sending/receiving messages between GUI and Sound (in separate programs will be using shared memory or OSC)
