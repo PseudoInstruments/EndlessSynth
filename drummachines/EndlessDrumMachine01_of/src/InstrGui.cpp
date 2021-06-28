@@ -23,10 +23,10 @@ void InstrGui::setup() {
 	int x1 = 0;
 	int y1 = INSTR_H - 2;
 	//Sound control
+	GUI.add_button(get_pos(x1++, y1));
 	GUI.add_knob(get_pos(x1++, y1));
-	GUI.add_button(get_pos(x1++, y1));
-	GUI.add_button(get_pos(x1++, y1));
-	GUI.add_button(get_pos(x1++, y1));
+	GUI.add_knob(get_pos(x1++, y1));
+	GUI.add_knob(get_pos(x1++, y1));
 
 	//Play control
 	GUI.add_button(get_pos(x1++, y1));

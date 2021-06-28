@@ -60,7 +60,6 @@ void Gui::mousePressed(int x, int y, int button) {
     }
     for (auto it : items_) {
 		if (it->mouseOver(x, y)) {
-			cout << "mouse pressed" << endl;
 			it->mousePressed(x, y, button);
             moused_ = it;
             return;

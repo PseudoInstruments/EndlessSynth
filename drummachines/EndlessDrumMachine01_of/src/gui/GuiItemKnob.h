@@ -19,8 +19,11 @@ public:
 	virtual void mouseReleased(int x, int y, int button);
 	virtual void mouseReleased();
 
+	void set_value(int v);
+
 protected:
 	int value_ = 0;	 //0..KNOB_RANGE
+	int mouse_value0_ = 0;	
 
 
 };

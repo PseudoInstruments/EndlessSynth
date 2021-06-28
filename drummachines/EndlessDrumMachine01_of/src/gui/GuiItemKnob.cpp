@@ -1,5 +1,7 @@
 #include "GuiItemKnob.h"
 #include "SoundConfig.h"
+#include "xmath.h"
+#include "GuiAssert.h"
 
 vector<int2> knob_vectors_;	//KNOB_RANGE-sized vector with positions for knob pointer
 //--------------------------------------------------------------
@@ -30,27 +32,37 @@ bool GuiItemKnob::mouseOver(int x, int y) {
 
 //--------------------------------------------------------------
 void GuiItemKnob::mouseMoved(int x, int y, int button) {
-
+	GuiItem::mouseMoved(x, y, button);
 }
 
 //--------------------------------------------------------------
 void GuiItemKnob::mousePressed(int x, int y, int button) {
-
+	GuiItem::mousePressed(x, y, button);
+	mouse_value0_ = value_;
 }
 
 //--------------------------------------------------------------
 void GuiItemKnob::mouseDragged(int x, int y, int button) {
+	int delta = x - mouse_pos_.x - (y - mouse_pos_.y);
+	set_value(mouse_value0_ + delta);
 
+	GuiItem::mouseDragged(x, y, button);
 }
 
 //--------------------------------------------------------------
 void GuiItemKnob::mouseReleased(int x, int y, int button) {
-
+	mouseDragged(x, y, button);
+	GuiItem::mouseReleased(x, y, button);
 }
 
 //--------------------------------------------------------------
 void GuiItemKnob::mouseReleased() {
+	GuiItem::mouseReleased();
+}
 
+//--------------------------------------------------------------
+void GuiItemKnob::set_value(int v) {
+	value_ = xclampi(v, 0, KNOB_RANGE-1);
 }
 
 //--------------------------------------------------------------
@@ -66,6 +78,7 @@ void GuiItemKnob::draw() {
 
 	//pointer
 	ofSetColor(0);
+	gui_assert(value_ >= 0 && value_ < KNOB_RANGE, "GuiItemKnob::draw() - bad value_");
 	const auto &p = knob_vectors_[value_];
 	ofDrawLine(pos_.x, pos_.y, pos_.x + p.x, pos_.y + p.y);
 }

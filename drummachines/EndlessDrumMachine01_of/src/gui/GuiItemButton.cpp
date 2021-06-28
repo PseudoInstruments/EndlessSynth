@@ -13,27 +13,27 @@ bool GuiItemButton::mouseOver(int x, int y) {
 
 //--------------------------------------------------------------
 void GuiItemButton::mouseMoved(int x, int y, int button) {
-
+	GuiItem::mouseMoved(x, y, button);
 }
 
 //--------------------------------------------------------------
 void GuiItemButton::mousePressed(int x, int y, int button) {
-
+	GuiItem::mousePressed(x, y, button);
 }
 
 //--------------------------------------------------------------
 void GuiItemButton::mouseDragged(int x, int y, int button) {
-
+	GuiItem::mouseDragged(x, y, button);
 }
 
 //--------------------------------------------------------------
 void GuiItemButton::mouseReleased(int x, int y, int button) {
-
+	GuiItem::mouseReleased(x, y, button);
 }
 
 //--------------------------------------------------------------
 void GuiItemButton::mouseReleased() {
-
+	GuiItem::mouseReleased();
 }
 
 //--------------------------------------------------------------

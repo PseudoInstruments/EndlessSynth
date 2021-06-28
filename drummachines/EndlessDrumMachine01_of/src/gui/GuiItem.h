@@ -21,5 +21,7 @@ public:
 	virtual void mouseReleased();
 protected:
 	int2 pos_;
+	bool moused_ = false;
+	int2 mouse_pos_;
 };
 
