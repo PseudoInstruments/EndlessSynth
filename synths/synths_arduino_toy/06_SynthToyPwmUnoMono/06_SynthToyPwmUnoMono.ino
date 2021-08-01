@@ -11,8 +11,6 @@
 //--------------------------------------------
 //- install "TimerOne" library using Library Manager
 
-#include <TimerOne.h>
-
 //--------------------------------------------
 //Monitor port speed: 
 //--------------------------------------------
@@ -30,52 +28,34 @@
 //- connection with volume control: connect 10 kOhm pot's inputs to Gnd and pin 12, and pot's output to buzzer or audio jack input, 
 //and also connect there Arduino's Gnd to a second input.
 
-byte pin_audio = A0;  //we will use A0 as digital output pin!
-
-//---------------------------------------------------------------
-int SampleRate = 10000;   //Sample rate of the synth
-int TimerPeriod = long(1000000) / SampleRate;
-
-
 //---------------------------------------------------------------
 void setup() {
   // Serial setup
   Serial.begin(500000);
   Serial.println("06_SynthToyPwmUnoMono - PWM-monosynth for toy keyboard and Arduino Uno/Nano.");
-  Serial.println();
 
   // Keyboard, see file "keyboard"
   keyboard_setup();
 
-  // Starting timer for sound generation
-  Timer1.initialize(TimerPeriod);   //set timer's period
-  Timer1.attachInterrupt(audio_out); //set function which is called by timer
-  
+  // Sound, see file "sound"
+  sound_setup();
+
+  Serial.println();
   Serial.println("Synth is ready to play.");
 
 }
 
 //----------------------------------------------------------
 void loop() {
+  //this is function for control - updating keyboard and sound state,
+  //with control rate, which is much slower than SampleRate, used at audio_loop()
   // Keyboard 
-  keyboard_loop();
-  
-  delay(2);
-}
+  keyboard_update();
 
+  // Sound
+  sound_update();
+  
+  delay(2); //control rate - so 1000/2 = 500 Hz
+}
 
 //----------------------------------------------------------
-//Main sound function which is called by timer SampleRate times per second
-void audio_out() {
-  /*if (ledState == LOW) {
-    ledState = HIGH;
-    blinkCount = blinkCount + 1;  // increase when LED turns on
-  } else {
-    ledState = LOW;
-  }
-  digitalWrite(led, ledState);*/
-}
-
-
-
-//---------------------------------------------------------------

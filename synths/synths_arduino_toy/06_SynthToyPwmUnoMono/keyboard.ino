@@ -27,9 +27,9 @@ void keyboard_setup() {
 }
 
 //---------------------------------------------------------------
-// Keyboard scan
+// Keyboard update
 // If several keys are pressed, it will use rightmost key.
-void keyboard_loop() {
+void keyboard_update() {
   int key = -1;   //pressed key, -1 - no key, 0..keys-1
   //Scan all blocks
   for (byte b = 0; b < blocks; b++) {
