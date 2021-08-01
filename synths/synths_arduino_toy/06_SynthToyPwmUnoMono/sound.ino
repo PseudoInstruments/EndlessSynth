@@ -1,5 +1,5 @@
 //---------------------------------------------------------------
-//Sound engine
+//Sound generation
 //---------------------------------------------------------------
 //Using library TimerOne for working with Arduino's Timer1
 #include <TimerOne.h>
@@ -29,7 +29,12 @@ void sound_setup() {
 // Sound update at control rate
 //This is not audio generator, but control-rate function for changing sound
 void sound_update() {
-
+  //Test of sound
+  digitalWrite(A0,1);
+  delay(2);
+  digitalWrite(A0,0);
+  delay(2);
+  
 }
 
 

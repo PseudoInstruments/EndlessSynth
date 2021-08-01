@@ -12,12 +12,11 @@ const byte pin_keys[keys_in_block] = {6,7,8,9,10,11,12,13};
 const byte keys = 32; //number of keys
 
 //Base note
-byte base_note = 53;
+byte base_note = 53; //F
 
 //---------------------------------------------------------------
 // Keyboard setup
 void keyboard_setup() {
-  // Keyboard setup
   for (byte i = 0; i < blocks; i++) {
     pinMode(pin_blocks[i], INPUT);  //really it will OUTPUT when required
   }
@@ -45,7 +44,8 @@ void keyboard_update() {
       byte v = (digitalRead(pin_keys[k]) == LOW) ? 1 : 0;
       if (v) {
         key = b*keys_in_block + k;
-        Serial.print("key "); Serial.println(key);        
+        //Debug print
+        //Serial.print("key "); Serial.println(key);        
       }
     }
 
