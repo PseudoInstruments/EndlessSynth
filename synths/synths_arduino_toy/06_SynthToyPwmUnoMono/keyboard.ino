@@ -11,10 +11,10 @@ const byte pin_keys[keys_in_block] = {6,7,8,9,10,11,12,13};
 
 const byte keys = 32; //number of keys
 
-//Base note
-byte base_note = 53; //F
+//Base note - it's used together with octave to decide which key to play
+byte base_note = 53; //F 
 
-byte key_pressed = 0;
+byte playing_key = 0; //Key playing now, 0 - no key
 //---------------------------------------------------------------
 // Keyboard setup
 void keyboard_setup() {
@@ -30,7 +30,7 @@ void keyboard_setup() {
 // Keyboard update
 // If several keys are pressed, it will use rightmost key.
 void keyboard_update() {
-  int key = -1;   //pressed key, -1 - no key, 0..keys-1
+  byte key = 255;   //255 - no key, 0..keys-1 - some key is pressed
   //Scan all blocks
   for (byte b = 0; b < blocks; b++) {
 
@@ -45,14 +45,53 @@ void keyboard_update() {
       byte v = (digitalRead(pin_keys[k]) == LOW) ? 1 : 0;
       if (v) {
         key = b*keys_in_block + k;
-        //Debug print - uncomment it for printing keyboard response
-        //Serial.print("key "); Serial.println(key);        
+        // Debug print - uncomment it for printing keyboard response
+        //Serial.print("raw key "); Serial.println(key);        
       }
     }
 
     //disable current from the block, see NOTE above
     pinMode(pin_blocks[b], INPUT);
   }
+
+  // If some key is pressed - move to proper octave and check if it was changed
+  if (key != 255) {
+    key = key + base_note + get_octave()*12;
+    // Case key is pressed
+    if (!playing_key) {
+      key_pressed(key); //key newly pressed - start sounding with attack
+    }
+    else {
+      if (playing_key != key) {
+        key_changed(key); //key changed - just change tone, without attack
+      }
+    }
+  }
+  else {
+    //no key pressed, check if it was released
+    if (playing_key) {
+      key_released();   //key released - start sound to fade
+    }
+  }
+  
+}
+
+//---------------------------------------------------------------
+//Key events
+//---------------------------------------------------------------
+void key_pressed(byte key) { //key newly pressed - start sounding with attack
+  Serial.print("key pressed "); Serial.println(key);
+  playing_key = key;
+}
+
+void key_changed(byte key) { //key changed - just change tone, without attack
+  Serial.print("key changed "); Serial.println(key);
+  playing_key = key;
+}
+
+void key_released() {  //key released - start sound to fade
+   Serial.println("key released "); 
+   playing_key = 0;
 }
 
 //---------------------------------------------------------------

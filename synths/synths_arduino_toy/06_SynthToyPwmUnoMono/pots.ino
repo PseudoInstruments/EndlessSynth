@@ -46,7 +46,7 @@ int get_pwm() {
 //---------------------------------------------------------------
 //Octave, -2..2
 int get_octave() {
-  return map(pots_values[4],0,1023,-2,2); 
+  return map(pots_values[4],0,1023*5/6,-2,2); //*5/6 required to get space on pot's range for the last octave
 }
 
 //---------------------------------------------------------------
@@ -65,7 +65,7 @@ void pots_update() {
   }
 
   //Debug print - uncomment it for printing pots values
-  Serial.print("Pots:\t"); 
+  /*Serial.print("Pots:\t"); 
   for (byte i=0; i<pots; i++) {
     Serial.print(pots_values[i]);
     Serial.print("\t");
@@ -76,6 +76,7 @@ void pots_update() {
   Serial.print("\tPWM: "); Serial.print(get_pwm());
   Serial.print("\tOctave: "); Serial.print(get_octave());
   Serial.println();
+  */
 }
 
 //---------------------------------------------------------------

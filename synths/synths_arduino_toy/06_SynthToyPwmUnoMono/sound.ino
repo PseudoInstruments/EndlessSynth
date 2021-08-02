@@ -40,7 +40,6 @@ void sound_update() {
   
 }
 
-
 //---------------------------------------------------------------
 // audio_out() - Main sound function which is called by Timer 1 at rate SampleRate Hz
 
