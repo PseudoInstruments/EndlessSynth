@@ -55,16 +55,10 @@ void setup() {
 void keys_update() {
   //Обновление состояния клавиатуры
   for (byte k=0; k<keyGndN; k++) {
-    //set control pin 
-    for (byte j=0; j<keyGndN; j++) {
-      if (j == k) {
-        pinMode(keyGnd[j], OUTPUT);  //put current
-        digitalWrite(keyGnd[j], LOW);              
-      }
-      else {
-        pinMode(keyGnd[j], INPUT);  //disable current, see NOTE above
-      }
-    }
+    //put current to block's pin 
+    pinMode(keyGnd[k], OUTPUT);  //put current
+    digitalWrite(keyGnd[k], LOW);              
+
     //небольшая пауза, чтобы пины настроились, говорят, что достаточно 2 мкс, но делаем больше
     delayMicroseconds(10);
     //считываем значения клавиатуры
@@ -82,7 +76,9 @@ void keys_update() {
       }
       state = v;
     }
-    
+
+    //disable current, see NOTE above 
+    pinMode(keyGnd[k], INPUT);     
   }
 
   //тестовая выдача на печать

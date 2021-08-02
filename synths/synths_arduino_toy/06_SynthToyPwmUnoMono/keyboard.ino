@@ -14,6 +14,7 @@ const byte keys = 32; //number of keys
 //Base note
 byte base_note = 53; //F
 
+byte key_pressed = 0;
 //---------------------------------------------------------------
 // Keyboard setup
 void keyboard_setup() {
@@ -44,7 +45,7 @@ void keyboard_update() {
       byte v = (digitalRead(pin_keys[k]) == LOW) ? 1 : 0;
       if (v) {
         key = b*keys_in_block + k;
-        //Debug print
+        //Debug print - uncomment it for printing keyboard response
         //Serial.print("key "); Serial.println(key);        
       }
     }

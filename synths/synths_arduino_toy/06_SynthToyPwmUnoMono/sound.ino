@@ -30,10 +30,13 @@ void sound_setup() {
 //This is not audio generator, but control-rate function for changing sound
 void sound_update() {
   //Test of sound
-  digitalWrite(A0,1);
-  delay(2);
-  digitalWrite(A0,0);
-  delay(2);
+  //digitalWrite(A0,1);
+  //delay(2);
+  //digitalWrite(A0,0);
+  //delay(2);
+  //return;
+  //-------------
+  
   
 }
 
@@ -44,13 +47,13 @@ void sound_update() {
 byte phase = 0; //it's fun trick: so phase range is 0..255 - we will use it for PWM computation
 
 void audio_out() {
-  /*if (ledState == LOW) {
-    ledState = HIGH;
-    blinkCount = blinkCount + 1;  // increase when LED turns on
-    } else {
-    ledState = LOW;
-    }
-    digitalWrite(led, ledState);*/
+  //Test of sound
+  //static byte v = 0;
+  //digitalWrite(A0,v);
+  //v = 1-v;
+  //return;
+
+
 
   //frequencies of sounds
   //0 means note off
