@@ -14,7 +14,9 @@ const byte keys = 32; //number of keys
 //Base note - it's used together with octave to decide which key to play
 byte base_note = 53; //F 
 
-byte playing_key = 0; //Key playing now, 0 - no key
+byte keyboard_note = 0; //currently pressed note, 0 - not pressed
+
+
 //---------------------------------------------------------------
 // Keyboard setup
 void keyboard_setup() {
@@ -56,42 +58,28 @@ void keyboard_update() {
 
   // If some key is pressed - move to proper octave and check if it was changed
   if (key != 255) {
-    key = key + base_note + get_octave()*12;
+    byte note = key + base_note + get_octave()*12;
     // Case key is pressed
-    if (!playing_key) {
-      key_pressed(key); //key newly pressed - start sounding with attack
+    if (!keyboard_note) {
+      key_pressed(note); //key newly pressed - start sounding with attack
     }
     else {
-      if (playing_key != key) {
-        key_changed(key); //key changed - just change tone, without attack
+      if (keyboard_note != note) {
+        key_changed(note); //key changed - just change tone, without attack
       }
     }
+    keyboard_note = note;
   }
   else {
     //no key pressed, check if it was released
-    if (playing_key) {
+    if (keyboard_note) {
+      keyboard_note = 0;
       key_released();   //key released - start sound to fade
     }
   }
   
 }
 
-//---------------------------------------------------------------
-//Key events
-//---------------------------------------------------------------
-void key_pressed(byte key) { //key newly pressed - start sounding with attack
-  Serial.print("key pressed "); Serial.println(key);
-  playing_key = key;
-}
 
-void key_changed(byte key) { //key changed - just change tone, without attack
-  Serial.print("key changed "); Serial.println(key);
-  playing_key = key;
-}
-
-void key_released() {  //key released - start sound to fade
-   Serial.println("key released "); 
-   playing_key = 0;
-}
 
 //---------------------------------------------------------------

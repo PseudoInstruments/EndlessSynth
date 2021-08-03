@@ -17,7 +17,7 @@ int pots_values[pots] = {0,0,0,0,0}; //0..1023
 //---------------------------------------------------------------
 
 //Pitch, -100..100, in percents
-int get_pitch() {
+int get_pitch_percents() {
   //we get -150..150 and then collapse in to -100..100 to obtain zero-range at pot's center
   int p = map(pots_values[0],0,1023,-150,150); 
   if (abs(p)<50) return 0;
@@ -27,13 +27,13 @@ int get_pitch() {
 
 //---------------------------------------------------------------
 //Attack time, 0..2000 milliseconds
-int get_attack() {
+int get_attack_ms() {
   return map(pots_values[1],0,1023,0,2000); 
 }
 
 //---------------------------------------------------------------
 //Release time, 0..2000 milliseconds
-int get_release() {
+int get_release_ms() {
   return map(pots_values[2],0,1023,0,2000); 
 }
 
@@ -70,9 +70,9 @@ void pots_update() {
     Serial.print(pots_values[i]);
     Serial.print("\t");
   }
-  Serial.print("Pitch: "); Serial.print(get_pitch());
-  Serial.print("\tAttack: "); Serial.print(get_attack());
-  Serial.print("\tRelease: "); Serial.print(get_release());
+  Serial.print("Pitch %: "); Serial.print(get_pitch_percents());
+  Serial.print("\tAttack ms: "); Serial.print(get_attack_ms());
+  Serial.print("\tRelease ms: "); Serial.print(get_release_ms());
   Serial.print("\tPWM: "); Serial.print(get_pwm());
   Serial.print("\tOctave: "); Serial.print(get_octave());
   Serial.println();
