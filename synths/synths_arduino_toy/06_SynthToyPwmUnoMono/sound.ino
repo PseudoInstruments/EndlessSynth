@@ -12,7 +12,7 @@ const long int sample_rate = 8192;   //Sample rate of the audio generation
 const int timer_period = long(1000000) / sample_rate;  //period for Timer1 working
 
 
-const float pitch_band_range = 6;  //range of pitch bend of hemitones
+const float pitch_band_range = 7;   //range of pitch bend of hemitones
 
 byte sound_vol = 0;  //sound "volume", 0..255, changing by attack/release processes; precisely it's not volume, but PWM modulation
 int sound_freq = 1; //current sound frequency for sound generation
@@ -89,7 +89,7 @@ void sound_update() {
   phase_adder = float(phase_range) * sound_freq / sample_rate;
 
   // Debug print
-  static byte print = 0;
+  /*static byte print = 0;
   print = (print + 1) % 10;
   if (print == 0) {
 
@@ -106,7 +106,7 @@ void sound_update() {
     Serial.println();
 
   }
-
+*/
 }
 
 //---------------------------------------------------------------

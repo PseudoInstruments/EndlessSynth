@@ -18,9 +18,9 @@ int pots_values[pots] = {0,0,0,0,0}; //0..1023
 
 //Pitch, -100..100, in percents
 int get_pitch_percents() {
-  //we get -140..14 and then collapse in to -100..100 to obtain zero-range at pot's center
-  int p = map(pots_values[0],0,1023,-140,140); 
-  if (abs(p)<40) return 0;
+  //we get -150..150 and then collapse in to -100..100 to obtain zero-range at pot's center
+  int p = map(pots_values[0],0,1023,-150,150); 
+  if (abs(p)<50) return 0;
   if (p > 0) return p-50;
   return p+50;
 }
