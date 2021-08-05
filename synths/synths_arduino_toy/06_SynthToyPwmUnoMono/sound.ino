@@ -173,8 +173,9 @@ void audio_out() {
   phase_ %= phase_range;
   // if phase_ < pwm*volume, then audio out = 1, else = 0;
 
-  momentary_pwm_ = ((phase_range * pwm_ >> pwm_pow2) * fade_pos_) >> fade_pow2;  // / (pwm_range * fade_range);
-  //if (phase_ < phase_range/2)   //For debugging - simple 50% PWM
+  momentary_pwm_ = ((phase_range * pwm_ >> pwm_pow2) 
+                    * fade_pos_) >> fade_pow2;  
+  //if (phase_ < phase_range/2) //For debugging - simple 50% PWM
   if (phase_ < momentary_pwm_) {
     digitalWrite(A0, 1);
   }

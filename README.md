@@ -1,63 +1,32 @@
 # EndlessSynth
-1-bit synthesizers and other instruments using Arduino,
-with toy keyboard and microphone and self-made "guitar".
+This project is devoted to creating 1-bit synthesizers and other musical instruments using Arduino.
 
-Made by Endless Attractions Museum, https://eamuseum.com/Endless-Instruments
+Made by Denis Perevalov (Endless Attractions Museum, https://eamuseum.com/Endless-Instruments)
 
 ## Instruments
 
-### Endless Mic 
+### 1-bit PWM synth made from toy keyboard and Arduino Uno
 
-Endless Mic is a instrument made from toy microphone and Arduino Uno. 
-It processes input sound to 1 bit.
+Code: synths\synths_arduino_toy\06_SynthToyPwmUnoMono
 
-Performance video: 
-
-[![How it works](https://img.youtube.com/vi/3pW5L71EReI/0.jpg)](https://www.youtube.com/watch?v=3pW5L71EReI)
-
-Code and implementation details: mic/01_boombox_simple
+Instructions: synths\synths_arduino_toy\how_to_assembly
 
 
-### Endless Guitar
+[![PWM-synth](https://img.youtube.com/vi/Cb2GTfVAnb0/0.jpg)](https://www.youtube.com/watch?v=Cb2GTfVAnb0)
+
+
+### 1-bit guitar with Arduino Nano
 
 Endless Guitar is a 1-string 1-bit guitar with controllable volume, sample rate and sensitivity.
 
 How it works: 
 
-[![How it works](https://img.youtube.com/vi/se3GxTyyy_U/0.jpg)](https://www.youtube.com/watch?v=se3GxTyyy_U)
+[![1-bit guitar](https://img.youtube.com/vi/hyriUtXthH8/0.jpg)](https://www.youtube.com/watch?v=hyriUtXthH8 )
 
-Code and implementation details: guitars/03_guitar_sliders_1V
-
-### Endless Synth
-
-Endless Synth is a 1-bit synthesizer which generates sine wave.
-It has sliders to control volume, diffuse step and history duration.
-Also from keys user can switch octaves and sample rate.
-
-The style of playing is like guitar - you choose "notes" by the left hand and hit "strings" by the right hand.
-This style fits well for live performance of arpeggios found in 8-bit games music.
-
-How it works: 
-
-[![How it works](https://img.youtube.com/vi/sMg1RHxQQ2w/0.jpg)](https://www.youtube.com/watch?v=sMg1RHxQQ2w)
-
-Code and assembly insructions: synths folder.
-
-
-## Performances
-
-[![Performance part 2](https://img.youtube.com/vi/nv2vj5iOq3Y/0.jpg)](https://www.youtube.com/watch?v=nv2vj5iOq3Y)
-
-[![Performance part 3](https://img.youtube.com/vi/5nkdpzOd9-w/0.jpg)](https://www.youtube.com/watch?v=5nkdpzOd9-w)
+Code: guitars\04_guitar_sliders_simple
  
+### 1-bit drums with Arduino Mega
 
-## Contents
-
-* **doc** - Some images.
-* **guitars** - Endless Guitar codes and instructions.
-* **keyboard_tests** - tests of connecting toy keyboards.
-* **mic** - Endless Boombox codes and instructions.
-* **mic_tests** - tests of using microphone with Arduino.
-* **synthesis_tests** - tests of synthesizing sound in Arduino.
-* **synths** - Endless Wynth codes and instructions.
+[![1-bit drums](https://raw.githubusercontent.com/EndlessBits/EndlessSynth/main/drums/how_to_assembly/05_drum_pedal_2tones_timbres.jpg)]
+Code: drums\06_drum_pedal_2tones_timbres
 
