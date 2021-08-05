@@ -12,7 +12,7 @@ const byte pin_keys[keys_in_block] = {6,7,8,9,10,11,12,13};
 const byte keys = 32; //number of keys
 
 //Base note - it's used together with octave to decide which key to play
-byte base_note = 53; //F 
+const byte base_note = 53-12; //F 
 
 byte keyboard_note = 0; //currently pressed note, 0 - not pressed
 

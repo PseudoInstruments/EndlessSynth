@@ -74,7 +74,7 @@ void loop() {
   // Sound
   sound_update();
   
-  delay(2); //control rate - so 1000/2 = 500 Hz
+  delay(2); //control rate - so 1000/2 = 500 Hz, but really a bit less due operations between.
 }
 
 //----------------------------------------------------------

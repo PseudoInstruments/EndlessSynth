@@ -9,7 +9,6 @@
 const byte pin_audio = A0;  //we will use A0 as digital output pin!
 
 const long int sample_rate = 8192;   //Sample rate of the audio generation
-const byte sample_rate_pow2 = 13; //2^13 = 8192//power of 2 to faster divide
 const int timer_period = long(1000000) / sample_rate;  //period for Timer1 working
 
 
@@ -21,13 +20,26 @@ byte sound_pwm = 0; //cuurent PWM value for sound generation
 
 byte playing_note = 0; //currently playing note - it keeps here for "release" process even after user releases key
 
+//PWM
+const long int pwm_range = 256;
+const int pwm_pow2 = 8;  //2^8 = pwm_range
+
+long int pwm_ = 0;
+
 //attack/release implemented as PWM change, we are using integer arithmetics instead floats to speed-up computing
-long int fade_range = 500000;    //just a "big number"
+const long int fade_range = (long int)1024*32; 
+const int fade_pow2 = 15;  //2^... = fade_range
+   
 long int fade_pos_ = 0;    //position for attack/release, "_" marks it's changed in audio_loop(); value 0 - means min volume, value fade_range means max volume
 long int fade_adder = 0;  //how much add to fade at each sound sample generation
 
+//PWM phase
+const long int phase_range = sample_rate*4;   //Nyqist and more
+long int phase_ = 0;
+long int phase_adder = 0;
+long int momentary_pwm_ = 0;
 
-//sound phase 0..255: (((long long)phase * freq1 * 256) >> sample_rate_pow2) % 256];
+unsigned long int time_ = 0;
 
 //---------------------------------------------------------------
 // Setup sound
@@ -53,25 +65,56 @@ void sound_update() {
   //return;
   //-------------
 
-  //current frequency - made from key and pitch bend
+  // Attack/release
+  unsigned long int time = millis();
+  unsigned long int dt = time - time_;
+  time_ = time;
+
+  fade_pos_ += fade_adder * dt;
+  if (fade_adder > 0 && fade_pos_ > fade_range) fade_pos_ = fade_range;
+  if (fade_adder < 0 && fade_pos_ < 0) fade_pos_ = 0;
+  //For usage below: sound volume is fade_pos_/fade_range
+
+  // PWM
+  pwm_ = get_pwm();
+
+  // Computing current sound frequency - made from key and pitch bend
   sound_freq = int(m_to_f_float(playing_note    //Note
                                 + get_pitch_percents() * pitch_band_range * 0.01f)); //Pitch -100..100, so multiply by 0.01
 
+  // Computing phase_adder:
+  // "phase_" should walk "sound_freq" periods by one second, the period is "phase_range"
+  // so "phase_" goes phase_range*sound_freq per second, or phase_range*sound_freq/sample_rate per audio step
+  // - this is phase_adder
+  phase_adder = float(phase_range) * sound_freq / sample_rate;
+
   // Debug print
-  /* 
-  Serial.print("sound_freq: "); Serial.print(sound_freq);
-  Serial.print("\tfade_adder: "); Serial.print(fade_adder);
-  Serial.print("\tfade_pos_: "); Serial.print(fade_pos_);
-  Serial.println();
- */
+  static byte print = 0;
+  print = (print + 1) % 10;
+  if (print == 0) {
+
+    Serial.print("sound_freq: "); Serial.print(sound_freq);
+    Serial.print("\tphase_adder: "); Serial.print(phase_adder);
+
+    Serial.print("\tfade_adder: "); Serial.print(fade_adder);
+    Serial.print("\tfade_pos_: "); Serial.print(fade_pos_);
+
+    //Serial.print("\tpwm_: "); Serial.print(pwm_);
+    //Serial.print("\tphase_range: "); Serial.print(phase_range);
+    Serial.print("\tmomentary_pwm_: "); Serial.print(momentary_pwm_);  
+    //Serial.print("\tphase"); Serial.print(phase_);
+    Serial.println();
+
+  }
 
 }
 
 //---------------------------------------------------------------
 //start attack/release, dir==1 - attack, dir==-1 - release
 void set_fade(int duration_ms, int dir) {
-  //need to go way fade_range at duration_ms/1000 seconds, that is duration_ms/1000*sample_rate samples
-  fade_adder = fade_range * 1000 / (duration_ms * sample_rate) * dir;  //integer-arithmetics optimized from original formula: fade_range / (duration_ms * sample_rate / 1000);
+  //we work in milliseconds rate
+  //need to go way fade_range at duration_ms milliseconds
+  fade_adder = fade_range / duration_ms * dir;  //integer-arithmetics optimized from original formula: fade_range / (duration_ms * sample_rate / 1000);
 }
 
 //---------------------------------------------------------------
@@ -117,7 +160,6 @@ void key_released() {  //key released - start sound to fade
 //---------------------------------------------------------------
 // audio_out() - Main sound function which is called by Timer 1 at rate SampleRate Hz
 
-byte phase = 0; //it's fun trick: so phase range is 0..255 - we will use it for PWM computation
 
 void audio_out() {
   //Test of sound
@@ -126,27 +168,19 @@ void audio_out() {
   //v = 1-v;
   //return;
 
-  // Attack/release
-  fade_pos_ += fade_adder;
-  if (fade_adder > 0 && fade_pos_ > fade_range) fade_pos_ = fade_range;
-  if (fade_adder < 0 && fade_pos_ < 0) fade_pos_ = 0;
-  //For usage below: sound volume is fade_pos_/fade_range
+  // Sound phase
+  phase_ += phase_adder;
+  phase_ %= phase_range;
+  // if phase_ < pwm*volume, then audio out = 1, else = 0;
 
-
-  //frequencies of sounds
-  //0 means note off
-  //long int freq1 = 0;
-  //  freq1 = (midi_note1 != -1) ? m_to_f_int(midi_note1 + base_note) : 0;
-
-
-
-  //We should make this function as fast as possible, and trying to omit "/" and "%" operations
-  //phase - is changed audio_sample_rate times per second
-  //wave_n - length of wavetable
-  //freq - desired frequency
-  //ph - must go freq times 0..wave_n-1
-  //  if (freq1) sound_value += wave_table[(((long long)phase * freq1 * wave_n) >> shift_audio) % wave_n];
-  //phase++;
+  momentary_pwm_ = ((phase_range * pwm_ >> pwm_pow2) * fade_pos_) >> fade_pow2;  // / (pwm_range * fade_range);
+  //if (phase_ < phase_range/2)   //For debugging - simple 50% PWM
+  if (phase_ < momentary_pwm_) {
+    digitalWrite(A0, 1);
+  }
+  else {
+    digitalWrite(A0, 0);
+  }
 }
 
 //---------------------------------------------------------------
